@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<ProgramParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <IP>192.168.0.1</IP>
+  <IsStartConnect>true</IsStartConnect>
+  <RAF_Exposure>35000</RAF_Exposure>
+  <RAF_Gain>0</RAF_Gain>
+  <DO_Exposure1>65000</DO_Exposure1>
+  <DO_Gain1>4</DO_Gain1>
+  <DO_Exposure2>40000</DO_Exposure2>
+  <DO_Gain2>3</DO_Gain2>
+  <RAF_OK_NUM>63</RAF_OK_NUM>
+  <RAF_ALL_NUM>129</RAF_ALL_NUM>
+  <RAF_NG_NUM>66</RAF_NG_NUM>
+  <DO_OK_NUM>79</DO_OK_NUM>
+  <DO_ALL_NUM>162</DO_ALL_NUM>
+  <DO_NG_NUM>83</DO_NG_NUM>
+  <Current_Program>0</Current_Program>
+</ProgramParameters>

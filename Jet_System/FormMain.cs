@@ -40,6 +40,7 @@ using Cognex.VisionPro.ToolBlock;
 using JC.Camera;
 using Jet_System.Utils;
 using Jet_System.Utils.CustomerCSV;
+using Jet_System.Utils.ProgramConfig;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -50,11 +51,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using VisionproToolBase;
 
 namespace Jet_System
 {
@@ -66,32 +65,23 @@ namespace Jet_System
 
         ProgramParameters programParameters = new ProgramParameters();//
 
-
         string  last_time="";     //check time ,update excel file name
         CameraBase Currnet_Camera;
 
         public Result Statistics;//index for SaveImage 
 
-
         string DO_Result;//for twice exposure ,not use now
         bool First_ok;//for twice exposure ,not use now
-
 
         private readonly BlockingCollection<ImageIndexAndImage> RowImageSave = new BlockingCollection<ImageIndexAndImage>();
         private readonly BlockingCollection<ImageIndexAndImage> ResultImageSave = new BlockingCollection<ImageIndexAndImage>();
 
         CancellationTokenSource cancel = new CancellationTokenSource();
         IDisposable ScanPCI;
-
         PCI7230 Currnet_PCI;
 
         List<string> RAF_Configure_Path = new List<string>();
-
         List<string> DO_Configure_Path = new List<string>();
-
-
-
-
 
 
         public FormMain()
@@ -99,10 +89,9 @@ namespace Jet_System
             InitializeComponent();
 
             chbxSaveImage.Checked = true;
-            Statistics = new Result();
-            // CustomerSerialize.XMLSerialize<Result>(Statistics, "Result.xml");
-
-
+           
+            
+            /*
             RAF_Configure_Path.Add(@"Configure\12PR-RAF\Angle.csv");
             RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_Difference.csv");
             RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_L.csv");
@@ -125,7 +114,7 @@ namespace Jet_System
             DO_Configure_Path.Add(@"Configure\8PR-DO\Shield_Plate_To_Tower.csv");
             DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_Inner_L.csv");
             DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_Inner_R.csv");
-
+            */
 
 
 
@@ -134,28 +123,14 @@ namespace Jet_System
         #region FormInit
         private void Init()
         {
-
+            SetImageAndMeasureDataPath();
+            Read_Measure_Path();            
+            Read_Vpp_Path();
             ClickTab();
-            
-
-            filenames = System.IO.File.ReadAllLines("Config.txt");
-            /*
-            foreach (string files in filenames)
-            {
-                string[] NameAndPath = files.Split(',');
-                var percentage = VisionProToolFactory.GetBase(NameAndPath[0], NameAndPath[1]);
-                Tools.Add(percentage);
-            }
-            */
-            cogtool_RAF.Subject = CogSerializer.LoadObjectFromFile(filenames[0]) as CogToolBlock;
-            cogtool_DO.Subject = CogSerializer.LoadObjectFromFile(filenames[1]) as CogToolBlock;
-            cogtool_RAF.Subject.Ran += cogtool_RAF_Ran;
-            cogtool_DO.Subject.Ran += cogtool_DO_Ran;
 
             SetCurrentFileName();
             CheckImageAndCsvSavePath();
-            
-            
+                       
             programParameters = ReadParameters();
 
             if (programParameters != null)
@@ -186,9 +161,6 @@ namespace Jet_System
 
             cbxProgramSelect.SelectedIndex = programParameters.Current_Program;
             
-
-            ReadStatistics();
-
             ScanResultImage();
             ScanRowImage();
 
@@ -198,15 +170,49 @@ namespace Jet_System
         }
 
 
-
-        private void ReadStatistics()
+        private void SetImageAndMeasureDataPath()
         {
-            Statistics = CustomerSerialize.XmlDeserialize<Result>("Result.xml");
+            ImageAndMeasureDataSaveRoot temp = CustomerSerialize.XmlDeserialize<ImageAndMeasureDataSaveRoot>(@"Config\ImageAndMeasureDataSaveRoot.xml");
+            SavePath.FileResult = temp.MeasureData;
+            SavePath.ImageRootPath = temp.Image;
         }
+
+
+        private void Read_Measure_Path()
+        {
+            string measure_path = @"Config\Measure_Config.txt";
+
+            var fil = System.IO.File.ReadAllLines(measure_path);
+
+            if (fil.Count() != 18)
+            {
+                MessageBox.Show(measure_path + "  不存在");
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                RAF_Configure_Path.Add(fil[i]);
+            }
+
+            for (int i = 9; i < 18; i++)
+            {
+                DO_Configure_Path.Add(fil[i]);
+            }
+        }
+
+        private void Read_Vpp_Path()
+        {
+            filenames = System.IO.File.ReadAllLines(@"Config\VPP_Config.txt");
+
+            cogtool_RAF.Subject = CogSerializer.LoadObjectFromFile(filenames[0]) as CogToolBlock;
+            cogtool_DO.Subject = CogSerializer.LoadObjectFromFile(filenames[1]) as CogToolBlock;
+            cogtool_RAF.Subject.Ran += cogtool_RAF_Ran;
+            cogtool_DO.Subject.Ran += cogtool_DO_Ran;
+        }
+       
 
         private ProgramParameters ReadParameters()
         {
-            return CustomerSerialize.XmlDeserialize<ProgramParameters>();
+            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/VPP_Config.txt");
         }
 
         private void FormInitConnectCamera(string _cameraIP)
@@ -1109,8 +1115,6 @@ namespace Jet_System
         }
         #endregion
 
-
-
         #region Get Excel Configure And Update table
         private void ReadConfigure()
         {
@@ -1266,7 +1270,6 @@ namespace Jet_System
 
 
         #endregion
-
 
         #region ResultShow  ,Save MeasureData
         private void ShowResultTable( ref Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 _showTool,bool _save_data)
@@ -1818,16 +1821,20 @@ namespace Jet_System
 
     class SavePath
     {
-        public static string ImageRootPath { set { } get { return "Image"; } }
-        public static string Image1ResultOK { set { } get { return "Image/12PR_OK"; } }//12PR_OK
-        public static string Image1ResultNG { set { } get { return "Image/12PR_NG"; } }//12PR_NG
 
-        public static string Image1Row { set { } get { return "Image/12PR_ROW"; } }//12PR_ROW
-        public static string Image2ResultOK { set { } get { return "Image/8PR_OK"; } }//8PR_OK
+       
+       
 
-        public static string Image2ResultNG { set { } get { return "Image/8PR_NG"; } }//8PR_NG
-        public static string Image2Row { set { } get { return "Image/8PR_ROW"; } }//8PR_ROW
-        public static string FileResult { set { } get { return "Data"; } }
+        public static string ImageRootPath { set; get; }
+        public static string Image1ResultOK { set { } get { return ImageRootPath + "/12PR_OK"; } }//12PR_OK
+        public static string Image1ResultNG { set { } get { return ImageRootPath+"/12PR_NG"; } }//12PR_NG
+
+        public static string Image1Row { set { } get { return ImageRootPath+"/12PR_ROW"; } }//12PR_ROW
+        public static string Image2ResultOK { set { } get { return ImageRootPath+"/8PR_OK"; } }//8PR_OK
+
+        public static string Image2ResultNG { set { } get { return ImageRootPath+"/8PR_NG"; } }//8PR_NG
+        public static string Image2Row { set { } get { return ImageRootPath+"/8PR_ROW"; } }//8PR_ROW
+        public static string FileResult { set; get; }
 
 
 

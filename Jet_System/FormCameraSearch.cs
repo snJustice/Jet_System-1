@@ -1,7 +1,7 @@
 ﻿
 
 using JC.Camera;
-using Jet_System.Utils;
+using Jet_System.Utils.ProgramConfig;
 using MvCamCtrl.NET;
 using System;
 using System.Collections.Generic;

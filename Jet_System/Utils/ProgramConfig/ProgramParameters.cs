@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jet_System.Utils
+namespace Jet_System.Utils.ProgramConfig
 {
     public class ProgramParameters
     {
