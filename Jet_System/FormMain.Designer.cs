@@ -22,6 +22,7 @@ namespace Jet_System
             RowImageSave.Dispose();
             ResultImageSave.Dispose();
             cancel.Dispose();
+            ImageProcess_Task.Dispose();
 
             base.Dispose(disposing);
         }

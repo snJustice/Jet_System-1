@@ -68,13 +68,16 @@ namespace Jet_System
         string  last_time="";     //check time ,update excel file name
         CameraBase Currnet_Camera;
 
-        public Result Statistics;//index for SaveImage 
+       
 
         string DO_Result;//for twice exposure ,not use now
         bool First_ok;//for twice exposure ,not use now
 
         private readonly BlockingCollection<ImageIndexAndImage> RowImageSave = new BlockingCollection<ImageIndexAndImage>();
         private readonly BlockingCollection<ImageIndexAndImage> ResultImageSave = new BlockingCollection<ImageIndexAndImage>();
+
+
+        private readonly BlockingCollection<ImageProcess> ImageProcess_Task = new BlockingCollection<ImageProcess>();
 
         CancellationTokenSource cancel = new CancellationTokenSource();
         IDisposable ScanPCI;
@@ -320,13 +323,6 @@ namespace Jet_System
 
         }
 
-
-
-
-        #endregion
-
-        #region Image Save
-
         private void AddImagePathDirectonary(int index, string _filaeRootPath)
         {
             string file = _filaeRootPath + "/" + DateTime.Now.ToString("yyyy-MM-dd");
@@ -334,6 +330,12 @@ namespace Jet_System
                key => file,
                (key, oldvalue) => file);
         }
+        
+
+        #endregion
+
+        #region Image Save
+
 
         private void CheckImageAndCsvSavePathChild(string path)
         {
@@ -343,13 +345,6 @@ namespace Jet_System
             }
 
         }
-
-
-
-   
-
-
-       
 
         private void ScanRowImage()
         {
@@ -438,12 +433,14 @@ namespace Jet_System
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             Currnet_Camera?.Close();
-            ScanPCI.Dispose();
+            ScanPCI?.Dispose();
+            cancel.Cancel(); 
 
             Task.Delay(TimeSpan.FromMilliseconds(100));
-            Currnet_PCI.Release();
+            Currnet_PCI?.Release();
             RowImageSave.CompleteAdding();
             ResultImageSave.CompleteAdding();
+            ImageProcess_Task.CompleteAdding();
 
             CustomerSerialize.XMLSerialize<ProgramParameters>(programParameters);
         }
@@ -605,7 +602,7 @@ namespace Jet_System
         //Switch Current CogDisplay
         private void btnSwitch_Click(object sender, EventArgs e)
         {
-            RunningOnce_First(mDisplay1Row.Image as CogImage8Grey);
+            //RunningOnce_First(mDisplay1Row.Image as CogImage8Grey);
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -695,14 +692,18 @@ namespace Jet_System
         private void ProcessImage(object sender, ImageEventArgs e)
         {
             
+
+
             switch(e.Command)
             {
 
                 case Command.Grab:
-                    RunningOnce_First(e.CameraImage);
+                   // RunningOnce_First(e.CameraImage);
+                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy(),Program = programParameters.Current_Program ,RunTime = 1});
                     break;
                 case Command.Grab2:
-                    RunningOnce_Second(e.CameraImage);
+                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy(), Program = programParameters.Current_Program, RunTime = 2 });
+                    //RunningOnce_Second(e.CameraImage);
                     break;
                 default:
                     break;
@@ -829,7 +830,7 @@ namespace Jet_System
 
 
 
-        private void RunningOnce_First(CogImage8Grey _image)
+        private void RunningOnce_First(CogImage8Grey _image,int _program)
         {
             mDisplay1Row.Image = _image;
             mDisplay1RowShow.Image = _image;
@@ -842,10 +843,10 @@ namespace Jet_System
 
 
 
-            if (programParameters.Current_Program ==0)//RAF
+            if (_program == 0)//RAF
             {
 
-                //RowImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[3],image = mDisplay1Row.CreateContentBitmap( CogDisplayContentBitmapConstants.Custom)});
+               
 
                 RowImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[3], image = _image.ToBitmap() });
 
@@ -912,7 +913,7 @@ namespace Jet_System
                         txt_message.Text = result.Message;
                         Console.WriteLine(ss.Milliseconds.ToString());
                         txtTime.Text = ss.Milliseconds.ToString();
-                        //   Second_Trigger();
+                     
 
 
                        
@@ -939,7 +940,7 @@ namespace Jet_System
 
                 });
                            
-                    //Second_Trigger();
+                  
           
             }
             
@@ -993,6 +994,30 @@ namespace Jet_System
         }
 
             
+
+        private void ScanImageProcess()
+        {
+            Task.Factory.StartNew(()=> {
+
+                while(true)
+                {
+                    var temp = ImageProcess_Task.Take(cancel.Token);
+                    switch(temp.RunTime)
+                    {
+                        case 1:
+                            RunningOnce_First(temp.Image as CogImage8Grey,temp.Program);
+                            break;
+                        case 2:
+                            RunningOnce_Second(temp.Image as CogImage8Grey);
+                            break;
+                        default:
+                            break;
+                    }
+                   
+                }
+
+            });
+        }
 
 
         #endregion
@@ -1819,70 +1844,5 @@ namespace Jet_System
         
     }
 
-    class SavePath
-    {
-
-       
-       
-
-        public static string ImageRootPath { set; get; }
-        public static string Image1ResultOK { set { } get { return ImageRootPath + "/12PR_OK"; } }//12PR_OK
-        public static string Image1ResultNG { set { } get { return ImageRootPath+"/12PR_NG"; } }//12PR_NG
-
-        public static string Image1Row { set { } get { return ImageRootPath+"/12PR_ROW"; } }//12PR_ROW
-        public static string Image2ResultOK { set { } get { return ImageRootPath+"/8PR_OK"; } }//8PR_OK
-
-        public static string Image2ResultNG { set { } get { return ImageRootPath+"/8PR_NG"; } }//8PR_NG
-        public static string Image2Row { set { } get { return ImageRootPath+"/8PR_ROW"; } }//8PR_ROW
-        public static string FileResult { set; get; }
-
-
-
-        public static void RefreshImagePath()
-        {
-            
-        }
-        
-
-    }
-
-
-   
-
-
-    public class Result_8
-    {
-        public int Total { set; get; }
-
-        public int Pass { set; get; }
-
-        public int Fail { set; get; }
-    }
-    public class Result_12
-    {
-        public int Total { set; get; }
-
-        public int Pass { set; get; }
-
-        public int Fail { set; get; }
-    }
-    public class Result
-    {
-        public Result_8 PR8;
-        public Result_12 PR12;
-    }
-
-    public class ImageIndexAndImage
-    {
-        public string Path;
-        public Bitmap image;
-    }
-
-    public class ResultImageIndexAndImage
-    {
-        
-        public string Path;
-        public CogImage8Grey image;
-    }
 
 }

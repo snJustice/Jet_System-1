@@ -242,9 +242,12 @@
     <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="Utils\CustomerCSV\ICsvHelper.cs" />
     <Compile Include="Utils\HostPinger.cs" />
+    <Compile Include="Utils\ImageIndexAndImage.cs" />
+    <Compile Include="Utils\ImageProcess.cs" />
     <Compile Include="Utils\PCI.cs" />
     <Compile Include="Utils\ProgramConfig\ImageAndMeasureDataSaveRoot.cs" />
     <Compile Include="Utils\ProgramConfig\ProgramParameters.cs" />
+    <Compile Include="Utils\ProgramConfig\SavePath.cs" />
     <Compile Include="Utils\ROIExtension.cs" />
     <EmbeddedResource Include="CustomerUserControl\DataShowBase.resx">
       <DependentUpon>DataShowBase.cs</DependentUpon>
