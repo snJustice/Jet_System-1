@@ -309,7 +309,6 @@ namespace Jet_System
             this.btnCurrentImageRun.TabIndex = 7;
             this.btnCurrentImageRun.Text = "运行";
             this.btnCurrentImageRun.UseVisualStyleBackColor = false;
-            this.btnCurrentImageRun.Visible = false;
             this.btnCurrentImageRun.Click += new System.EventHandler(this.btnCurrentImageRun_Click);
             // 
             // tblMain
@@ -1027,7 +1026,6 @@ namespace Jet_System
             this.ra_Beam_Inner_L.TabStop = true;
             this.ra_Beam_Inner_L.Text = "Beam_Inner_L";
             this.ra_Beam_Inner_L.UseVisualStyleBackColor = true;
-            this.ra_Beam_Inner_L.CheckedChanged += ra_Beam_Touch_Window_L_L_CheckedChanged;
             // 
             // ra_Beam_Inner_R
             // 
@@ -1040,7 +1038,6 @@ namespace Jet_System
             this.ra_Beam_Inner_R.TabStop = true;
             this.ra_Beam_Inner_R.Text = "Beam_Inner_R";
             this.ra_Beam_Inner_R.UseVisualStyleBackColor = true;
-            this.ra_Beam_Inner_R.CheckedChanged += ra_Beam_Touch_Window_L_L_CheckedChanged;
             // 
             // ra_Beam_Height_L
             // 
@@ -1766,7 +1763,7 @@ namespace Jet_System
             this.tabPage8.Controls.Add(this.mDisplay2RowShow);
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(56, 612);
+            this.tabPage8.Size = new System.Drawing.Size(56, 734);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "2号原始图像";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -1784,7 +1781,7 @@ namespace Jet_System
             this.mDisplay2RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay2RowShow.Name = "mDisplay2RowShow";
             this.mDisplay2RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay2RowShow.OcxState")));
-            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 612);
+            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 734);
             this.mDisplay2RowShow.TabIndex = 5;
             // 
             // tabControl1
@@ -1830,7 +1827,7 @@ namespace Jet_System
             this.tabPage3.Controls.Add(this.mDisplay1RowShow);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1033, 612);
+            this.tabPage3.Size = new System.Drawing.Size(1033, 734);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "1号原始图像";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1848,7 +1845,7 @@ namespace Jet_System
             this.mDisplay1RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay1RowShow.Name = "mDisplay1RowShow";
             this.mDisplay1RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay1RowShow.OcxState")));
-            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 612);
+            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 734);
             this.mDisplay1RowShow.TabIndex = 6;
             // 
             // tabControl_Main_all

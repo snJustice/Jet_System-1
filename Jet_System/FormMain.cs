@@ -86,39 +86,13 @@ namespace Jet_System
         List<string> RAF_Configure_Path = new List<string>();
         List<string> DO_Configure_Path = new List<string>();
 
+        Dictionary<int, DataTable> CurrentSavedDatatable = new Dictionary<int, DataTable>();
 
         public FormMain()
         {
             InitializeComponent();
 
             chbxSaveImage.Checked = true;
-           
-            
-            /*
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Angle.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_Difference.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_L.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_R.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Cross_Shield_Tp.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Shield_Flatness.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Wafer_Thickness.csv");
-
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_Inner_L.csv");
-            RAF_Configure_Path.Add(@"Configure\12PR-RAF\Beam_Inner_R.csv");
-
-
-
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Angle.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_Difference.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_L.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_R.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Shield_Blade_Tp.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Shield_Flatness.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Shield_Plate_To_Tower.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_Inner_L.csv");
-            DO_Configure_Path.Add(@"Configure\8PR-DO\Beam_Inner_R.csv");
-            */
-
 
 
         }
@@ -168,6 +142,7 @@ namespace Jet_System
             ScanRowImage();
 
             ReadConfigure();
+            ScanImageProcess();
 
 
         }
@@ -215,7 +190,7 @@ namespace Jet_System
 
         private ProgramParameters ReadParameters()
         {
-            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/VPP_Config.txt");
+            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/Data.xml");
         }
 
         private void FormInitConnectCamera(string _cameraIP)
@@ -577,9 +552,10 @@ namespace Jet_System
         //当前图像再次运行
         private void btnCurrentImageRun_Click(object sender, EventArgs e)
         {
-            
+            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = 1,RunTime=1});
 
-            
+
+
         }
 
         //Trigger Once
@@ -897,7 +873,7 @@ namespace Jet_System
                 ss.Start();
                
                 Tool_SetInputs(_image, cogtool_DO);
-                Currnet_PCI.Clear124Light();
+                Currnet_PCI?.Clear124Light();
                 cogtool_DO.Subject.Run();
                 
                 var result = (CogRunStatus)cogtool_DO.Subject.RunStatus;
@@ -926,7 +902,7 @@ namespace Jet_System
                 }
 
                 this.PerformSafely(()=> {
-                    Currnet_PCI.Open4Light();
+                    Currnet_PCI?.Open4Light();
                     Second_Trigger();
 
                     ShowResultTable(ref cogtool_DO, true);
@@ -1304,104 +1280,70 @@ namespace Jet_System
             switch (_showTool.Name.Replace("cogtool_",""))
             {
                 case "RAF":
-                    
-                    
+
+
                     var temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_L_L.DataSource = null;
-                    dataGrid_Beam_Touch_Window_L_L.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref dataGrid_Beam_Touch_Window_L_L, temp,false, ref data_string);
+                    ModifyDataGridChild( ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);                  
+
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
                    
 
-                    
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_L_R.DataSource = null;
-                    dataGrid_Beam_Touch_Window_L_R.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref  dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string);
-
-               
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
-                    dataGrid_Beam_Tip_To_Window_L.DataSource = null;
-                    dataGrid_Beam_Tip_To_Window_L.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
+                   
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_R_L.DataSource = null;
-                    dataGrid_Beam_Touch_Window_R_L.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
+                   
 
-                  
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_R_R.DataSource = null;
-                    dataGrid_Beam_Touch_Window_R_R.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
+                   
 
-               
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
-                    dataGrid_Beam_Tip_To_Window_R.DataSource = null;
-                    dataGrid_Beam_Tip_To_Window_R.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK,ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string);
-
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
+                   
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
-                    dataGrid_Beam_Height_L.DataSource = null;
-                    dataGrid_Beam_Height_L.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_L, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp, false, ref data_string, ref is_allOK);
+                   
 
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
-                    dataGrid_Beam_Height_R.DataSource = null;
-                    dataGrid_Beam_Height_R.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_R, temp, true, ref data_string);
-
-
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp, false, ref data_string, ref is_allOK);
                     
+
+
+
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
-                    dataGrid_Beam_Inner_L.DataSource = null;
-                    dataGrid_Beam_Inner_L.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Inner_L, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp, false, ref data_string, ref is_allOK);
+                   
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
-                    dataGrid_Beam_Inner_R.DataSource = null;
-                    dataGrid_Beam_Inner_R.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Inner_R, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp, false, ref data_string, ref is_allOK);
+                   
 
                     temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
-                    dataGrid_Beam_Height_Difference.DataSource = null;
-                    dataGrid_Beam_Height_Difference.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_Difference, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp, false, ref data_string, ref is_allOK);
+                   
 
-             
                     temp = ((DataTable)_showTool.Subject.Outputs["Shield_Flatness"].Value).Copy();
-                    dataGrid_Shield_Flatness.DataSource = null;
-                    dataGrid_Shield_Flatness.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Shield_Flatness, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp, false, ref data_string, ref is_allOK);
 
-                
+
+
                     temp = ((DataTable)_showTool.Subject.Outputs["Cross_Shield_TP"].Value).Copy();
-                    dataGrid_Cross_Shield_TP.DataSource = null;
-                    dataGrid_Cross_Shield_TP.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Cross_Shield_TP, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp, false, ref data_string, ref is_allOK);
 
-                
+
                     temp = ((DataTable)_showTool.Subject.Outputs["Wafer_Thickness"].Value).Copy();
-                    dataGrid_Wafer_Thickness.DataSource = null;
-                    dataGrid_Wafer_Thickness.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Wafer_Thickness, temp, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp, false, ref data_string, ref is_allOK);
 
-                 
                     temp = ((DataTable)_showTool.Subject.Outputs["Shield_Cross_Angle"].Value).Copy();
-                    dataGrid_Shield_Cross_Angle.DataSource = null;
-                    dataGrid_Shield_Cross_Angle.DataSource = temp;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Shield_Cross_Angle, temp, false, ref data_string);
-
-
-                    
-
-
-
-
-
+                    ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, false, ref data_string, ref is_allOK);
 
 
                     if (is_allOK)
@@ -1411,7 +1353,7 @@ namespace Jet_System
                             programParameters.RAF_OK_NUM++;
                             programParameters.RAF_ALL_NUM++;
                         }
-                        //SaveImageAndShowResult(mDisplay1Result,mDisplay1Row, is_allOK,20);
+                 
 
                         lbl_RAF_OKNG.BackColor = Color.Green;
                         lbl_RAF_OKNG.Text = "OK";
@@ -1422,7 +1364,8 @@ namespace Jet_System
                         {
                             ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[1], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
 
-                            this.PerformSafely(() => {
+                            this.PerformSafely(() =>
+                            {
                                 lblStatus.Text = "检测成功，产品OK";
                             });
 
@@ -1437,19 +1380,16 @@ namespace Jet_System
                             programParameters.RAF_NG_NUM++;
                             programParameters.RAF_ALL_NUM++;
                         }
-                        //SaveImageAndShowResult(mDisplay1Result, mDisplay1Row, is_allOK, 20);
-
                         lbl_RAF_OKNG.BackColor = Color.Red;
                         lbl_RAF_OKNG.Text = "NG";
-
-
                         Label_max.BackColor = Color.Red;
                         Label_max.Text = "NG";
                         if (_save_data)
                         {
-                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[2], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display)  as Bitmap});
+                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[2], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
 
-                            this.PerformSafely(() => {
+                            this.PerformSafely(() =>
+                            {
                                 lblStatus.Text = "检测成功，产品NG";
                             });
 
@@ -1457,134 +1397,86 @@ namespace Jet_System
                     }
                     ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
 
-                    if(_save_data)
+                    if (_save_data)
                     {
                         SaveMeasureData_RAF(data_string, Current_File_Name[0]);
                     }
-                    
 
-                    
 
-                    
+
+
+
 
                     break;
                 case "DO":
+                   
 
                     var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_L_L.DataSource = null;
-                    dataGrid_Beam_Touch_Window_L_L.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Touch_Window_L_L, temp2, false, ref data_string);
-
-
-                    temp2 =  ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_L_R.DataSource = null;
-                    dataGrid_Beam_Touch_Window_L_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Touch_Window_L_R, temp2, false, ref data_string);
-
-                    
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
-                    dataGrid_Beam_Tip_To_Window_L.DataSource = null;
-                    dataGrid_Beam_Tip_To_Window_L.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Tip_To_Window_L, temp2, false, ref data_string);
-
-                   
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_R_L.DataSource = null;
-                    dataGrid_Beam_Touch_Window_R_L.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Touch_Window_R_L, temp2, false, ref data_string);
-
-                
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
-                    dataGrid_Beam_Touch_Window_R_R.DataSource = null;
-                    dataGrid_Beam_Touch_Window_R_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Touch_Window_R_R, temp2, false, ref data_string);
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
-                    dataGrid_Beam_Tip_To_Window_R.DataSource = null;
-                    dataGrid_Beam_Tip_To_Window_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Tip_To_Window_R, temp2, false, ref data_string);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
-                    dataGrid_Beam_Height_L.DataSource = null;
-                    dataGrid_Beam_Height_L.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_L, temp2, true, ref data_string);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
-                    dataGrid_Beam_Height_R.DataSource = null;
-                    dataGrid_Beam_Height_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_R, temp2, true, ref data_string);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
-                    dataGrid_Beam_Inner_R.DataSource = null;
-                    dataGrid_Beam_Inner_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Inner_R, temp2, true, ref data_string);
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
-                    dataGrid_Beam_Inner_L.DataSource = null;
-                    dataGrid_Beam_Inner_L.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Inner_L, temp2, true, ref data_string);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
-                    dataGrid_Beam_Inner_R.DataSource = null;
-                    dataGrid_Beam_Inner_R.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Inner_R, temp2, true, ref data_string);
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
-                    dataGrid_Beam_Height_Difference.DataSource = null;
-                    dataGrid_Beam_Height_Difference.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Beam_Height_Difference, temp2, true, ref data_string);
-                    /*
-                    var dasdad = temp2.Copy();
-                    
-                    for (int k = 0; k < 8; k++)
-                    {
-                        var rows = dasdad.NewRow();
-                        rows["序号"] = 96 + k;
-                        rows["上限"] = 0.1;
-                        rows["下限"] = -0.1;
-                        rows["偏移"] = 0;
-                        rows["比例系数"] = 0.008;
-                        rows["结果"] = 0;
-                        rows["单项NG"] = 0;
-                        rows["指示"] = true;
-
-                        dasdad.Rows.Add(rows);
-
-                    }
-                    _showTool.Subject.Outputs["Shield_Blade_TP"].Value = dasdad.Copy(); ;
-                    */
-                    
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_Flatness"].Value).Copy();
-                    dataGrid_Shield_Flatness.DataSource = null;
-                    dataGrid_Shield_Flatness.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Shield_Flatness, temp2, true, ref data_string);
-
-                
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_To_Tower"].Value).Copy();
-                    dataGrid_Cross_Shield_TP.DataSource = null;
-                    dataGrid_Cross_Shield_TP.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Cross_Shield_TP, temp2, true, ref data_string);
-
-
-                    
-
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Blade_TP"].Value).Copy();
-                    dataGrid_Wafer_Thickness.DataSource = null;
-                    dataGrid_Wafer_Thickness.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Wafer_Thickness, temp2, true, ref data_string);
+                    ModifyDataGridChild( ref  dataGrid_Beam_Touch_Window_L_L, temp2, false,ref data_string,ref is_allOK);
                   
 
 
+                    temp2 =  ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp2, false, ref data_string, ref is_allOK);
+                 
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp2, false, ref data_string, ref is_allOK);
+                 
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp2, false, ref data_string, ref is_allOK);
+                 
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp2, false, ref data_string, ref is_allOK);
+                 
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp2, false, ref data_string, ref is_allOK);
+                  
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp2, false, ref data_string, ref is_allOK);
+              
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp2, false, ref data_string, ref is_allOK);
+                
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp2, false, ref data_string, ref is_allOK);
+                
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp2, false, ref data_string, ref is_allOK);
+                
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp2, false, ref data_string, ref is_allOK);
+                   
+                    
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_Flatness"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp2, false, ref data_string, ref is_allOK);
+
+
+                
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_To_Tower"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Blade_TP"].Value).Copy();
+                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp2, false, ref data_string, ref is_allOK);
+
+
                     temp2 = ((DataTable)_showTool.Subject.Outputs["Angle"].Value).Copy();
-                    dataGrid_Shield_Cross_Angle.DataSource = null;
-                    dataGrid_Shield_Cross_Angle.DataSource = temp2;
-                    ShowResultTableChild(ref is_allOK, ref dataGrid_Shield_Cross_Angle, temp2, true, ref data_string);
+                    ModifyDataGridChild(  ref dataGrid_Shield_Cross_Angle, temp2, false, ref data_string, ref is_allOK);
+
                    
                     DO_Result = data_string;
 
@@ -1655,6 +1547,7 @@ namespace Jet_System
             }
         }
 
+       
 
         private bool ShowResultTableChild(ref bool _all_result ,ref DataGridView _grid, DataTable _table,bool isNeedSave,ref string dataS)
         {
@@ -1705,6 +1598,221 @@ namespace Jet_System
             return isok;
         }
 
+
+
+        private void ModifyDataGridChild(ref DataGridView _modifyGrid,DataTable temp, bool _save_data,ref string _data_string,ref bool _allok)
+        {
+           
+            _modifyGrid.DataSource = null;
+            _modifyGrid.DataSource = temp;
+            ShowResultTableChild(ref _allok, ref _modifyGrid, temp, _save_data, ref _data_string);
+            
+        }
+
+        private void ShowRecord(int index,ProductTables _tables,string _do)
+        {
+            bool is_allOK = true;
+            string data_string = "";
+            switch (_do)
+            {
+                case "RAF":
+
+
+                    var temp = _tables.Beam_Touch_Window_L_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Touch_Window_L_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Tip_To_Window_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Touch_Window_R_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Touch_Window_R_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Tip_To_Window_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Height_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp, false, ref data_string, ref is_allOK);
+
+
+
+                    temp = _tables.Beam_Height_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp, false, ref data_string, ref is_allOK);
+
+
+
+
+
+                    temp = _tables.Beam_Inner_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Inner_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Beam_Height_Difference.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Shield_Plate_Flatness.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp, false, ref data_string, ref is_allOK);
+
+
+
+                    temp = _tables.Shield_Plate_To_Tower.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp, false, ref data_string, ref is_allOK);
+
+
+                    temp = _tables.Shield_Blade_TP.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp, false, ref data_string, ref is_allOK);
+
+                    temp = _tables.Angle.Copy();
+                    ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, false, ref data_string, ref is_allOK);
+
+
+                    if (is_allOK)
+                    {
+                        
+
+
+                        lbl_RAF_OKNG.BackColor = Color.Green;
+                        lbl_RAF_OKNG.Text = "OK";
+
+                        Label_max.BackColor = Color.Green;
+                        Label_max.Text = "OK";
+                        this.PerformSafely(() =>
+                        {
+                            lblStatus.Text = "检测成功，产品OK";
+                        });
+
+                    }
+                    else
+                    {
+                       
+                        lbl_RAF_OKNG.BackColor = Color.Red;
+                        lbl_RAF_OKNG.Text = "NG";
+                        Label_max.BackColor = Color.Red;
+                        Label_max.Text = "NG";
+                        this.PerformSafely(() =>
+                        {
+                            lblStatus.Text = "检测成功，产品NG";
+                        });
+                    }
+                   
+
+
+
+
+
+
+                    break;
+                case "DO":
+
+                    var temp2=_tables.Beam_Touch_Window_L_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_L, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Touch_Window_L_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Tip_To_Window_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Touch_Window_R_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Touch_Window_R_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Beam_Tip_To_Window_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Beam_Height_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Beam_Height_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Inner_L.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Beam_Inner_R.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Beam_Height_Difference.Copy();
+                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Shield_Plate_Flatness.Copy();                    
+                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp2, false, ref data_string, ref is_allOK);
+
+
+                    temp2 = _tables.Shield_Plate_To_Tower.Copy();                  
+                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Shield_Blade_TP.Copy();                  
+                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp2, false, ref data_string, ref is_allOK);
+
+                    temp2 = _tables.Angle.Copy();                   
+                    ModifyDataGridChild(  ref dataGrid_Shield_Cross_Angle, temp2, false, ref data_string, ref is_allOK);
+
+
+                    DO_Result = data_string;
+
+                    First_ok = is_allOK;
+
+
+                    if (is_allOK)
+                    {
+                        
+
+                        lbl_DO_OKNG.BackColor = Color.Green;
+                        lbl_DO_OKNG.Text = "OK";
+
+                        Label_max.BackColor = Color.Green;
+                        Label_max.Text = "OK";
+                        this.PerformSafely(() => {
+                            lblStatus.Text = "检测成功，产品OK";
+                        });
+                    }
+                    else
+                    {
+                       
+
+                        lbl_DO_OKNG.BackColor = Color.Red;
+                        lbl_DO_OKNG.Text = "NG";
+
+                        Label_max.BackColor = Color.Red;
+                        Label_max.Text = "NG";
+                        this.PerformSafely(() => {
+                            lblStatus.Text = "检测成功，产品NG";
+                        });
+
+                    }
+                  
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         private void ClickTab()
         {

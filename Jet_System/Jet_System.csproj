@@ -244,7 +244,9 @@
     <Compile Include="Utils\HostPinger.cs" />
     <Compile Include="Utils\ImageIndexAndImage.cs" />
     <Compile Include="Utils\ImageProcess.cs" />
+    <Compile Include="Utils\MyQuene\CustomerQuene.cs" />
     <Compile Include="Utils\PCI.cs" />
+    <Compile Include="Utils\ProductTables.cs" />
     <Compile Include="Utils\ProgramConfig\ImageAndMeasureDataSaveRoot.cs" />
     <Compile Include="Utils\ProgramConfig\ProgramParameters.cs" />
     <Compile Include="Utils\ProgramConfig\SavePath.cs" />
