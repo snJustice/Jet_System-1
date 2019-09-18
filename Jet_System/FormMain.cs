@@ -215,7 +215,7 @@ namespace Jet_System
 
         private ProgramParameters ReadParameters()
         {
-            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/VPP_Config.txt");
+            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/Data.xml");
         }
 
         private void FormInitConnectCamera(string _cameraIP)
@@ -292,7 +292,7 @@ namespace Jet_System
         {
             if(!Directory.Exists(SavePath.FileResult + "/RAF"))
             {
-                MessageBox.Show(SavePath.FileResult + "/ RAF   路劲不存在，请增加 ");
+                MessageBox.Show(SavePath.FileResult + "/ RAF   路径不存在，请增加 ");
             }
             string file = SavePath.FileResult + "/RAF/" + DateTime.Now.ToString("yyyy-MM-dd")+".csv";
 
@@ -313,7 +313,7 @@ namespace Jet_System
 
             if (!Directory.Exists(SavePath.FileResult + "/DO"))
             {
-                MessageBox.Show(SavePath.FileResult + "/ DO   路劲不存在，请增加 ");
+                MessageBox.Show(SavePath.FileResult + "/ DO   路径不存在，请增加 ");
             }
             file = SavePath.FileResult + "/DO/" + DateTime.Now.ToString("yyyy-MM-dd") + ".csv";
 
