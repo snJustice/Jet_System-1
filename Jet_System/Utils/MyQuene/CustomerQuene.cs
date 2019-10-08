@@ -10,9 +10,11 @@ namespace Jet_System.Utils.MyQuene
     public class CustomerQuene
     {
         ConcurrentQueue<ProductTables> SavedTables;
-        public CustomerQuene()
+        private readonly int Count;
+        public CustomerQuene(int count)
         {
             SavedTables = new ConcurrentQueue<ProductTables>();
+            Count = count;
         }
 
         public ProductTables this[int index]
@@ -29,7 +31,7 @@ namespace Jet_System.Utils.MyQuene
         {
             SavedTables.Enqueue(_product);
 
-            while(SavedTables.Count>6)
+            while(SavedTables.Count> Count)
             {
                 ProductTables trush_product;
                 while (!SavedTables.TryDequeue(out trush_product)) ;
@@ -37,6 +39,11 @@ namespace Jet_System.Utils.MyQuene
                 trush_product.Dispose();
             }
 
+        }
+
+        public void Clear()
+        {
+            SavedTables = new ConcurrentQueue<ProductTables>();
         }
 
     }

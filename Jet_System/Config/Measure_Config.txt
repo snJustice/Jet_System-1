@@ -7,6 +7,7 @@ Configure\12PR-RAF\Shield_Flatness.csv
 Configure\12PR-RAF\Wafer_Thickness.csv
 Configure\12PR-RAF\Beam_Inner_L.csv
 Configure\12PR-RAF\Beam_Inner_R.csv
+Configure\12PR-RAF\TiePian.csv
 Configure\8PR-DO\Angle.csv
 Configure\8PR-DO\Beam_Difference.csv
 Configure\8PR-DO\Beam_L.csv

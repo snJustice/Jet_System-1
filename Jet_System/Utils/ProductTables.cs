@@ -25,10 +25,12 @@ namespace Jet_System.Utils
         public DataTable Beam_Height_Difference { set; get; }
         public DataTable Beam_Height_L { set; get; }
         public DataTable Beam_Height_R { set; get; }
-        public DataTable Shield_Plate_Flatness { set; get; }
-        public DataTable Shield_Plate_To_Tower { set; get; }
-        public DataTable Shield_Blade_TP { set; get; }
-        public DataTable Angle { set; get; }
+        public DataTable Shield_Flatness { set; get; }
+        public DataTable Cross_Shield_TP { set; get; }
+        public DataTable Wafer_Thickness { set; get; }
+        public DataTable Shield_Cross_Angle { set; get; }
+
+        public DataTable TiePian { get; set; }
 
         public void Dispose()
         {
@@ -44,10 +46,11 @@ namespace Jet_System.Utils
             Beam_Height_R.Dispose();
             Beam_Inner_L.Dispose();
             Beam_Inner_R.Dispose();
-            Shield_Plate_Flatness.Dispose();
-            Shield_Plate_To_Tower.Dispose();
-            Shield_Blade_TP.Dispose();
-            Angle.Dispose();
+            Shield_Flatness.Dispose();
+            Cross_Shield_TP.Dispose();
+            Wafer_Thickness.Dispose();
+            Shield_Cross_Angle.Dispose();
+            TiePian.Dispose();
         }
     }
 }

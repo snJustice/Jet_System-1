@@ -1,4 +1,6 @@
 ﻿
+
+
 /*
 Configure\RAF 
 ？？？？？？？？？？？？？bieba
@@ -31,6 +33,24 @@ Shield_Plate_To_Tower.csv
 */
 
 
+/*
+ * 
+ * 
+ * RAF                       DO                  DataGerd
+ * 
+ Wafer_Thickness   ,   Shield_Blade_TP  ,        dataGrid_Wafer_Thickness
+ 
+ Cross_Shield_TP,      Shield_Plate_To_Tower,    dataGrid_Cross_Shield_TP
+ 
+
+
+ Shield_Flatness,      Shield_Plate_Flatness,    dataGrid_Shield_Flatness
+
+
+ Shield_Cross_Angle,   Angle,                    dataGrid_Shield_Cross_Angle
+ */
+
+
 
 
 using Cognex.VisionPro;
@@ -40,8 +60,10 @@ using Cognex.VisionPro.ToolBlock;
 using JC.Camera;
 using Jet_System.Utils;
 using Jet_System.Utils.CustomerCSV;
+using Jet_System.Utils.MyQuene;
 using Jet_System.Utils.ProgramConfig;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -86,13 +108,14 @@ namespace Jet_System
         List<string> RAF_Configure_Path = new List<string>();
         List<string> DO_Configure_Path = new List<string>();
 
-        Dictionary<int, DataTable> CurrentSavedDatatable = new Dictionary<int, DataTable>();
+        CustomerQuene MeasureDataQuene = new CustomerQuene(6);
 
         public FormMain()
         {
             InitializeComponent();
 
             chbxSaveImage.Checked = true;
+            DataGridBindEvent();
 
 
         }
@@ -114,24 +137,28 @@ namespace Jet_System
             {
                 ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
                 ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);              
-                FormInitConnectCamera(programParameters.IP);////////////////////////////////////////////////////相机ip
+              //  FormInitConnectCamera(programParameters.IP);////////////////////////////////////////////////////相机ip
             }
             else
             {
                 MessageBox.Show("未配置相机，请先转到相机配置");
             }
-            CheckPCI();
-            ScanIOSignals();
+          //  CheckPCI();
+          //  ScanIOSignals();
             ScanTime();
             if (programParameters.Current_Program == 0)
             {
-                ShowResultTable(ref cogtool_RAF,false);
+                var tab = GetProductTable(cogtool_RAF);
+                ShowRecord(0, tab,"RAF",false);
+             
                 mDisplay1Row.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
                 ShowRAF_User_Message();
             }
             else
-            {              
-                ShowResultTable(ref cogtool_DO,false);
+            {
+                var tab = GetProductTable(cogtool_DO);
+                ShowRecord(0, tab, "DO",false);
+              
                 mDisplay1Row.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
                 ShowDO_User_Message();
             }
@@ -162,16 +189,16 @@ namespace Jet_System
 
             var fil = System.IO.File.ReadAllLines(measure_path);
 
-            if (fil.Count() != 18)
+            if (fil.Count() != 19)
             {
                 MessageBox.Show(measure_path + "  不存在");
             }
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 10; i++)
             {
                 RAF_Configure_Path.Add(fil[i]);
             }
 
-            for (int i = 9; i < 18; i++)
+            for (int i = 10; i < 19; i++)
             {
                 DO_Configure_Path.Add(fil[i]);
             }
@@ -409,20 +436,22 @@ namespace Jet_System
         {
             Currnet_Camera?.Close();
             ScanPCI?.Dispose();
-            cancel.Cancel(); 
+           // ImageProcess_Task.CompleteAdding();
+          //  cancel.Cancel(); 
 
             Task.Delay(TimeSpan.FromMilliseconds(100));
             Currnet_PCI?.Release();
             RowImageSave.CompleteAdding();
             ResultImageSave.CompleteAdding();
-            ImageProcess_Task.CompleteAdding();
+            
 
             CustomerSerialize.XMLSerialize<ProgramParameters>(programParameters);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)// Program switch
         {
-            if(first_change)
+            MeasureDataQuene.Clear();
+            if (first_change)
             {
                 first_change = false;
                 return;
@@ -437,7 +466,10 @@ namespace Jet_System
                 Tool_SetInputs(cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_DO);
                 SaveToolBlock(cogtool_DO, filenames[1]);      
                 mDisplay1Row.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
-                ShowResultTable(ref cogtool_RAF,false);
+
+                var tab = GetProductTable(cogtool_RAF);
+                ShowRecord(0,tab,"RAF",false);
+               
                 ReadConfigure();
             }
             if (cbxProgramSelect.SelectedIndex == 1)
@@ -449,7 +481,10 @@ namespace Jet_System
 
                 SaveToolBlock(cogtool_RAF, filenames[0]);
                 mDisplay1Row.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
-                ShowResultTable(ref cogtool_DO, false);
+
+                var tab = GetProductTable(cogtool_DO);
+                ShowRecord(0, tab, "DO", false);
+               
 
                 ReadConfigure();
 
@@ -458,6 +493,9 @@ namespace Jet_System
 
             MessageBox.Show("切换完成");
         }
+
+
+
 
         #endregion
 
@@ -552,7 +590,7 @@ namespace Jet_System
         //当前图像再次运行
         private void btnCurrentImageRun_Click(object sender, EventArgs e)
         {
-            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = 1,RunTime=1});
+            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = 0,RunTime=1});
 
 
 
@@ -761,7 +799,7 @@ namespace Jet_System
 
                     cogtool_RAF.Subject.Inputs["Beam_Inner_L"].Value = ((DataTable)dataGrid_Beam_Inner_L.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Beam_Inner_R"].Value = ((DataTable)dataGrid_Beam_Inner_R.DataSource).Copy();
-
+                    cogtool_RAF.Subject.Inputs["TiePian"].Value = ((DataTable)dataGrid_TiePian.DataSource).Copy();
 
                     break;
                 case "DO":
@@ -803,7 +841,124 @@ namespace Jet_System
                     break;
             }
         }
+        private ProductTables GetProductTable(Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 _showTool)
+        {
+            ProductTables product = new ProductTables();
+            switch (_showTool.Name.Replace("cogtool_", ""))
+            {
+                case "RAF":
+                    var temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
+                    product.Beam_Touch_Window_L_L = temp;
 
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
+                    product.Beam_Touch_Window_L_R = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
+                    product.Beam_Tip_To_Window_L = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
+                    product.Beam_Touch_Window_R_L = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
+                    product.Beam_Touch_Window_R_R = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
+                    product.Beam_Tip_To_Window_R = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
+                    product.Beam_Height_L = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
+                    product.Beam_Height_R = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
+                    product.Beam_Inner_L = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
+                    product.Beam_Inner_R = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
+                    product.Beam_Height_Difference = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Shield_Flatness"].Value).Copy();
+                    product.Shield_Flatness = temp;
+
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Cross_Shield_TP"].Value).Copy();
+                    product.Cross_Shield_TP = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Wafer_Thickness"].Value).Copy();
+                    product.Wafer_Thickness = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["Shield_Cross_Angle"].Value).Copy();
+                    product.Shield_Cross_Angle = temp;
+
+                    temp = ((DataTable)_showTool.Subject.Outputs["TiePian"].Value).Copy();
+                    product.TiePian = temp;
+
+                    break;
+                case "DO":
+
+                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
+                    product.Beam_Touch_Window_L_L = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
+                    product.Beam_Touch_Window_L_R = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
+                    product.Beam_Tip_To_Window_L = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
+                    product.Beam_Touch_Window_R_L = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
+                    product.Beam_Touch_Window_R_R = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
+                    product.Beam_Tip_To_Window_R = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
+                    product.Beam_Height_L = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
+                    product.Beam_Height_R = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
+                    product.Beam_Inner_L = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
+                    product.Beam_Inner_R = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
+                    product.Beam_Height_Difference = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_Flatness"].Value).Copy();
+                    product.Shield_Flatness = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_To_Tower"].Value).Copy();
+                    product.Cross_Shield_TP = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Blade_TP"].Value).Copy();
+                    product.Wafer_Thickness = temp2;
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Angle"].Value).Copy();
+                    product.Shield_Cross_Angle = temp2;
+
+                    break;
+                default:
+                    break;
+
+
+            }
+            return product;
+        }
 
 
         private void RunningOnce_First(CogImage8Grey _image,int _program)
@@ -814,6 +969,10 @@ namespace Jet_System
 
             this.PerformSafely(()=> {
                 lblStatus.Text = "开始检测....";
+                lblStatusShow.Text = "开始检测....";
+
+                lblStatus.ForeColor = Color.Black;
+                lblStatusShow.ForeColor = Color.Black;
             });
             
 
@@ -829,7 +988,8 @@ namespace Jet_System
                 Stopwatch ss = new Stopwatch();
                 ss.Start();
                 Tool_SetInputs(_image, cogtool_RAF);
-                Currnet_PCI.Clear12Light();
+                
+                Currnet_PCI?.Clear12Light();
                 cogtool_RAF.Subject.Run();
 
                 var result = (CogRunStatus)cogtool_RAF.Subject.RunStatus;
@@ -846,18 +1006,25 @@ namespace Jet_System
 
                         this.PerformSafely(() => {
                             lblStatus.Text = "检测失败，请再试一次";
+                            lblStatusShow.Text = "检测失败，请再试一次";
+                            lblStatus.ForeColor = Color.Red;
+                            lblStatusShow.ForeColor = Color.Red;
                         });
 
                     });
                     return;
                 }
                 this.PerformSafely(()=> {
-                    ShowResultTable(ref cogtool_RAF, true);
+                    var tab=GetProductTable(cogtool_RAF);
+                    ShowRecord(0, tab, "RAF",true);
+                    MeasureDataQuene.Add(tab);
+
+
                 });
                 
                 ss.Stop();             
                 this.PerformSafely(() => {
-                    //ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[5], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) });
+                    
                     Console.WriteLine(ss.ElapsedMilliseconds.ToString());
                     txtTime.Text = ss.ElapsedMilliseconds.ToString();
                 });
@@ -895,6 +1062,9 @@ namespace Jet_System
                        
                         this.PerformSafely(() => {
                             lblStatus.Text = "检测失败，请再试一次";
+                            lblStatusShow.Text = "检测失败，请再试一次";
+                            lblStatus.ForeColor = Color.Red;
+                            lblStatusShow.ForeColor = Color.Red;
                         });
 
                     });
@@ -903,9 +1073,13 @@ namespace Jet_System
 
                 this.PerformSafely(()=> {
                     Currnet_PCI?.Open4Light();
-                    Second_Trigger();
+                  //  Second_Trigger();
 
-                    ShowResultTable(ref cogtool_DO, true);
+                    var tab = GetProductTable(cogtool_DO);
+                    MeasureDataQuene.Add(tab);
+                    ShowRecord(0, tab, "DO",true);
+
+                    //ShowResultTable(ref cogtool_DO, true);
                 });
                 
                 ss.Stop();
@@ -994,6 +1168,15 @@ namespace Jet_System
 
             });
         }
+
+        private void ShowHistoryMeasureData(int index)
+        {
+            var table = MeasureDataQuene[index];
+            string name = programParameters.Current_Program == 0 ? "RAF" : "DO";
+            ShowRecord(0, table, name,false);
+        }
+
+        
 
 
         #endregion
@@ -1103,7 +1286,7 @@ namespace Jet_System
         {
             if (programParameters.Current_Program == 1)
             {
-                Currnet_PCI.Open4Light();
+                Currnet_PCI?.Open4Light();
                 
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure2;
                 Currnet_Camera.GainCur = (long)programParameters.DO_Gain2;
@@ -1160,6 +1343,8 @@ namespace Jet_System
                 temp = CustomerCsvHelper.ReadParameters(RAF_Configure_Path[8]);
                 UpdateConfigure(temp, ref dataGrid_Beam_Inner_R);
 
+                temp = CustomerCsvHelper.ReadParameters(RAF_Configure_Path[9]);
+                UpdateConfigure(temp, ref dataGrid_TiePian);
 
 
                 /*
@@ -1273,279 +1458,7 @@ namespace Jet_System
         #endregion
 
         #region ResultShow  ,Save MeasureData
-        private void ShowResultTable( ref Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 _showTool,bool _save_data)
-        {
-            bool is_allOK = true;
-            string data_string="";
-            switch (_showTool.Name.Replace("cogtool_",""))
-            {
-                case "RAF":
-
-
-                    var temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
-                    ModifyDataGridChild( ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);                  
-
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp, false, ref data_string, ref is_allOK);
-                   
-
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp, false, ref data_string, ref is_allOK);
-                    
-
-
-
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp, false, ref data_string, ref is_allOK);
-                   
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Shield_Flatness"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp, false, ref data_string, ref is_allOK);
-
-
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Cross_Shield_TP"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Wafer_Thickness"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp, false, ref data_string, ref is_allOK);
-
-                    temp = ((DataTable)_showTool.Subject.Outputs["Shield_Cross_Angle"].Value).Copy();
-                    ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, false, ref data_string, ref is_allOK);
-
-
-                    if (is_allOK)
-                    {
-                        if (_save_data)
-                        {
-                            programParameters.RAF_OK_NUM++;
-                            programParameters.RAF_ALL_NUM++;
-                        }
-                 
-
-                        lbl_RAF_OKNG.BackColor = Color.Green;
-                        lbl_RAF_OKNG.Text = "OK";
-
-                        Label_max.BackColor = Color.Green;
-                        Label_max.Text = "OK";
-                        if (_save_data)
-                        {
-                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[1], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
-
-                            this.PerformSafely(() =>
-                            {
-                                lblStatus.Text = "检测成功，产品OK";
-                            });
-
-                        }
-                    }
-                    else
-                    {
-                        if (_save_data)
-                        {
-
-
-                            programParameters.RAF_NG_NUM++;
-                            programParameters.RAF_ALL_NUM++;
-                        }
-                        lbl_RAF_OKNG.BackColor = Color.Red;
-                        lbl_RAF_OKNG.Text = "NG";
-                        Label_max.BackColor = Color.Red;
-                        Label_max.Text = "NG";
-                        if (_save_data)
-                        {
-                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[2], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
-
-                            this.PerformSafely(() =>
-                            {
-                                lblStatus.Text = "检测成功，产品NG";
-                            });
-
-                        }
-                    }
-                    ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
-
-                    if (_save_data)
-                    {
-                        SaveMeasureData_RAF(data_string, Current_File_Name[0]);
-                    }
-
-
-
-
-
-
-                    break;
-                case "DO":
-                   
-
-                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
-                    ModifyDataGridChild( ref  dataGrid_Beam_Touch_Window_L_L, temp2, false,ref data_string,ref is_allOK);
-                  
-
-
-                    temp2 =  ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp2, false, ref data_string, ref is_allOK);
-                 
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp2, false, ref data_string, ref is_allOK);
-                 
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp2, false, ref data_string, ref is_allOK);
-                 
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_R_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp2, false, ref data_string, ref is_allOK);
-                 
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Tip_To_Window_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp2, false, ref data_string, ref is_allOK);
-                  
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp2, false, ref data_string, ref is_allOK);
-              
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp2, false, ref data_string, ref is_allOK);
-                
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_L"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp2, false, ref data_string, ref is_allOK);
-                
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Inner_R"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp2, false, ref data_string, ref is_allOK);
-                
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Height_Difference"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp2, false, ref data_string, ref is_allOK);
-                   
-                    
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_Flatness"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp2, false, ref data_string, ref is_allOK);
-
-
-                
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Plate_To_Tower"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Blade_TP"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = ((DataTable)_showTool.Subject.Outputs["Angle"].Value).Copy();
-                    ModifyDataGridChild(  ref dataGrid_Shield_Cross_Angle, temp2, false, ref data_string, ref is_allOK);
-
-                   
-                    DO_Result = data_string;
-
-                    First_ok = is_allOK;
-
-
-                    if (is_allOK)
-                    {
-                        if (_save_data)
-                        {
-                            programParameters.DO_OK_NUM++;
-                            programParameters.DO_ALL_NUM++;
-                        }
-                        //SaveImageAndShowResult(mDisplay1Result, mDisplay1Row, is_allOK, 20);
-
-                        lbl_DO_OKNG.BackColor = Color.Green;
-                        lbl_DO_OKNG.Text = "OK";
-
-                        Label_max.BackColor = Color.Green;
-                        Label_max.Text = "OK";
-                        if (_save_data)
-                        {
-                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[4], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display)  as Bitmap});
-
-                            this.PerformSafely(() => {
-                                lblStatus.Text = "检测成功，产品OK";
-                            });
-
-                        }
-                    }
-                    else
-                    {
-                        if (_save_data)
-                        {
-
-
-                            programParameters.DO_NG_NUM++;
-                            programParameters.DO_ALL_NUM++;
-                        }
-
-                        lbl_DO_OKNG.BackColor = Color.Red;
-                        lbl_DO_OKNG.Text = "NG";
-
-                        Label_max.BackColor = Color.Red;
-                        Label_max.Text = "NG";
-                        if(_save_data)
-                        {
-                            var images = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display);
-                            ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[5], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap});
-                            this.PerformSafely(() => {
-                                lblStatus.Text = "检测成功，产品NG";
-                            });
-                        }
-                        
-                    }
-                    ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);
-
-                    if(_save_data)
-                    {
-                        SaveMeasureData_DO(DO_Result, Current_File_Name[7]);
-                    }
-                    
-
-                    break;
-                
-                default:
-                    break;
-            }
-        }
+       
 
        
 
@@ -1553,21 +1466,17 @@ namespace Jet_System
         {
             bool isok = true;
            
-            //_grid.DefaultCellStyle.BackColor = Color.White;
-            foreach (DataGridViewColumn item in _grid.Columns)
-            {
-                item.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                item.ReadOnly = true;
-              //  item.DefaultCellStyle.BackColor = Color.White;
-            }
             var data_table = _table.AsEnumerable();
             if (isNeedSave)
             {
                 var sss  = data_table.Select(x=>x.Field<string>("结果"));
+             
+                
                 foreach (var item in sss)
                 {
                     dataS += item + ";";
                 }
+              
             }
 
             
@@ -1578,11 +1487,7 @@ namespace Jet_System
             isok = ng.Count() > 0 ? false : true;
 
             
-
-            foreach (var item in ng)
-            {
-                _grid.Rows[Convert.ToInt32(item.Field<string>("序号"))-1].DefaultCellStyle.BackColor = Color.Red;//////////////////////////////////////////////////////////////////////
-            }
+           
             var temp1 = this.FindControls<RadioButton>(_grid.Name.Replace("dataGrid", "ra")).FirstOrDefault();
 
             if (isok)
@@ -1609,209 +1514,198 @@ namespace Jet_System
             
         }
 
-        private void ShowRecord(int index,ProductTables _tables,string _do)
+        private void ShowRecord(int index,ProductTables _tables,string _do,bool _is_save)
         {
             bool is_allOK = true;
             string data_string = "";
+
+            var temp = _tables.Beam_Touch_Window_L_L.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Touch_Window_L_R.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Tip_To_Window_L.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Touch_Window_R_L.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Touch_Window_R_R.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Tip_To_Window_R.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Height_L.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Height_L, temp, true, ref data_string, ref is_allOK);
+
+
+
+            temp = _tables.Beam_Height_R.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Height_R, temp, true, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Inner_L.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Inner_L, temp, true, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Inner_R.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Inner_R, temp, true, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Beam_Height_Difference.Copy();
+            ModifyDataGridChild(ref dataGrid_Beam_Height_Difference, temp, true, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Shield_Flatness.Copy();
+            ModifyDataGridChild(ref dataGrid_Shield_Flatness, temp, true, ref data_string, ref is_allOK);
+
+
+
+            temp = _tables.Cross_Shield_TP.Copy();
+            ModifyDataGridChild(ref dataGrid_Cross_Shield_TP, temp, true, ref data_string, ref is_allOK);
+
+
+            temp = _tables.Wafer_Thickness.Copy();
+            ModifyDataGridChild(ref dataGrid_Wafer_Thickness, temp, true, ref data_string, ref is_allOK);
+
+            temp = _tables.Shield_Cross_Angle.Copy();
+            ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, true, ref data_string, ref is_allOK);
+
+
             switch (_do)
             {
                 case "RAF":
-
-
-                    var temp = _tables.Beam_Touch_Window_L_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Touch_Window_L_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Tip_To_Window_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Touch_Window_R_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Touch_Window_R_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Tip_To_Window_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Height_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp, false, ref data_string, ref is_allOK);
-
-
-
-                    temp = _tables.Beam_Height_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp, false, ref data_string, ref is_allOK);
-
-
-
-
-
-                    temp = _tables.Beam_Inner_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Inner_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Beam_Height_Difference.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Shield_Plate_Flatness.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp, false, ref data_string, ref is_allOK);
-
-
-
-                    temp = _tables.Shield_Plate_To_Tower.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp, false, ref data_string, ref is_allOK);
-
-
-                    temp = _tables.Shield_Blade_TP.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp, false, ref data_string, ref is_allOK);
-
-                    temp = _tables.Angle.Copy();
-                    ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, false, ref data_string, ref is_allOK);
-
-
-                    if (is_allOK)
-                    {
-                        
-
-
-                        lbl_RAF_OKNG.BackColor = Color.Green;
-                        lbl_RAF_OKNG.Text = "OK";
-
-                        Label_max.BackColor = Color.Green;
-                        Label_max.Text = "OK";
-                        this.PerformSafely(() =>
-                        {
-                            lblStatus.Text = "检测成功，产品OK";
-                        });
-
-                    }
-                    else
-                    {
-                       
-                        lbl_RAF_OKNG.BackColor = Color.Red;
-                        lbl_RAF_OKNG.Text = "NG";
-                        Label_max.BackColor = Color.Red;
-                        Label_max.Text = "NG";
-                        this.PerformSafely(() =>
-                        {
-                            lblStatus.Text = "检测成功，产品NG";
-                        });
-                    }
-                   
-
-
-
-
-
+                    temp = _tables.TiePian.Copy();
+                    ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK);
+                    data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
+                    CheckRAFResult(is_allOK, _is_save, data_string);
 
                     break;
                 case "DO":
-
-                    var temp2=_tables.Beam_Touch_Window_L_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_L, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Touch_Window_L_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_L_R, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Tip_To_Window_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_L, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Touch_Window_R_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_L, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Touch_Window_R_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Touch_Window_R_R, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Beam_Tip_To_Window_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Tip_To_Window_R, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Beam_Height_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_L, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Beam_Height_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_R, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Inner_L.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_L, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Beam_Inner_R.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Inner_R, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Beam_Height_Difference.Copy();
-                    ModifyDataGridChild(  ref dataGrid_Beam_Height_Difference, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Shield_Plate_Flatness.Copy();                    
-                    ModifyDataGridChild(  ref dataGrid_Shield_Flatness, temp2, false, ref data_string, ref is_allOK);
-
-
-                    temp2 = _tables.Shield_Plate_To_Tower.Copy();                  
-                    ModifyDataGridChild(  ref dataGrid_Cross_Shield_TP, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Shield_Blade_TP.Copy();                  
-                    ModifyDataGridChild(  ref dataGrid_Wafer_Thickness, temp2, false, ref data_string, ref is_allOK);
-
-                    temp2 = _tables.Angle.Copy();                   
-                    ModifyDataGridChild(  ref dataGrid_Shield_Cross_Angle, temp2, false, ref data_string, ref is_allOK);
-
-
-                    DO_Result = data_string;
-
-                    First_ok = is_allOK;
-
-
-                    if (is_allOK)
-                    {
-                        
-
-                        lbl_DO_OKNG.BackColor = Color.Green;
-                        lbl_DO_OKNG.Text = "OK";
-
-                        Label_max.BackColor = Color.Green;
-                        Label_max.Text = "OK";
-                        this.PerformSafely(() => {
-                            lblStatus.Text = "检测成功，产品OK";
-                        });
-                    }
-                    else
-                    {
-                       
-
-                        lbl_DO_OKNG.BackColor = Color.Red;
-                        lbl_DO_OKNG.Text = "NG";
-
-                        Label_max.BackColor = Color.Red;
-                        Label_max.Text = "NG";
-                        this.PerformSafely(() => {
-                            lblStatus.Text = "检测成功，产品NG";
-                        });
-
-                    }
-                  
+                    data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
+                    CheckDOResult(is_allOK, _is_save, data_string);
 
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private void CheckRAFResult(bool is_allOK,bool _save_data,string data_string)
+        {
+            if (is_allOK)
+            {
+
+                lbl_RAF_OKNG.BackColor = Color.Green;
+                lbl_RAF_OKNG.Text = "OK";
+                Label_max.BackColor = Color.Green;
+                Label_max.Text = "OK";
+                this.PerformSafely(() =>{lblStatus.Text = "检测成功，产品OK";
+                    lblStatusShow.Text = "检测成功，产品OK";
+                    lblStatus.ForeColor = Color.Green;
+                    lblStatusShow.ForeColor = Color.Green;
+                });
+                
+                if (_save_data)
+                {
+
+                    programParameters.RAF_OK_NUM++;
+                    programParameters.RAF_ALL_NUM++;
+                    ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[1], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
+
+                }
+            }
+            else
+            {
+                lbl_RAF_OKNG.BackColor = Color.Red;
+                lbl_RAF_OKNG.Text = "NG";
+                Label_max.BackColor = Color.Red;
+                Label_max.Text = "NG";
+                this.PerformSafely(() =>{lblStatus.Text = "检测成功，产品NG";
+                    lblStatusShow.Text = "检测成功，产品NG";
+                    lblStatus.ForeColor = Color.Red;
+                    lblStatusShow.ForeColor = Color.Red;
+                });
+              
+                if (_save_data)
+                {
+                    programParameters.RAF_NG_NUM++;
+                    programParameters.RAF_ALL_NUM++;
+                    ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[2], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
+
+                }
+            }
+            if (_save_data)
+            {
+               
+                SaveMeasureData_RAF(data_string, Current_File_Name[0]);
+            }
+            ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
+        }
+
+        private void CheckDOResult(bool is_allOK,bool _save_data,string data_string)
+        {          
+            if (is_allOK)
+            {
+                lbl_DO_OKNG.BackColor = Color.Green;
+                lbl_DO_OKNG.Text = "OK";
+                Label_max.BackColor = Color.Green;
+                Label_max.Text = "OK";
+                this.PerformSafely(() => {lblStatus.Text = "检测成功，产品OK";
+                    lblStatusShow.Text = "检测成功，产品OK";
+                    lblStatus.ForeColor = Color.Green;
+                    lblStatusShow.ForeColor = Color.Green;
+                });
+
+                if (_save_data)
+                {
+                    programParameters.DO_OK_NUM++;
+                    programParameters.DO_ALL_NUM++;
+                    ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[4], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
+                }
+            }
+            else
+            {
+
+                lbl_DO_OKNG.BackColor = Color.Red;
+                lbl_DO_OKNG.Text = "NG";
+                Label_max.BackColor = Color.Red;
+                Label_max.Text = "NG";
+                this.PerformSafely(() => {lblStatus.Text = "检测成功，产品NG";
+                    lblStatusShow.Text = "检测成功，产品NG";
+                    lblStatus.ForeColor = Color.Red;
+                    lblStatusShow.ForeColor = Color.Red;
+                });
+                if (_save_data)
+                {
+                    programParameters.DO_NG_NUM++;
+                    programParameters.DO_ALL_NUM++;                   
+                    ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[5], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
+                    
+                }
+            }
+            if(_save_data)
+            {
+                
+                SaveMeasureData_DO(data_string, Current_File_Name[7]);
+            }
+
+            ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);
+
+
+
+
+
+
         }
 
         private void ClickTab()
@@ -1856,7 +1750,7 @@ namespace Jet_System
             if (!File.Exists(_filename))
             {
                 CustomerCsvHelper.CreateFile(_filename);
-                string head = "";
+                string head = "Number;";
                 List<string> dataname = new List<string>();
                 dataname.Add("Beam_L");
                 dataname.Add("Beam_R");
@@ -1866,6 +1760,7 @@ namespace Jet_System
                 dataname.Add("Shield");
                 dataname.Add("Cross");
                 dataname.Add("Wafer");
+                dataname.Add("Angle");
                 foreach (var item in dataname)
                 {
                     for (int i = 1; i <= 96; i++)
@@ -1873,6 +1768,12 @@ namespace Jet_System
                         head += item + "_" + i.ToString() + ";";
                     }
                 }
+                for (int i = 1; i <= 14; i++)
+                {
+                    head += "TiePian" + "_" + i.ToString() + ";";
+                }
+
+
                 CustomerCsvHelper.WriteHeader(_filename, head);
             }
             CustomerCsvHelper.WriteOneLine(_filename, _measureData);
@@ -1885,7 +1786,7 @@ namespace Jet_System
             if (!File.Exists(_filename))
             {
                 CustomerCsvHelper.CreateFile(_filename);
-                string head = "";
+                string head = "Number;";
                 List<string> dataname = new List<string>();
                 if (programParameters.Current_Program ==0)
                 {
@@ -1911,6 +1812,7 @@ namespace Jet_System
 
                 else
                 {
+                    
                     dataname.Add("Beam_L");
                     dataname.Add("Beam_R");
                     dataname.Add("Beam_Inner_L");
@@ -1936,6 +1838,7 @@ namespace Jet_System
                     }
                    
                 }
+                
                 CustomerCsvHelper.WriteHeader(_filename, head);
 
 
@@ -1947,9 +1850,52 @@ namespace Jet_System
 
 
 
+
         #endregion
 
+        #region  DataGridView Paint Event 
+
+        private void DataGridBindEvent()
+        {
+
+            var finds = this.FindControls<DataGridView>("");
+          
+            foreach (var item in finds)
+            {
+                if (item is DataGridView && item.Name.Contains("dataGrid"))
+                {
+                    item.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader;
+                    item.RowPrePaint += dataGridView1_RowPrePaint;
+                    item.AllowUserToAddRows = false;
+                    item.ReadOnly = true;
+
+                   
+
+
+                }
+            }
         
+           
+
+
+
+        }
+        private void dataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var temp = (DataGridView)sender;
+           
+            string isok = temp.Rows[e.RowIndex].Cells[7].Value.ToString();
+
+            if (isok =="False" )
+            {
+                temp.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+            }
+            
+        }
+
+        #endregion
+
+       
     }
 
 
