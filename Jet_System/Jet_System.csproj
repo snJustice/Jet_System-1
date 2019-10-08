@@ -244,7 +244,9 @@
     <Compile Include="Utils\HostPinger.cs" />
     <Compile Include="Utils\ImageIndexAndImage.cs" />
     <Compile Include="Utils\ImageProcess.cs" />
+    <Compile Include="Utils\MyQuene\CustomerQuene.cs" />
     <Compile Include="Utils\PCI.cs" />
+    <Compile Include="Utils\ProductTables.cs" />
     <Compile Include="Utils\ProgramConfig\ImageAndMeasureDataSaveRoot.cs" />
     <Compile Include="Utils\ProgramConfig\ProgramParameters.cs" />
     <Compile Include="Utils\ProgramConfig\SavePath.cs" />
@@ -318,6 +320,7 @@
     <Content Include="Config\ImageAndMeasureDataSaveRoot.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="更新说明.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
