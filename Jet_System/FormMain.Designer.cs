@@ -101,7 +101,10 @@ namespace Jet_System
             this.dataGrid_Beam_Inner_L = new System.Windows.Forms.DataGridView();
             this.tab_Beam_Inner_R = new System.Windows.Forms.TabPage();
             this.dataGrid_Beam_Inner_R = new System.Windows.Forms.DataGridView();
+            this.tab_TiePian = new System.Windows.Forms.TabPage();
+            this.dataGrid_TiePian = new System.Windows.Forms.DataGridView();
             this.palSelectMeasure = new System.Windows.Forms.Panel();
+            this.ra_TiePian = new System.Windows.Forms.RadioButton();
             this.ra_Beam_Inner_L = new System.Windows.Forms.RadioButton();
             this.ra_Beam_Inner_R = new System.Windows.Forms.RadioButton();
             this.ra_Beam_Height_L = new System.Windows.Forms.RadioButton();
@@ -142,6 +145,7 @@ namespace Jet_System
             this.label1 = new System.Windows.Forms.Label();
             this.tblImageAndControl = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblStatusShow = new System.Windows.Forms.Label();
             this.btnRunOnce_D0_T = new System.Windows.Forms.Button();
             this.txtTime = new System.Windows.Forms.TextBox();
             this.btnSwitch = new System.Windows.Forms.Button();
@@ -233,6 +237,8 @@ namespace Jet_System
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Beam_Inner_L)).BeginInit();
             this.tab_Beam_Inner_R.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Beam_Inner_R)).BeginInit();
+            this.tab_TiePian.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_TiePian)).BeginInit();
             this.palSelectMeasure.SuspendLayout();
             this.groupBoxTongji.SuspendLayout();
             this.tblImageAndControl.SuspendLayout();
@@ -309,7 +315,6 @@ namespace Jet_System
             this.btnCurrentImageRun.TabIndex = 7;
             this.btnCurrentImageRun.Text = "运行";
             this.btnCurrentImageRun.UseVisualStyleBackColor = false;
-            this.btnCurrentImageRun.Visible = false;
             this.btnCurrentImageRun.Click += new System.EventHandler(this.btnCurrentImageRun_Click);
             // 
             // tblMain
@@ -387,6 +392,7 @@ namespace Jet_System
             this.tabControl_Main.Controls.Add(this.tab_Beam_Height_R);
             this.tabControl_Main.Controls.Add(this.tab_Beam_Inner_L);
             this.tabControl_Main.Controls.Add(this.tab_Beam_Inner_R);
+            this.tabControl_Main.Controls.Add(this.tab_TiePian);
             this.tabControl_Main.Font = new System.Drawing.Font("宋体", 9F);
             this.tabControl_Main.Location = new System.Drawing.Point(178, 3);
             this.tabControl_Main.Name = "tabControl_Main";
@@ -776,6 +782,7 @@ namespace Jet_System
             // 
             // dataGrid_Cross_Shield_TP
             // 
+            this.dataGrid_Cross_Shield_TP.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dataGrid_Cross_Shield_TP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGrid_Cross_Shield_TP.Location = new System.Drawing.Point(3, 3);
             this.dataGrid_Cross_Shield_TP.Name = "dataGrid_Cross_Shield_TP";
@@ -993,8 +1000,28 @@ namespace Jet_System
             this.dataGrid_Beam_Inner_R.Size = new System.Drawing.Size(568, 446);
             this.dataGrid_Beam_Inner_R.TabIndex = 1;
             // 
+            // tab_TiePian
+            // 
+            this.tab_TiePian.Controls.Add(this.dataGrid_TiePian);
+            this.tab_TiePian.Location = new System.Drawing.Point(4, 22);
+            this.tab_TiePian.Name = "tab_TiePian";
+            this.tab_TiePian.Size = new System.Drawing.Size(788, 474);
+            this.tab_TiePian.TabIndex = 21;
+            this.tab_TiePian.Text = "TiePian";
+            this.tab_TiePian.UseVisualStyleBackColor = true;
+            // 
+            // dataGrid_TiePian
+            // 
+            this.dataGrid_TiePian.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid_TiePian.Location = new System.Drawing.Point(4, 3);
+            this.dataGrid_TiePian.Name = "dataGrid_TiePian";
+            this.dataGrid_TiePian.RowTemplate.Height = 23;
+            this.dataGrid_TiePian.Size = new System.Drawing.Size(568, 446);
+            this.dataGrid_TiePian.TabIndex = 2;
+            // 
             // palSelectMeasure
             // 
+            this.palSelectMeasure.Controls.Add(this.ra_TiePian);
             this.palSelectMeasure.Controls.Add(this.ra_Beam_Inner_L);
             this.palSelectMeasure.Controls.Add(this.ra_Beam_Inner_R);
             this.palSelectMeasure.Controls.Add(this.ra_Beam_Height_L);
@@ -1016,6 +1043,19 @@ namespace Jet_System
             this.palSelectMeasure.Size = new System.Drawing.Size(169, 597);
             this.palSelectMeasure.TabIndex = 2;
             // 
+            // ra_TiePian
+            // 
+            this.ra_TiePian.AutoSize = true;
+            this.ra_TiePian.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ra_TiePian.Location = new System.Drawing.Point(0, 579);
+            this.ra_TiePian.Name = "ra_TiePian";
+            this.ra_TiePian.Size = new System.Drawing.Size(74, 18);
+            this.ra_TiePian.TabIndex = 24;
+            this.ra_TiePian.TabStop = true;
+            this.ra_TiePian.Text = "TiePian";
+            this.ra_TiePian.UseVisualStyleBackColor = true;
+            this.ra_TiePian.CheckedChanged += new System.EventHandler(this.ra_Beam_Touch_Window_L_L_CheckedChanged);
+            // 
             // ra_Beam_Inner_L
             // 
             this.ra_Beam_Inner_L.AutoSize = true;
@@ -1027,7 +1067,7 @@ namespace Jet_System
             this.ra_Beam_Inner_L.TabStop = true;
             this.ra_Beam_Inner_L.Text = "Beam_Inner_L";
             this.ra_Beam_Inner_L.UseVisualStyleBackColor = true;
-            this.ra_Beam_Inner_L.CheckedChanged += ra_Beam_Touch_Window_L_L_CheckedChanged;
+            this.ra_Beam_Inner_L.CheckedChanged += new System.EventHandler(this.ra_Beam_Touch_Window_L_L_CheckedChanged);
             // 
             // ra_Beam_Inner_R
             // 
@@ -1040,7 +1080,7 @@ namespace Jet_System
             this.ra_Beam_Inner_R.TabStop = true;
             this.ra_Beam_Inner_R.Text = "Beam_Inner_R";
             this.ra_Beam_Inner_R.UseVisualStyleBackColor = true;
-            this.ra_Beam_Inner_R.CheckedChanged += ra_Beam_Touch_Window_L_L_CheckedChanged;
+            this.ra_Beam_Inner_R.CheckedChanged += new System.EventHandler(this.ra_Beam_Touch_Window_L_L_CheckedChanged);
             // 
             // ra_Beam_Height_L
             // 
@@ -1489,6 +1529,7 @@ namespace Jet_System
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblStatusShow);
             this.groupBox2.Controls.Add(this.btnRunOnce_D0_T);
             this.groupBox2.Controls.Add(this.txtTime);
             this.groupBox2.Controls.Add(this.btnSwitch);
@@ -1502,11 +1543,21 @@ namespace Jet_System
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行";
             // 
+            // lblStatusShow
+            // 
+            this.lblStatusShow.AutoSize = true;
+            this.lblStatusShow.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblStatusShow.Location = new System.Drawing.Point(39, 94);
+            this.lblStatusShow.Name = "lblStatusShow";
+            this.lblStatusShow.Size = new System.Drawing.Size(130, 24);
+            this.lblStatusShow.TabIndex = 16;
+            this.lblStatusShow.Text = "未开始检测";
+            // 
             // btnRunOnce_D0_T
             // 
             this.btnRunOnce_D0_T.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.btnRunOnce_D0_T.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRunOnce_D0_T.Location = new System.Drawing.Point(43, 81);
+            this.btnRunOnce_D0_T.Location = new System.Drawing.Point(89, 188);
             this.btnRunOnce_D0_T.Name = "btnRunOnce_D0_T";
             this.btnRunOnce_D0_T.Size = new System.Drawing.Size(143, 44);
             this.btnRunOnce_D0_T.TabIndex = 10;
@@ -1766,7 +1817,7 @@ namespace Jet_System
             this.tabPage8.Controls.Add(this.mDisplay2RowShow);
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(56, 612);
+            this.tabPage8.Size = new System.Drawing.Size(56, 734);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "2号原始图像";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -1784,7 +1835,7 @@ namespace Jet_System
             this.mDisplay2RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay2RowShow.Name = "mDisplay2RowShow";
             this.mDisplay2RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay2RowShow.OcxState")));
-            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 612);
+            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 734);
             this.mDisplay2RowShow.TabIndex = 5;
             // 
             // tabControl1
@@ -1830,7 +1881,7 @@ namespace Jet_System
             this.tabPage3.Controls.Add(this.mDisplay1RowShow);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1033, 612);
+            this.tabPage3.Size = new System.Drawing.Size(1033, 734);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "1号原始图像";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1848,7 +1899,7 @@ namespace Jet_System
             this.mDisplay1RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay1RowShow.Name = "mDisplay1RowShow";
             this.mDisplay1RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay1RowShow.OcxState")));
-            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 612);
+            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 734);
             this.mDisplay1RowShow.TabIndex = 6;
             // 
             // tabControl_Main_all
@@ -2052,6 +2103,8 @@ namespace Jet_System
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Beam_Inner_L)).EndInit();
             this.tab_Beam_Inner_R.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Beam_Inner_R)).EndInit();
+            this.tab_TiePian.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_TiePian)).EndInit();
             this.palSelectMeasure.ResumeLayout(false);
             this.palSelectMeasure.PerformLayout();
             this.groupBoxTongji.ResumeLayout(false);
@@ -2249,6 +2302,10 @@ namespace Jet_System
         private System.Windows.Forms.DataGridView dataGrid_Beam_Inner_L;
         private System.Windows.Forms.TabPage tab_Beam_Inner_R;
         private System.Windows.Forms.DataGridView dataGrid_Beam_Inner_R;
+        private System.Windows.Forms.Label lblStatusShow;
+        private System.Windows.Forms.TabPage tab_TiePian;
+        private System.Windows.Forms.DataGridView dataGrid_TiePian;
+        private System.Windows.Forms.RadioButton ra_TiePian;
     }
 }
 
