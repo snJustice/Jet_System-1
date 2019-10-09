@@ -30,15 +30,17 @@ namespace Jet_System.Utils.MyQuene
         public void Add(ProductTables _product)
         {
             SavedTables.Enqueue(_product);
+            
 
-            while(SavedTables.Count> Count)
+            while (SavedTables.Count> Count)
             {
                 ProductTables trush_product;
                 while (!SavedTables.TryDequeue(out trush_product)) ;
-                SavedTables.TryDequeue(out trush_product);
+                
                 trush_product.Dispose();
+                
             }
-
+            Console.WriteLine(SavedTables.Count);
         }
 
         public void Clear()

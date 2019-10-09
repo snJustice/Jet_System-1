@@ -137,14 +137,14 @@ namespace Jet_System
             {
                 ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
                 ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);              
-              //  FormInitConnectCamera(programParameters.IP);////////////////////////////////////////////////////相机ip
+                FormInitConnectCamera(programParameters.IP);////////////////////////////////////////////////////相机ip
             }
             else
             {
                 MessageBox.Show("未配置相机，请先转到相机配置");
             }
-          //  CheckPCI();
-          //  ScanIOSignals();
+            CheckPCI();
+            ScanIOSignals();
             ScanTime();
             if (programParameters.Current_Program == 0)
             {
@@ -208,8 +208,11 @@ namespace Jet_System
         {
             filenames = System.IO.File.ReadAllLines(@"Config\VPP_Config.txt");
 
-            cogtool_RAF.Subject = CogSerializer.LoadObjectFromFile(filenames[0]) as CogToolBlock;
-            cogtool_DO.Subject = CogSerializer.LoadObjectFromFile(filenames[1]) as CogToolBlock;
+            var raf = CogSerializer.LoadObjectFromFile(filenames[0]) as CogToolBlock;
+            var dodd = CogSerializer.LoadObjectFromFile(filenames[1]) as CogToolBlock;
+            cogtool_RAF.Subject = raf;
+            cogtool_DO.Subject = dodd;
+
             cogtool_RAF.Subject.Ran += cogtool_RAF_Ran;
             cogtool_DO.Subject.Ran += cogtool_DO_Ran;
         }
@@ -555,7 +558,7 @@ namespace Jet_System
 
                 
 
-                Currnet_Camera.ImageEvent += ProcessImage;
+              //  Currnet_Camera.ImageEvent += ProcessImage;
 
 
             }
@@ -590,7 +593,7 @@ namespace Jet_System
         //当前图像再次运行
         private void btnCurrentImageRun_Click(object sender, EventArgs e)
         {
-            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = 0,RunTime=1});
+            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = programParameters.Current_Program,RunTime=1});
 
 
 
@@ -1018,6 +1021,7 @@ namespace Jet_System
                     var tab=GetProductTable(cogtool_RAF);
                     ShowRecord(0, tab, "RAF",true);
                     MeasureDataQuene.Add(tab);
+                    
 
 
                 });
