@@ -9,6 +9,11 @@ namespace Jet_System.Utils.MyQuene
 {
     public class CustomerQuene
     {
+
+
+        public int CurrentCount {
+            get { return SavedTables.ToList().Count(); }
+        }
         ConcurrentQueue<ProductTables> SavedTables;
         private readonly int Count;
         public CustomerQuene(int count)

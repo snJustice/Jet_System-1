@@ -116,7 +116,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MvCameraControl.Net">
-      <HintPath>..\..\..\soft\hiksion\MVS\Development\DotNet\AnyCpu\MvCameraControl.Net.dll</HintPath>
+      <HintPath>D:\Program Files\MVS\Development\DotNet\MvCameraControl.Net.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.10\lib\net45\NLog.dll</HintPath>
@@ -178,6 +178,7 @@
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -238,6 +239,13 @@
     <Compile Include="Utils\ProgramConfig\ProgramParameters.cs" />
     <Compile Include="Utils\ProgramConfig\SavePath.cs" />
     <Compile Include="Utils\ROIExtension.cs" />
+    <Compile Include="Utils\WaveData.cs" />
+    <Compile Include="Wave Pattern.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wave Pattern.Designer.cs">
+      <DependentUpon>Wave Pattern.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CustomerUserControl\DataShowBase.resx">
       <DependentUpon>DataShowBase.cs</DependentUpon>
     </EmbeddedResource>
@@ -259,6 +267,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Wave Pattern.resx">
+      <DependentUpon>Wave Pattern.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -308,6 +319,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="更新说明.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

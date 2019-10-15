@@ -52,12 +52,11 @@ namespace Jet_System.Utils
         {
             
             m_dev = DASK.Register_Card(PCI_name, 0);
-           // DASK.DIO_SetDualInterrupt
-         //  DASK.DIO_INT1_EventMessage
+     
             if (m_dev < 0)
             {
                 MessageBox.Show("Register_Card error!");
-              //  Application.Exit();
+           
                 System.Environment.Exit(0);
             }
         }

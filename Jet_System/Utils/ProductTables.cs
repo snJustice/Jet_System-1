@@ -13,7 +13,7 @@ namespace Jet_System.Utils
 
         
 
-        public Cognex.VisionPro.CogImage8Grey Image;
+        public Cognex.VisionPro.ICogRecord Image;
         public DataTable Beam_Touch_Window_R_L { set; get; }
         public DataTable Beam_Touch_Window_R_R { set; get; }
         public DataTable Beam_Tip_To_Window_R { set; get; }
