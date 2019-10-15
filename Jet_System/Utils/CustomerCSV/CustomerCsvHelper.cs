@@ -74,15 +74,15 @@ namespace Jet_System.Utils.CustomerCSV
         public static IEnumerable<ParametersConfigure> ReadParameters(string _filename)
         {
             var reader = new StreamReader(_filename);
-            
-              //  reader.ReadLine();
-                using (var csv = new CsvReader(reader))
-                {
-                  //  csv.Configuration.HasHeaderRecord = false;
-                    var records = csv.GetRecords<ParametersConfigure>().ToList();
-                    return records;
-                }
-            
+
+            //  reader.ReadLine();
+            using (var csv = new CsvReader(reader))
+            {
+                //  csv.Configuration.HasHeaderRecord = false;
+                var records = csv.GetRecords<ParametersConfigure>().ToList();
+                return records;
+            }
+
         }
     }
 }

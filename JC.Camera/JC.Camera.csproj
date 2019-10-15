@@ -46,7 +46,7 @@
       <HintPath>..\..\..\soft\vision\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Core.dll</HintPath>
     </Reference>
     <Reference Include="MvCameraControl.Net">
-      <HintPath>..\..\..\soft\hiksion\MVS\Development\DotNet\AnyCpu\MvCameraControl.Net.dll</HintPath>
+      <HintPath>D:\Program Files\MVS\Development\DotNet\MvCameraControl.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
