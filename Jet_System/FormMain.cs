@@ -11,7 +11,7 @@ Configure\RAF
  Beam_Difference.csv
  Beam_L.csv
  Beam_R.csv
- Cross_Shield_Tp.csv
+ Cross_Shield_extp.csv
  Shield_Flatness.csv
  Wafer_Thickness.csv
  */
@@ -79,6 +79,7 @@ using System.Windows.Forms;
 
 namespace Jet_System
 {
+    
     public partial class FormMain : Form
     {
         string[] filenames;//vpp root
@@ -105,31 +106,41 @@ namespace Jet_System
         IDisposable ScanPCI;
         PCI7230 Currnet_PCI;
 
-        List<string> RAF_Configure_Path = new List<string>();
-        List<string> DO_Configure_Path = new List<string>();
+        List<string> RAF_Configure_Path = new List<string>();//存放RAF配置
+        List<string> DO_Configure_Path = new List<string>();//存放DO配置
 
         CustomerQuene MeasureDataQuene = new CustomerQuene(6);
 
+        List<WaveData> Wavedata_Do = new List<WaveData>();
+        List<WaveData> Wavedata_Raf = new List<WaveData>();
+        WaveData WaveData;
+
+        Wave_Pattern wavepatten = new Wave_Pattern();
+
+        string waveName = null;
         public FormMain()
         {
             InitializeComponent();
 
             chbxSaveImage.Checked = true;
-            DataGridBindEvent();
+            DataGridBindEvent();//找到显示DataTable的控件
+            
+            //并将每个控件显示datatable包含datagrid名称的控件绑定rowprepaint事件和自适应表格大小
 
 
         }
 
         #region FormInit
-        private void Init()
+        private void Init()//初始化
         {
-            SetImageAndMeasureDataPath();
-            Read_Measure_Path();            
-            Read_Vpp_Path();
+            SetImageAndMeasureDataPath();//读取存放再xml文件的根文件名，用来存放公差数据和图片，下次需要更换保存路径就不要反复设置了；
+            Read_Measure_Path();//读取公差数据。。如果读取的文件名条数不等于19说明路径错误。判断完将前十条目录 放进raf配置后9条do配置          
+            Read_Vpp_Path();//读取vpro文件，载入文件显示再界面上。并且绑定cogtool_raf_ran使之运行完后将inputs图片显示在界面上，创建一个lastrecord显示ng信息。。两张图都自适应大小
+
             ClickTab();
 
-            SetCurrentFileName();
-            CheckImageAndCsvSavePath();
+            SetCurrentFileName();//设定文件名
+            CheckImageAndCsvSavePath();//检查字典中有没有设定好的文件名，没有就创一个
                        
             programParameters = ReadParameters();
 
@@ -143,20 +154,30 @@ namespace Jet_System
             {
                 MessageBox.Show("未配置相机，请先转到相机配置");
             }
-            CheckPCI();
-            ScanIOSignals();
+            //CheckPCI();
+            //ScanIOSignals();
             ScanTime();
             if (programParameters.Current_Program == 0)
             {
-                var tab = GetProductTable(cogtool_RAF);
-                ShowRecord(0, tab,"RAF",false);
+                var tab = GetProductTable(cogtool_RAF);//tab存放生成的datatable的各项数据
+                if (chbxWave.Checked)
+                {
+                    WaveDisplay(tab, ref WaveData);
+                 
+                }
+                ShowRecord(0, tab,"RAF",false);//这个index不知道干嘛的的。。tab：输入的表。""raf:"raf/do" false:是否保存
              
                 mDisplay1Row.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
-                ShowRAF_User_Message();
+                ShowRAF_User_Message();//tab和ratiobutton text显示成raf的各项数据
             }
             else
             {
                 var tab = GetProductTable(cogtool_DO);
+                if (chbxWave.Checked)
+                {
+                    WaveDisplay(tab, ref WaveData);
+                 
+                }
                 ShowRecord(0, tab, "DO",false);
               
                 mDisplay1Row.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
@@ -165,15 +186,25 @@ namespace Jet_System
 
             cbxProgramSelect.SelectedIndex = programParameters.Current_Program;
             
-            ScanResultImage();
-            ScanRowImage();
+            ScanResultImage();//开一个新线程用来保存结果图片
+            ScanRowImage();//保存原始图
 
-            ReadConfigure();
-            ScanImageProcess();
+            ReadConfigure();//从csv文件中读取配置
+            ScanImageProcess();//开始检测
+
 
 
         }
 
+
+        private void CbxHistoryIndexAdd()
+        {
+            for (int i = 1; i <= programParameters.MeasureDeep; i++)
+            {
+                cbxHistoryData.Items.Add(i);
+            }
+            
+        }
 
         private void SetImageAndMeasureDataPath()
         {
@@ -203,7 +234,10 @@ namespace Jet_System
                 DO_Configure_Path.Add(fil[i]);
             }
         }
-
+        private ProgramParameters ReadParameters()
+        {
+            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/Data.xml");
+        }
         private void Read_Vpp_Path()
         {
             filenames = System.IO.File.ReadAllLines(@"Config\VPP_Config.txt");
@@ -218,10 +252,7 @@ namespace Jet_System
         }
        
 
-        private ProgramParameters ReadParameters()
-        {
-            return CustomerSerialize.XmlDeserialize<ProgramParameters>(@"Config/Data.xml");
-        }
+     
 
         private void FormInitConnectCamera(string _cameraIP)
         {
@@ -365,7 +396,7 @@ namespace Jet_System
                         }
                         item.image.Save(item.Path + "/"+DateTime.Now.ToString("hh-mm-ss-ff")+".bmp");
                         
-                    }
+                    }  
 
                     Task.Delay(TimeSpan.FromSeconds(200));
                 }
@@ -428,11 +459,13 @@ namespace Jet_System
 
         #region Form Event
 
-
+        public Action<List<WaveData>,int,int,string> Sendmsg;
         private void FormMain_Load(object sender, EventArgs e)
         {
             Init();
-           
+            BtnWave.Enabled = false;
+      
+
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -519,7 +552,11 @@ namespace Jet_System
             }
         }
 
-
+        /// <summary>
+        /// ////////////////////////////////////////////////////////////////////////
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabControl_Main_SelectedIndexChanged(object sender, EventArgs e)
         {
             var temp = (TabControl)sender;
@@ -899,6 +936,11 @@ namespace Jet_System
                     temp = ((DataTable)_showTool.Subject.Outputs["TiePian"].Value).Copy();
                     product.TiePian = temp;
 
+
+                    mDisplay1Result.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
+                    var ImageRecord1 = cogtool_DO.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
+                    product.Image = ImageRecord1;
+
                     break;
                 case "DO":
 
@@ -954,6 +996,11 @@ namespace Jet_System
                     temp2 = ((DataTable)_showTool.Subject.Outputs["Angle"].Value).Copy();
                     product.Shield_Cross_Angle = temp2;
 
+                    mDisplay1Result.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
+                    var ImageRecord2 = cogtool_DO.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
+                    product.Image = ImageRecord2;
+
+
                     break;
                 default:
                     break;
@@ -963,7 +1010,7 @@ namespace Jet_System
             return product;
         }
 
-
+        public delegate void delegatea(List<WaveData> wd, int indexx, int Count, string name);
         private void RunningOnce_First(CogImage8Grey _image,int _program)
         {
             mDisplay1Row.Image = _image;
@@ -1012,6 +1059,8 @@ namespace Jet_System
                             lblStatusShow.Text = "检测失败，请再试一次";
                             lblStatus.ForeColor = Color.Red;
                             lblStatusShow.ForeColor = Color.Red;
+
+                            PCI_Fail_Signal();
                         });
 
                     });
@@ -1019,6 +1068,23 @@ namespace Jet_System
                 }
                 this.PerformSafely(()=> {
                     var tab=GetProductTable(cogtool_RAF);
+                    if (chbxWave.Checked)
+                    {
+
+                        WaveDisplay(tab, ref WaveData);
+                        Wavedata_Raf.Add(WaveData);
+
+                        int count = Wavedata_Raf.Count * (Wavedata_Raf[0].Beam_Height_L.Count());//meishayong
+
+                        //wavepatten = new Wave_Pattern();
+                        delegatea a = new delegatea(wavepatten.ReceiveMsg);
+                        a(Wavedata_Raf, Convert.ToInt32(textBox1.Text), count, waveName);
+                        //wavepatten.Show();
+                        //Sendmsg = null;
+                        //Sendmsg += wave.ReceiveMsg;
+                        //Sendmsg(Wavedata_Raf, Convert.ToInt32(textBox1.Text), count, waveName);
+                        //wave.Show();
+                    }
                     ShowRecord(0, tab, "RAF",true);
                     MeasureDataQuene.Add(tab);
                     
@@ -1067,6 +1133,7 @@ namespace Jet_System
                         this.PerformSafely(() => {
                             lblStatus.Text = "检测失败，请再试一次";
                             lblStatusShow.Text = "检测失败，请再试一次";
+                            PCI_Fail_Signal();
                             lblStatus.ForeColor = Color.Red;
                             lblStatusShow.ForeColor = Color.Red;
                         });
@@ -1077,13 +1144,13 @@ namespace Jet_System
 
                 this.PerformSafely(()=> {
                     Currnet_PCI?.Open4Light();
-                  //  Second_Trigger();
+                    Second_Trigger();
 
                     var tab = GetProductTable(cogtool_DO);
                     MeasureDataQuene.Add(tab);
                     ShowRecord(0, tab, "DO",true);
 
-                    //ShowResultTable(ref cogtool_DO, true);
+                    
                 });
                 
                 ss.Stop();
@@ -1115,36 +1182,7 @@ namespace Jet_System
             mDisplay2ResultShow.Image = _image;
 
 
-            /*
-            CogStopwatch ss = new CogStopwatch();
-            ss.Start();
-            Tool_SetInputs(_image, cogtool_DO);
-         
-
-            Currnet_PCI.Clear4Light();
-            var result = (CogRunStatus)cogtool_DO.Subject.RunStatus;
-            if (result.Result != CogToolResultConstants.Accept)//check result
-            {
-                ss.Stop();
-                this.PerformSafely(() => {
-                    MessageBox.Show(result.Message);
-                    txt_message.Text = result.Message;
-                    Console.WriteLine(ss.Milliseconds.ToString());
-                    txtTime.Text = ss.Milliseconds.ToString();
-                });
-                return;
-            }
-
             
-
-            ShowResultTable(ref cogtool_DO,true);
-            ss.Stop();
-
-            this.PerformSafely(() => {
-                
-                Console.WriteLine(ss.Milliseconds.ToString());
-                txtTime.Text = ss.Milliseconds.ToString();
-            });*/
         }
 
             
@@ -1263,7 +1301,26 @@ namespace Jet_System
             }
         }
 
+        private void PCI_OK_Signal()
+        {
+            Currnet_PCI.WriteIO0();
+            Thread.Sleep(20);
+            Currnet_PCI.ClearIO0();
+        }
 
+        private void PCI_NG_Signal()
+        {
+            Currnet_PCI.WriteIO1();
+            Thread.Sleep(20);
+            Currnet_PCI.ClearIO1();
+        }
+
+        private void PCI_Fail_Signal()
+        {
+            Currnet_PCI.WriteIO2();
+            Thread.Sleep(20);
+            Currnet_PCI.ClearIO2();
+        }
 
         private void First_Trigger()
         {
@@ -1294,9 +1351,9 @@ namespace Jet_System
                 
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure2;
                 Currnet_Camera.GainCur = (long)programParameters.DO_Gain2;
-                
+                Currnet_PCI?.Clear4Light(); 
 
-                Currnet_Camera.OneShot(Command.Grab2);
+                //  Currnet_Camera.OneShot(Command.Grab2);
 
 
             }
@@ -1427,7 +1484,7 @@ namespace Jet_System
             DataTable tempt = ((DataTable)_grid.DataSource).Copy();
             for (int i = 0; i < _configure.Count(); i++)
             {
-                tempt.Rows[i]["上限"] = temp[i].Max.ToString();
+                //tempt.Rows[i]["上限"] = temp[i].Max.ToString();
                 tempt.Rows[i]["上限"] = temp[i].Max.ToString();
                 tempt.Rows[i]["下限"] = temp[i].Min.ToString();
                 tempt.Rows[i]["比例系数"] = temp[i].Rate.ToString();
@@ -1468,7 +1525,7 @@ namespace Jet_System
 
         private bool ShowResultTableChild(ref bool _all_result ,ref DataGridView _grid, DataTable _table,bool isNeedSave,ref string dataS)
         {
-            bool isok = true;
+            bool isok = true;//标红的标志位
            
             var data_table = _table.AsEnumerable();
             if (isNeedSave)
@@ -1518,6 +1575,13 @@ namespace Jet_System
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="_tables"></param>
+        /// <param name="_do"></param>
+        /// <param name="_is_save"></param>
         private void ShowRecord(int index,ProductTables _tables,string _do,bool _is_save)
         {
             bool is_allOK = true;
@@ -1617,6 +1681,7 @@ namespace Jet_System
                     lblStatusShow.Text = "检测成功，产品OK";
                     lblStatus.ForeColor = Color.Green;
                     lblStatusShow.ForeColor = Color.Green;
+                    PCI_OK_Signal();
                 });
                 
                 if (_save_data)
@@ -1638,6 +1703,7 @@ namespace Jet_System
                     lblStatusShow.Text = "检测成功，产品NG";
                     lblStatus.ForeColor = Color.Red;
                     lblStatusShow.ForeColor = Color.Red;
+                    PCI_NG_Signal();
                 });
               
                 if (_save_data)
@@ -1668,6 +1734,7 @@ namespace Jet_System
                     lblStatusShow.Text = "检测成功，产品OK";
                     lblStatus.ForeColor = Color.Green;
                     lblStatusShow.ForeColor = Color.Green;
+                    PCI_OK_Signal();
                 });
 
                 if (_save_data)
@@ -1688,6 +1755,7 @@ namespace Jet_System
                     lblStatusShow.Text = "检测成功，产品NG";
                     lblStatus.ForeColor = Color.Red;
                     lblStatusShow.ForeColor = Color.Red;
+                    PCI_NG_Signal();
                 });
                 if (_save_data)
                 {
@@ -1873,9 +1941,6 @@ namespace Jet_System
                     item.AllowUserToAddRows = false;
                     item.ReadOnly = true;
 
-                   
-
-
                 }
             }
         
@@ -1896,10 +1961,129 @@ namespace Jet_System
             }
             
         }
+        private void WaveDisplay(ProductTables _tables,ref WaveData wavedata)
+        {
+            wavedata = new WaveData();
+            
+            var temp = _tables.Beam_Height_L.AsEnumerable();
+            var selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Beam_Height_L = selectResult;
+
+            temp = _tables.Beam_Height_R.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Beam_Height_R = selectResult;
+
+            temp = _tables.Beam_Height_Difference.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Beam_Height_Difference = selectResult;
+
+            temp = _tables.Cross_Shield_TP.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Cross_Shield_TP = selectResult;
+
+            temp = _tables.Wafer_Thickness.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Wafer_Thickness= selectResult;
+
+            temp = _tables.Shield_Flatness.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Shield_Flatness = selectResult;
+
+            temp = _tables.Shield_Cross_Angle.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Shield_Cross_Angle = selectResult;
+
+            wavedata.datetime = DateTime.Now;
+           
+        }
+
 
         #endregion
+        
+        private void BtnWave_Click(object sender, EventArgs e)
+        {
+         
+                wavepatten.Show();
+        
+        }
 
+        private void dataGrid_Beam_Touch_Window_L_L_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            BtnWave.Enabled = false;
+             waveName = null;
+            if (ra_Beam_Height_Difference.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Beam_Height_Difference.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Beam_Height_Difference.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Beam_Height_R.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Beam_Height_R.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Beam_Height_R.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Beam_Height_L.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Beam_Height_L.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Beam_Height_L.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Shield_Flatness.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Shield_Flatness.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Shield_Flatness.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Cross_Shield_TP.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Cross_Shield_TP.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Cross_Shield_TP.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Wafer_Thickness.Checked)
+            {
+                BtnWave.Enabled = true;
+                textBox2.Text = waveName;
+                waveName = ra_Wafer_Thickness.Name.Remove(0, 3);
+                textBox1.Text = dataGrid_Wafer_Thickness.SelectedCells[0].Value.ToString();
+            }
+            else if (ra_Shield_Cross_Angle.Checked)
+            {
+                BtnWave.Enabled = true;
+                waveName = ra_Shield_Cross_Angle.Name.Remove(0, 3);
+                textBox2.Text = waveName;
+                textBox1.Text = dataGrid_Shield_Cross_Angle.SelectedCells[0].Value.ToString();
+            }
+            else
+            {
+                BtnWave.Enabled = false;
+            }
        
+
+            
+        }
+
+        private void cbxHistoryData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int count = Convert.ToInt32(cbxHistoryData.Text)-1;
+            if(MeasureDataQuene.CurrentCount<count)
+            {
+                var table = MeasureDataQuene[count];
+                string programString = programParameters.Current_Program == 0 ? "RAF" : "DO";
+                ShowRecord(0,table, programString, false);
+            }
+            else
+            {
+                MessageBox.Show("当前选择的历史纪录不存在");
+            }
+            
+        }
     }
 
 
