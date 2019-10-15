@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -49,18 +49,18 @@
             // 
             // chart1
             // 
-            chartArea2.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(12, 12);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(1155, 437);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -88,6 +88,7 @@
             this.chart_Beam_Height_L.TabIndex = 3;
             this.chart_Beam_Height_L.Text = "Beam_Height_L";
             this.chart_Beam_Height_L.UseVisualStyleBackColor = true;
+            this.chart_Beam_Height_L.Visible = false;
             this.chart_Beam_Height_L.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
@@ -98,6 +99,7 @@
             this.button2.TabIndex = 4;
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // chart_Beam_Height_R
@@ -108,6 +110,7 @@
             this.chart_Beam_Height_R.TabIndex = 5;
             this.chart_Beam_Height_R.Text = "Beam_Height_R";
             this.chart_Beam_Height_R.UseVisualStyleBackColor = true;
+            this.chart_Beam_Height_R.Visible = false;
             this.chart_Beam_Height_R.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox2
@@ -125,6 +128,7 @@
             this.chart_Beam_Height_Difference.TabIndex = 10;
             this.chart_Beam_Height_Difference.Text = "Beam_Height_Difference";
             this.chart_Beam_Height_Difference.UseVisualStyleBackColor = true;
+            this.chart_Beam_Height_Difference.Visible = false;
             this.chart_Beam_Height_Difference.Click += new System.EventHandler(this.button1_Click);
             // 
             // chart_Shield_Flatness
@@ -135,6 +139,7 @@
             this.chart_Shield_Flatness.TabIndex = 11;
             this.chart_Shield_Flatness.Text = "Shield_Flatness";
             this.chart_Shield_Flatness.UseVisualStyleBackColor = true;
+            this.chart_Shield_Flatness.Visible = false;
             this.chart_Shield_Flatness.Click += new System.EventHandler(this.button1_Click);
             // 
             // chart_Cross_Shield_TP
@@ -145,6 +150,7 @@
             this.chart_Cross_Shield_TP.TabIndex = 12;
             this.chart_Cross_Shield_TP.Text = "Cross_Shield_TP";
             this.chart_Cross_Shield_TP.UseVisualStyleBackColor = true;
+            this.chart_Cross_Shield_TP.Visible = false;
             this.chart_Cross_Shield_TP.Click += new System.EventHandler(this.button1_Click);
             // 
             // chart_Wafer_Thickness
@@ -155,6 +161,7 @@
             this.chart_Wafer_Thickness.TabIndex = 13;
             this.chart_Wafer_Thickness.Text = "Wafer_Thickness";
             this.chart_Wafer_Thickness.UseVisualStyleBackColor = true;
+            this.chart_Wafer_Thickness.Visible = false;
             this.chart_Wafer_Thickness.Click += new System.EventHandler(this.button1_Click);
             // 
             // chart_Shield_Cross_Angle
@@ -165,6 +172,7 @@
             this.chart_Shield_Cross_Angle.TabIndex = 14;
             this.chart_Shield_Cross_Angle.Text = "Shield_Cross_Angle";
             this.chart_Shield_Cross_Angle.UseVisualStyleBackColor = true;
+            this.chart_Shield_Cross_Angle.Visible = false;
             this.chart_Shield_Cross_Angle.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox3

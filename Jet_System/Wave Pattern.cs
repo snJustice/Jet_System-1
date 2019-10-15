@@ -62,6 +62,8 @@ namespace Jet_System
                 b.Add(data[i].datetime.ToString("HH:mm:ss"));
                 switch (Name)
                 {
+                    
+
 
                     case "Beam_Height_L":
                         a.Add(Convert.ToDouble(data[i].Beam_Height_L[indexxx]));
@@ -105,6 +107,8 @@ namespace Jet_System
                         textBox1.Text = a.Count.ToString();
                         series.LegendText = "Shield_Cross_Angle";
                         break;
+
+
                 }
                 chart1.Series[0].Points.DataBindXY(b, a);
                 ChartArea chartarea1 = chart1.ChartAreas[0];

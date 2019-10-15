@@ -61,6 +61,10 @@
             this.txtGain = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chbxStartConnect = new System.Windows.Forms.CheckBox();
+            this.cbxIO0 = new System.Windows.Forms.CheckBox();
+            this.cbxIO1 = new System.Windows.Forms.CheckBox();
+            this.cbxIO2 = new System.Windows.Forms.CheckBox();
+            this.cbxIO3 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayBefore)).BeginInit();
             this.tblMain.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -79,7 +83,7 @@
             this.DisplayBefore.MouseWheelSensitivity = 1D;
             this.DisplayBefore.Name = "DisplayBefore";
             this.DisplayBefore.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("DisplayBefore.OcxState")));
-            this.DisplayBefore.Size = new System.Drawing.Size(1049, 595);
+            this.DisplayBefore.Size = new System.Drawing.Size(1058, 734);
             this.DisplayBefore.TabIndex = 7;
             // 
             // btnTriggerOnce
@@ -155,7 +159,7 @@
             // 
             this.btnComplete.Enabled = false;
             this.btnComplete.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnComplete.Location = new System.Drawing.Point(24, 549);
+            this.btnComplete.Location = new System.Drawing.Point(10, 674);
             this.btnComplete.Name = "btnComplete";
             this.btnComplete.Size = new System.Drawing.Size(120, 40);
             this.btnComplete.TabIndex = 14;
@@ -196,11 +200,15 @@
             this.tblMain.RowCount = 2;
             this.tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.91576F));
             this.tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.084243F));
-            this.tblMain.Size = new System.Drawing.Size(1370, 641);
+            this.tblMain.Size = new System.Drawing.Size(1382, 788);
             this.tblMain.TabIndex = 17;
             // 
             // groupBoxParameters
             // 
+            this.groupBoxParameters.Controls.Add(this.cbxIO3);
+            this.groupBoxParameters.Controls.Add(this.cbxIO2);
+            this.groupBoxParameters.Controls.Add(this.cbxIO1);
+            this.groupBoxParameters.Controls.Add(this.cbxIO0);
             this.groupBoxParameters.Controls.Add(this.btnSetDO_T);
             this.groupBoxParameters.Controls.Add(this.btnSetDO);
             this.groupBoxParameters.Controls.Add(this.btnSetRaf);
@@ -230,9 +238,9 @@
             this.groupBoxParameters.Controls.Add(this.btnLive);
             this.groupBoxParameters.Controls.Add(this.btnStopLive);
             this.groupBoxParameters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxParameters.Location = new System.Drawing.Point(1058, 3);
+            this.groupBoxParameters.Location = new System.Drawing.Point(1067, 3);
             this.groupBoxParameters.Name = "groupBoxParameters";
-            this.groupBoxParameters.Size = new System.Drawing.Size(309, 595);
+            this.groupBoxParameters.Size = new System.Drawing.Size(312, 734);
             this.groupBoxParameters.TabIndex = 8;
             this.groupBoxParameters.TabStop = false;
             this.groupBoxParameters.Text = "参数";
@@ -421,18 +429,63 @@
             // 
             this.chbxStartConnect.AutoSize = true;
             this.chbxStartConnect.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.chbxStartConnect.Location = new System.Drawing.Point(177, 559);
+            this.chbxStartConnect.Location = new System.Drawing.Point(188, 684);
             this.chbxStartConnect.Name = "chbxStartConnect";
             this.chbxStartConnect.Size = new System.Drawing.Size(104, 23);
             this.chbxStartConnect.TabIndex = 19;
             this.chbxStartConnect.Text = "开机连接";
             this.chbxStartConnect.UseVisualStyleBackColor = true;
+            this.chbxStartConnect.Visible = false;
+            // 
+            // cbxIO0
+            // 
+            this.cbxIO0.AutoSize = true;
+            this.cbxIO0.Location = new System.Drawing.Point(37, 567);
+            this.cbxIO0.Name = "cbxIO0";
+            this.cbxIO0.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO0.TabIndex = 38;
+            this.cbxIO0.Text = "0口";
+            this.cbxIO0.UseVisualStyleBackColor = true;
+            this.cbxIO0.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO1
+            // 
+            this.cbxIO1.AutoSize = true;
+            this.cbxIO1.Location = new System.Drawing.Point(156, 567);
+            this.cbxIO1.Name = "cbxIO1";
+            this.cbxIO1.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO1.TabIndex = 39;
+            this.cbxIO1.Text = "1口";
+            this.cbxIO1.UseVisualStyleBackColor = true;
+            this.cbxIO1.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO2
+            // 
+            this.cbxIO2.AutoSize = true;
+            this.cbxIO2.Location = new System.Drawing.Point(37, 612);
+            this.cbxIO2.Name = "cbxIO2";
+            this.cbxIO2.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO2.TabIndex = 40;
+            this.cbxIO2.Text = "2口";
+            this.cbxIO2.UseVisualStyleBackColor = true;
+            this.cbxIO2.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO3
+            // 
+            this.cbxIO3.AutoSize = true;
+            this.cbxIO3.Location = new System.Drawing.Point(156, 612);
+            this.cbxIO3.Name = "cbxIO3";
+            this.cbxIO3.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO3.TabIndex = 41;
+            this.cbxIO3.Text = "3口";
+            this.cbxIO3.UseVisualStyleBackColor = true;
+            this.cbxIO3.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
             // 
             // FormCameraSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1370, 641);
+            this.ClientSize = new System.Drawing.Size(1382, 788);
             this.Controls.Add(this.tblMain);
             this.Name = "FormCameraSearch";
             this.Text = "相机搜索";
@@ -479,5 +532,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbxIO3;
+        private System.Windows.Forms.CheckBox cbxIO2;
+        private System.Windows.Forms.CheckBox cbxIO1;
+        private System.Windows.Forms.CheckBox cbxIO0;
     }
 }

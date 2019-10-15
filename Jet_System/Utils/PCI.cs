@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Jet_System.Utils
 {
-    abstract class PCI
+    public abstract class PCI
     {
         //写数据
         public const uint PCI_OUT0 = 1;//相机开始拍照信号
@@ -104,7 +104,7 @@ namespace Jet_System.Utils
     }
 
 
-    class PCI7230 : PCI
+    public class PCI7230 : PCI
     {
         //构造函数
         public PCI7230()

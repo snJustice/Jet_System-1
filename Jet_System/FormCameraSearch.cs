@@ -7,9 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using static MvCamCtrl.NET.MyCamera;
-
+using Jet_System.Utils;
 namespace Jet_System
 {
+    public delegate void SetIODelegate(string io, bool check);
     public partial class FormCameraSearch : Form
     {
 
@@ -18,12 +19,17 @@ namespace Jet_System
 
         public ProgramParameters programs;
 
+        public PCI7230 CurrentPCI;
+
+        public event SetIODelegate SetIOEvent;
+
         Dictionary<string, MyCamera.MV_CC_DEVICE_INFO> camerastring = new Dictionary<string, MV_CC_DEVICE_INFO>();
 
         public FormCameraSearch()
         {
             InitializeComponent();
 
+            
 
             
 
@@ -221,6 +227,20 @@ namespace Jet_System
                 txtGain.Text = camera.GainCur.ToString();
                 txtExposure.Text = camera.ShuterCur.ToString();
             }
+        }
+
+        private void cbxIO1_CheckedChanged(object sender, EventArgs e)
+        {
+
+
+            var main = (FormMain)this.Parent;
+            
+            CheckBox cbx = (CheckBox)(sender);
+            bool checkState = cbx.Checked;
+            string ioCount = cbx.Name.Replace("cbxIO", "");
+            SetIOEvent?.Invoke(ioCount, checkState);
+
+
         }
     }
 }
