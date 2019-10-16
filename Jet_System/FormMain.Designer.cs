@@ -138,9 +138,7 @@ namespace Jet_System
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lblStatusShow = new System.Windows.Forms.Label();
-            this.btnRunOnce_D0_T = new System.Windows.Forms.Button();
             this.txtTime = new System.Windows.Forms.TextBox();
-            this.btnSwitch = new System.Windows.Forms.Button();
             this.groupBox_Image = new System.Windows.Forms.GroupBox();
             this.tabControlImage = new System.Windows.Forms.TabControl();
             this.tapaResultImage1 = new System.Windows.Forms.TabPage();
@@ -180,6 +178,7 @@ namespace Jet_System
             this.cogtool_RAF = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.tab_DO = new System.Windows.Forms.TabPage();
             this.cogtool_DO = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
+            this.light_History = new Net.FlyingWind.Tools.LightIndicator();
             this.userControlSetMaxAndMin1 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
             this.userControlSetMaxAndMin2 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
             this.userControlSetMaxAndMin3 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
@@ -193,6 +192,7 @@ namespace Jet_System
             this.userControlSetMaxAndMin11 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
             this.userControlSetMaxAndMin12 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
             this.userControlSetMaxAndMin13 = new Jet_System.CustomerUserControl.UserControlSetMaxAndMin();
+            this.customerLights1 = new Jet_System.CustomerUserControl.CustomerLights();
             ((System.ComponentModel.ISupportInitialize)(this.mDisplay2Row)).BeginInit();
             this.tblMain.SuspendLayout();
             this.tblParametersAndResultShow.SuspendLayout();
@@ -314,7 +314,7 @@ namespace Jet_System
             // 
             this.btnCurrentImageRun.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.btnCurrentImageRun.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCurrentImageRun.Location = new System.Drawing.Point(43, 153);
+            this.btnCurrentImageRun.Location = new System.Drawing.Point(43, 123);
             this.btnCurrentImageRun.Name = "btnCurrentImageRun";
             this.btnCurrentImageRun.Size = new System.Drawing.Size(143, 48);
             this.btnCurrentImageRun.TabIndex = 7;
@@ -1446,14 +1446,14 @@ namespace Jet_System
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.customerLights1);
+            this.groupBox2.Controls.Add(this.light_History);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cbxHistoryData);
             this.groupBox2.Controls.Add(this.textBox2);
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.lblStatusShow);
-            this.groupBox2.Controls.Add(this.btnRunOnce_D0_T);
             this.groupBox2.Controls.Add(this.txtTime);
-            this.groupBox2.Controls.Add(this.btnSwitch);
             this.groupBox2.Controls.Add(this.btnRunOnce);
             this.groupBox2.Controls.Add(this.btnCurrentImageRun);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1468,7 +1468,7 @@ namespace Jet_System
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 18F);
-            this.label4.Location = new System.Drawing.Point(61, 299);
+            this.label4.Location = new System.Drawing.Point(39, 330);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 24);
             this.label4.TabIndex = 20;
@@ -1480,7 +1480,7 @@ namespace Jet_System
             this.cbxHistoryData.Items.AddRange(new object[] {
             "12PR-RAF",
             "8PR-DO"});
-            this.cbxHistoryData.Location = new System.Drawing.Point(203, 296);
+            this.cbxHistoryData.Location = new System.Drawing.Point(203, 334);
             this.cbxHistoryData.Name = "cbxHistoryData";
             this.cbxHistoryData.Size = new System.Drawing.Size(124, 20);
             this.cbxHistoryData.TabIndex = 19;
@@ -1512,38 +1512,12 @@ namespace Jet_System
             this.lblStatusShow.TabIndex = 16;
             this.lblStatusShow.Text = "未开始检测";
             // 
-            // btnRunOnce_D0_T
-            // 
-            this.btnRunOnce_D0_T.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.btnRunOnce_D0_T.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRunOnce_D0_T.Location = new System.Drawing.Point(206, 196);
-            this.btnRunOnce_D0_T.Name = "btnRunOnce_D0_T";
-            this.btnRunOnce_D0_T.Size = new System.Drawing.Size(143, 44);
-            this.btnRunOnce_D0_T.TabIndex = 10;
-            this.btnRunOnce_D0_T.Text = "触发DO_T";
-            this.btnRunOnce_D0_T.UseVisualStyleBackColor = false;
-            this.btnRunOnce_D0_T.Visible = false;
-            this.btnRunOnce_D0_T.Click += new System.EventHandler(this.btnRunOnce_D0_T_Click);
-            // 
             // txtTime
             // 
             this.txtTime.Location = new System.Drawing.Point(227, 29);
             this.txtTime.Name = "txtTime";
             this.txtTime.Size = new System.Drawing.Size(100, 21);
             this.txtTime.TabIndex = 9;
-            // 
-            // btnSwitch
-            // 
-            this.btnSwitch.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.btnSwitch.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSwitch.Location = new System.Drawing.Point(43, 224);
-            this.btnSwitch.Name = "btnSwitch";
-            this.btnSwitch.Size = new System.Drawing.Size(143, 44);
-            this.btnSwitch.TabIndex = 8;
-            this.btnSwitch.Text = "切换";
-            this.btnSwitch.UseVisualStyleBackColor = false;
-            this.btnSwitch.Visible = false;
-            this.btnSwitch.Click += new System.EventHandler(this.btnSwitch_Click);
             // 
             // groupBox_Image
             // 
@@ -2001,6 +1975,32 @@ namespace Jet_System
             this.cogtool_DO.SuspendElectricRuns = false;
             this.cogtool_DO.TabIndex = 2;
             // 
+            // light_History
+            // 
+            this.light_History.LightColors = new System.Drawing.Color[] {
+        System.Drawing.Color.Red,
+        System.Drawing.Color.Red,
+        System.Drawing.Color.Red,
+        System.Drawing.Color.Red,
+        System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.Lime,
+        System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255))))),
+        System.Drawing.Color.Aqua};
+            this.light_History.LightOffCOlor = System.Drawing.Color.Black;
+            this.light_History.LightOnColor = System.Drawing.Color.LimeGreen;
+            this.light_History.LightStatus = 0;
+            this.light_History.Location = new System.Drawing.Point(51, 205);
+            this.light_History.MinimumSize = new System.Drawing.Size(70, 12);
+            this.light_History.Name = "light_History";
+            this.light_History.NumLight = 10;
+            this.light_History.Size = new System.Drawing.Size(179, 15);
+            this.light_History.TabIndex = 21;
+            this.light_History.ToolTips = new string[] {
+        "急停灯",
+        "左转灯",
+        "右转灯",
+        "喇叭灯"};
+            // 
             // userControlSetMaxAndMin1
             // 
             this.userControlSetMaxAndMin1.CurrentGrid = this.dataGrid_Beam_Touch_Window_L_L;
@@ -2131,6 +2131,16 @@ namespace Jet_System
             this.userControlSetMaxAndMin13.TabIndex = 1;
             this.userControlSetMaxAndMin13.Visible = false;
             // 
+            // customerLights1
+            // 
+            this.customerLights1.LightCount = 2;
+            this.customerLights1.LightLength = 5;
+            this.customerLights1.LightRadius = 20;
+            this.customerLights1.Location = new System.Drawing.Point(27, 226);
+            this.customerLights1.Name = "customerLights1";
+            this.customerLights1.Size = new System.Drawing.Size(264, 62);
+            this.customerLights1.TabIndex = 22;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2256,7 +2266,6 @@ namespace Jet_System
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TabControl tabControl_Main;
         internal Cognex.VisionPro.Display.CogDisplay mDisplay1Row;
-        private System.Windows.Forms.Button btnSwitch;
         private System.Windows.Forms.TextBox txtTime;
         private CogRecordDisplay mDisplay1Result;
         private System.Windows.Forms.TabPage tab_Beam_Touch_Window_L_L;
@@ -2324,7 +2333,6 @@ namespace Jet_System
         private System.Windows.Forms.DataGridView dataGrid_Shield_Flatness;
         private System.Windows.Forms.DataGridView dataGrid_Cross_Shield_TP;
         private System.Windows.Forms.DataGridView dataGrid_Wafer_Thickness;
-        private System.Windows.Forms.Button btnRunOnce_D0_T;
         private System.Windows.Forms.RadioButton ra_Shield_Cross_Angle;
         private System.Windows.Forms.TabPage tab_Shield_Cross_Angle;
         private System.Windows.Forms.DataGridView dataGrid_Shield_Cross_Angle;
@@ -2402,6 +2410,8 @@ namespace Jet_System
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbxHistoryData;
+        private Net.FlyingWind.Tools.LightIndicator light_History;
+        private CustomerUserControl.CustomerLights customerLights1;
     }
 }
 

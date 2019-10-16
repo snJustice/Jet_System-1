@@ -15,10 +15,12 @@ namespace Jet_System.Utils.MyQuene
             get { return SavedTables.ToList().Count(); }
         }
         ConcurrentQueue<ProductTables> SavedTables;
+      
         private readonly int Count;
         public CustomerQuene(int count)
         {
             SavedTables = new ConcurrentQueue<ProductTables>();
+          
             Count = count;
         }
 
@@ -30,7 +32,12 @@ namespace Jet_System.Utils.MyQuene
             }
 
         }
-
+        public IEnumerable<bool> GetResults()
+        {
+            var temp =  SavedTables.ToList();
+            var re = from xx in temp select xx.Result;
+            return re; 
+        }
 
         public void Add(ProductTables _product)
         {

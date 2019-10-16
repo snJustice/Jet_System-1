@@ -111,9 +111,15 @@
       <HintPath>..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FlyingWindTools">
+      <HintPath>C:\Users\10395\Downloads\FlyingWindTools2011-08-11\FlyingWindTools.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="LEDLib">
+      <HintPath>E:\Work\Work\项目具体内容\华德\Interplex\Interplex\bin\Debug\LEDLib.dll</HintPath>
     </Reference>
     <Reference Include="MvCameraControl.Net">
       <HintPath>D:\Program Files\MVS\Development\DotNet\MvCameraControl.Net.dll</HintPath>
@@ -194,6 +200,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerUserControl\CustomerLights.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomerUserControl\CustomerLights.Designer.cs">
+      <DependentUpon>CustomerLights.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomerUserControl\DataShowBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -246,6 +258,9 @@
     <Compile Include="Wave Pattern.Designer.cs">
       <DependentUpon>Wave Pattern.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CustomerUserControl\CustomerLights.resx">
+      <DependentUpon>CustomerLights.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomerUserControl\DataShowBase.resx">
       <DependentUpon>DataShowBase.cs</DependentUpon>
     </EmbeddedResource>

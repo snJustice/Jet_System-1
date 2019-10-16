@@ -68,7 +68,7 @@ namespace Jet_System.Utils
                 ret = DASK.Release_Card((ushort)m_dev);
             }
         }
-        public static uint Read()
+        public  uint Read()
         {
             short ret;
             uint int_value;
@@ -82,7 +82,7 @@ namespace Jet_System.Utils
             }
             return int_value;
         }
-        public static void Write(uint data)
+        public  void Write(uint data)
         {
             short ret;
             

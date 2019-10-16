@@ -13,7 +13,11 @@ namespace Jet_System.Utils
 
         
 
-        public Cognex.VisionPro.ICogRecord Image;
+        public Cognex.VisionPro.ICogRecord Image { set; get; }
+
+        public bool Result { set; get; }
+
+        public Cognex.VisionPro.ICogImage RowImage { set; get; }
         public DataTable Beam_Touch_Window_R_L { set; get; }
         public DataTable Beam_Touch_Window_R_R { set; get; }
         public DataTable Beam_Tip_To_Window_R { set; get; }
@@ -31,6 +35,8 @@ namespace Jet_System.Utils
         public DataTable Shield_Cross_Angle { set; get; }
 
         public DataTable TiePian { get; set; }
+
+        public int Current_NG_Num { set; get; }
 
         public void Dispose()
         {
