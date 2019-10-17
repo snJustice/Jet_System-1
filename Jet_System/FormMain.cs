@@ -134,10 +134,12 @@ namespace Jet_System
         #region FormInit
         private void Init()//初始化
         {
-
+            
             programParameters = ReadParameters();
             MeasureDataQuene = new CustomerQuene(programParameters.MeasureDeep);
             SetImageAndMeasureDataPath();//读取存放再xml文件的根文件名，用来存放公差数据和图片，下次需要更换保存路径就不要反复设置了；
+           
+
             Read_Measure_Path();//读取公差数据。。如果读取的文件名条数不等于19说明路径错误。判断完将前十条目录 放进raf配置后9条do配置          
             Read_Vpp_Path();//读取vpro文件，载入文件显示再界面上。并且绑定cogtool_raf_ran使之运行完后将inputs图片显示在界面上，创建一个lastrecord显示ng信息。。两张图都自适应大小
 
@@ -560,7 +562,7 @@ namespace Jet_System
         private void cbxHistoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             int count = Convert.ToInt32(cbxHistoryData.Text) - 1;
-            if (MeasureDataQuene.CurrentCount < count)
+            if (MeasureDataQuene.CurrentCount > count)
             {
                 var table = MeasureDataQuene[count];
                 string programString = programParameters.Current_Program == 0 ? "RAF" : "DO";
@@ -1060,7 +1062,7 @@ namespace Jet_System
             return product;
         }
 
-        public delegate void delegatea(List<WaveData> wd, int indexx, int Count, string name);
+        public delegate void delegatea(List<WaveData> wd, int indexx, int Count, string name, string program);
         private void RunningOnce_First(CogImage8Grey _image,int _program)
         {
             mDisplay1Row.Image = _image;
@@ -1099,24 +1101,26 @@ namespace Jet_System
                     var tab=GetProductTable(cogtool_RAF);
                     tab.RowImage = _image;
 
-                        WaveDisplay(tab, ref WaveData);
-                        Wavedata_Raf.Add(WaveData);
-                    int count = Wavedata_Raf.Count * (Wavedata_Raf[0].Beam_Height_L.Count());//meishayong     
+                       
+                        
                     if (isClick == false)
                     {
 
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(textBox1.Text))
+                        if (string.IsNullOrEmpty(textBox3.Text))
                         {
                             MessageBox.Show("请选择行");
                         }
                         else
                         {
-                                       
+                            WaveDisplay(tab, ref WaveData);
+                            Wavedata_Raf.Add(WaveData);
+                            int count = Wavedata_Raf.Count * (Wavedata_Raf[0].Beam_Height_L.Count());//meishayong
                             delegatea a = new delegatea(wavepatten.ReceiveMsg);
-                            a(Wavedata_Raf, Convert.ToInt32(textBox1.Text), count, waveName);
+                            a(Wavedata_Raf, Convert.ToInt32(textBox3.Text), count, waveName, "RAF");
+                            LabelWaveDataCnt.Text = "共有" + Wavedata_Raf.Count.ToString() + "个数据。";
                         }
                        
 
@@ -1163,24 +1167,26 @@ namespace Jet_System
 
                     var tab = GetProductTable(cogtool_DO);
                     tab.RowImage = _image;
-                    WaveDisplay(tab, ref WaveData);
-                    Wavedata_Do.Add(WaveData);
-                    int count = Wavedata_Do.Count * (Wavedata_Do[0].Beam_Height_L.Count());//meishayong     
+                    
+                       
                     if (isClick == false)
                     {
 
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(textBox1.Text))
+                        if (string.IsNullOrEmpty(textBox3.Text))
                         {
                             MessageBox.Show("请选择行");
                         }
                         else
                         {
-
+                            WaveDisplay(tab, ref WaveData);
+                            Wavedata_Do.Add(WaveData);
+                            int count = Wavedata_Do.Count * (Wavedata_Do[0].Beam_Height_L.Count());//meishayong  
                             delegatea a = new delegatea(wavepatten.ReceiveMsg);
-                            a(Wavedata_Do, Convert.ToInt32(textBox1.Text), count, waveName);
+                            a(Wavedata_Do, Convert.ToInt32(textBox3.Text), count, waveName, "DO");
+                            LabelWaveDataCnt.Text = "共有" + Wavedata_Do.Count.ToString() + "个数据。";
                         }
 
                     }
@@ -1215,12 +1221,12 @@ namespace Jet_System
                 if(item)
                 {
                     clolos.Add(Color.Green);
-                    signals = signals >> 1 | 1;
+                    signals = signals << 1 | 1;
                 }
                 else
                 {
                     clolos.Add(Color.Red);
-                    signals = signals >> 1 | 1;
+                    signals = signals << 1 | 1;
                 }
             }
         //    signals = Convert.ToInt32(signals.ToString().PadRight(10,'0'));
@@ -1298,7 +1304,7 @@ namespace Jet_System
         /// </summary>
         private void ScanTime()
         {
-
+            int temp = programParameters.ImageDeleteNum;
             Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(
                 x => {
                     var current = DateTime.Now.ToString("yyyy-MM-dd");
@@ -1306,6 +1312,7 @@ namespace Jet_System
                     {
                         SetCurrentFileName();
                         last_time = current;
+                        DeleteImages(temp);
                     }
                 });
         }
@@ -1392,6 +1399,55 @@ namespace Jet_System
             }
         }
 
+        public void SetIO(string _io, bool _checked)
+        {
+            switch (_io)
+            {
+                case "0":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO0();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO0();
+                    }
+                    break;
+                case "1":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO1();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO1();
+                    }
+                    break;
+                case "2":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO2();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO2();
+                    }
+                    break;
+                case "3":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO3();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO3();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void PCI_OK_Signal()
         {
             Currnet_PCI?.WriteIO0();
@@ -1424,7 +1480,7 @@ namespace Jet_System
         {
             if (programParameters.Current_Program == 0)
             {
-                Currnet_PCI.Open12Light();
+                Currnet_PCI?.Open12Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure;
                 Currnet_Camera.GainCur = (long)programParameters.RAF_Gain;
 
@@ -1432,7 +1488,7 @@ namespace Jet_System
             }
             else
             {
-                Currnet_PCI.Open124Light();
+                Currnet_PCI?.Open124Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure1;
                 Currnet_Camera.GainCur = (long)programParameters.DO_Gain1;
 
@@ -2114,26 +2170,27 @@ namespace Jet_System
 
 
         #endregion
-        
+
+
+        #region 波动图
         private void BtnWave_Click(object sender, EventArgs e)
         {
             if (isClick == false)
             {
                 isClick = true;
                 BtnWave.Text = "正在记录数据。。";
-                wavepatten.Show();
 
+                wavepatten.Show();
             }
             else
             {
-                Wavedata_Raf.Clear();
-                Wavedata_Do.Clear();
+                //Wavedata_Raf.Clear();
+                //Wavedata_Do.Clear();
                 isClick = false;
-                BtnWave.Text = "不记录数据";
+                BtnWave.Text = "不记录数据。。";
                 wavepatten.Close();
             }
-             
-           
+
 
             //int count = Wavedata_Raf.Count * (Wavedata_Raf[0].Beam_Height_L.Count());//meishayong                 
             //delegatea a = new delegatea(wavepatten.ReceiveMsg);
@@ -2144,129 +2201,158 @@ namespace Jet_System
             //else
             //{
             //    a(Wavedata_Raf, Convert.ToInt32(textBox1.Text), count, waveName);
-                
+
             //}
-            
+
             //wavepatten.Show();
-        
+
         }
 
         private void dataGrid_Beam_Touch_Window_L_L_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            string rowindex = e.RowIndex.ToString();
+
             BtnWave.Enabled = false;
-             waveName = null;
+            waveName = null;
             if (ra_Beam_Height_Difference.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Beam_Height_Difference.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Beam_Height_Difference.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Beam_Height_R.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Beam_Height_R.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Beam_Height_R.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Beam_Height_L.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Beam_Height_L.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Beam_Height_L.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Shield_Flatness.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Shield_Flatness.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Shield_Flatness.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Cross_Shield_TP.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Cross_Shield_TP.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Cross_Shield_TP.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Wafer_Thickness.Checked)
             {
                 BtnWave.Enabled = true;
-                textBox2.Text = waveName;
+                textBox3.Text = waveName;
                 waveName = ra_Wafer_Thickness.Name.Remove(0, 3);
-                textBox1.Text = dataGrid_Wafer_Thickness.SelectedCells[0].Value.ToString();
+                textBox3.Text = rowindex;
             }
             else if (ra_Shield_Cross_Angle.Checked)
             {
                 BtnWave.Enabled = true;
                 waveName = ra_Shield_Cross_Angle.Name.Remove(0, 3);
-                textBox2.Text = waveName;
-                textBox1.Text = dataGrid_Shield_Cross_Angle.SelectedCells[0].Value.ToString();
+                textBox3.Text = waveName;
+                textBox3.Text = rowindex;
             }
             else
             {
                 BtnWave.Enabled = false;
             }
-       
 
-            
+
+
         }
 
-        
 
-
-
-        public void SetIO(string _io,bool _checked)
+        private void btnClearaHistory_Click(object sender, EventArgs e)
         {
-            switch (_io)
+            Wavedata_Raf.Clear();
+            Wavedata_Do.Clear();
+            MessageBox.Show("已清除波动图数据");
+            LabelWaveDataCnt.Text = "共有0个数据";
+        }
+
+        private void BtnWave_Click_1(object sender, EventArgs e)
+        {
+
+            if (isClick == false)
             {
-                case "0":
-                    if (_checked)
-                    {
-                        Currnet_PCI.WriteIO0();
-                    }
-                    else
-                    {
-                        Currnet_PCI.ClearIO0();
-                    }
-                    break;
-                case "1":
-                    if (_checked)
-                    {
-                        Currnet_PCI.WriteIO1();
-                    }
-                    else
-                    {
-                        Currnet_PCI.ClearIO1();
-                    }
-                    break;
-                case "2":
-                    if (_checked)
-                    {
-                        Currnet_PCI.WriteIO2();
-                    }
-                    else
-                    {
-                        Currnet_PCI.ClearIO2();
-                    }
-                    break;
-                case "3":
-                    if (_checked)
-                    {
-                        Currnet_PCI.WriteIO3();
-                    }
-                    else
-                    {
-                        Currnet_PCI.ClearIO3();
-                    }
-                    break;
-                default:
-                    break;
+                isClick = true;
+                BtnWave.Text = "正在记录数据。。";
+
+                wavepatten.Show();
+            }
+            else
+            {
+                //Wavedata_Raf.Clear();
+                //Wavedata_Do.Clear();
+                isClick = false;
+                BtnWave.Text = "不记录数据。。";
+                wavepatten.Close();
             }
         }
+        #endregion
+
+
+
+        #region 图片删除
+        private void DeleteImages(int _deleteNum)
+        {
+            DateTime timepath = DateTime.Now;
+            List<string> timepaths = new List<string>();
+            for (int i = 0; i < _deleteNum; i++)
+            {
+                timepaths.Add(timepath.AddDays((-1) * i).ToString("yyyy-MM-dd"));
+            }
+            List<string> ImagePaths = new List<string>();
+            ImagePaths.Add(SavePath.Image1ResultNG);
+            ImagePaths.Add(SavePath.Image1ResultOK);
+            ImagePaths.Add(SavePath.Image1Row);
+            ImagePaths.Add(SavePath.Image2ResultNG);
+            ImagePaths.Add(SavePath.Image2ResultOK);
+            ImagePaths.Add(SavePath.Image2Row);
+            List<string> tempNeedPath = new List<string>();
+            foreach (var item in ImagePaths)
+            {
+                tempNeedPath.Clear();
+                foreach (var ite in timepaths)
+                {
+                    tempNeedPath.Add(item + @"\" + ite);
+                }
+                string[] exitsDirectories = Directory.GetDirectories(item);
+                foreach (var it in exitsDirectories)
+                {
+                    if (!tempNeedPath.Contains(it))
+                    {
+                        Directory.Delete(it, true);
+                    }
+                }
+
+
+            }
+
+
+
+
+        }
+        #endregion
+
 
         
+
+        
+
+
+
     }
 
 

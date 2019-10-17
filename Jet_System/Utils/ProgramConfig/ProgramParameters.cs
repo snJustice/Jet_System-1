@@ -37,6 +37,8 @@ namespace Jet_System.Utils.ProgramConfig
 
         public int MeasureDeep { set; get; }
 
+        public int ImageDeleteNum { set; get; }
+
 
 
     }
