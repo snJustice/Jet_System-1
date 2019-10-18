@@ -56,7 +56,7 @@ namespace Jet_System.Utils
             Cross_Shield_TP.Dispose();
             Wafer_Thickness.Dispose();
             Shield_Cross_Angle.Dispose();
-            TiePian.Dispose();
+           // TiePian.Dispose();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Jet_System.Utils
         {
             XmlSerializer binformat = new XmlSerializer(typeof(T));
 
-            string fileName = "Data.xml";
+            string fileName = "Config//Data.xml";
             if(File.Exists(fileName))
             {
                 File.Delete(fileName);
