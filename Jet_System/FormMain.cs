@@ -398,7 +398,7 @@ namespace Jet_System
                             {
                                 Directory.CreateDirectory(item.Path);
                             }
-                            item.image.Save(item.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".bmp");
+                            item.image.Save(item.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
 
                         }
 
@@ -426,7 +426,7 @@ namespace Jet_System
                             {
                                 Directory.CreateDirectory(item.Path);
                             }
-                            item.image.Save(item.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".bmp");
+                            item.image.Save(item.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
 
                         }
 
@@ -680,9 +680,16 @@ namespace Jet_System
         //当前图像再次运行
         private void btnCurrentImageRun_Click(object sender, EventArgs e)
         {
-            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = programParameters.Current_Program,RunTime=1});
+            //  ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = programParameters.Current_Program,RunTime=1});
 
-
+            List<bool> xxx = new List<bool>();
+            xxx.Add(true);
+            xxx.Add(false);
+            xxx.Add(true);
+            xxx.Add(false);
+            xxx.Add(true);
+            xxx.Add(false);
+            LightShow(xxx);
 
         }
 
@@ -1131,7 +1138,7 @@ namespace Jet_System
                     ShowRecord(0,ref tab, "RAF",true);
                     MeasureDataQuene.Add(tab);
 
-                    LightShow();
+                    LightShow(MeasureDataQuene.GetResults());
 
 
 
@@ -1193,7 +1200,7 @@ namespace Jet_System
                     
                     ShowRecord(0,ref tab, "DO", true);
                     MeasureDataQuene.Add(tab);
-                    LightShow();
+                    LightShow(MeasureDataQuene.GetResults());
                 });
                 
                 ss.Stop();
@@ -1211,12 +1218,12 @@ namespace Jet_System
         }
 
 
-        private void LightShow()
+        private void LightShow(IEnumerable<bool > results)
         {
-            var historyResults = MeasureDataQuene.GetResults();
+            //var historyResults = MeasureDataQuene.GetResults();
             int signals = 0;
             List<Color> clolos = new List<Color>();
-            foreach (var item in historyResults)
+            foreach (var item in results)
             {
                 if(item)
                 {
@@ -1240,6 +1247,8 @@ namespace Jet_System
 
 
         
+
+
 
         private void RunningOnce_Second(CogImage8Grey _image)
         {
@@ -1450,30 +1459,30 @@ namespace Jet_System
 
         private void PCI_OK_Signal()
         {
-            Currnet_PCI?.WriteIO0();
+            Currnet_PCI?.WriteIO4();
             Thread.Sleep(20);
-            Currnet_PCI?.ClearIO0();
+            Currnet_PCI?.ClearIO4();
         }
 
         private void PCI_NG_Signal()
         {
-            Currnet_PCI?.WriteIO1();
+            Currnet_PCI?.WriteIO5();
             Thread.Sleep(20);
-            Currnet_PCI?.ClearIO1();
+            Currnet_PCI?.ClearIO5();
         }
 
         private void PCI_Fail_Signal()
         {
-            Currnet_PCI?.WriteIO2();
+            Currnet_PCI?.WriteIO6();
             Thread.Sleep(20);
-            Currnet_PCI?.ClearIO2();
+            Currnet_PCI?.ClearIO6();
         }
 
         private void PCI_Change_Program_OK()
         {
-            Currnet_PCI?.WriteIO3();
+            Currnet_PCI?.WriteIO7();
             Thread.Sleep(20);
-            Currnet_PCI?.ClearIO3();
+            Currnet_PCI?.ClearIO7();
         }
 
         private void First_Trigger()
