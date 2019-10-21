@@ -34,7 +34,7 @@ namespace Jet_System
         }
         internal void ReceiveMsg(List<WaveData> wd, int indexx, int Count, string name, string program)
         {
-            chart1.Width = 1246 + wd.Count() * 40;
+            chart1.Width = 1246 + wd.Count() * 50;
             series = new Series();
             series = chart1.Series[0];
             series.ChartType = SeriesChartType.Spline;
@@ -169,7 +169,7 @@ namespace Jet_System
                     }
                     if (i == receiveData.Count - 1)
                     {
-                        labelTimeEnd.Text = receiveData[i].datetime.ToString("HH:ss:mm");
+                        labelTimeEnd.Text = receiveData[i].datetime.ToString("HH:mm:ss");
                     }
                     chart1.Series[0].Points.DataBindXY(b, a);
 
@@ -222,8 +222,8 @@ namespace Jet_System
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            WaveDataShow.SelectionStart = WaveDataShow.Text.Length;
-            WaveDataShow.ScrollToCaret();
+            //WaveDataShow.SelectionStart = WaveDataShow.Text.Length;
+            //WaveDataShow.ScrollToCaret();
         }
     }
 }

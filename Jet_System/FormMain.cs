@@ -138,7 +138,7 @@ namespace Jet_System
             programParameters = ReadParameters();
             MeasureDataQuene = new CustomerQuene(programParameters.MeasureDeep);
             SetImageAndMeasureDataPath();//读取存放再xml文件的根文件名，用来存放公差数据和图片，下次需要更换保存路径就不要反复设置了；
-           
+
 
             Read_Measure_Path();//读取公差数据。。如果读取的文件名条数不等于19说明路径错误。判断完将前十条目录 放进raf配置后9条do配置          
             Read_Vpp_Path();//读取vpro文件，载入文件显示再界面上。并且绑定cogtool_raf_ran使之运行完后将inputs图片显示在界面上，创建一个lastrecord显示ng信息。。两张图都自适应大小
@@ -147,8 +147,8 @@ namespace Jet_System
 
             SetCurrentFileName();//设定文件名
             CheckImageAndCsvSavePath();//检查字典中有没有设定好的文件名，没有就创一个
-                       
-            
+
+
 
 
             CbxHistoryIndexAdd();
@@ -430,7 +430,8 @@ namespace Jet_System
                     if (!Directory.Exists(temp.Path))
                     {
                         Directory.CreateDirectory(temp.Path);
-                    }
+                    }  
+                 
                     temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
 
                     /*
@@ -1024,8 +1025,8 @@ namespace Jet_System
                     break;
                 case "DO":
 
-                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
-                    product.Beam_Touch_Window_L_L = temp2;
+                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy(); 
+                      product.Beam_Touch_Window_L_L = temp2;
 
 
                     temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
@@ -1167,7 +1168,7 @@ namespace Jet_System
 
 
                    
-                    ShowRecord(0,ref tab, "RAF",true,false,false);
+                    ShowRecord(0,ref tab, "RAF",true,true,false);
                     MeasureDataQuene.Add(tab);
 
                     LightShow();
@@ -1230,7 +1231,7 @@ namespace Jet_System
 
                     }
                     
-                    ShowRecord(0,ref tab, "DO", true,false,false);
+                    ShowRecord(0,ref tab, "DO", true,true,false);
                     MeasureDataQuene.Add(tab);
                     LightShow();
                 });
@@ -1511,7 +1512,7 @@ namespace Jet_System
         private void PCI_ImageOK_Signal()
         {
             Currnet_PCI?.WriteIO6();
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             Currnet_PCI?.ClearIO6();
         }
 
