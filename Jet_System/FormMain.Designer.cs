@@ -150,6 +150,16 @@ namespace Jet_System
             this.label1 = new System.Windows.Forms.Label();
             this.tblImageAndControl = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.light_History = new Net.FlyingWind.Tools.LightIndicator();
             this.label4 = new System.Windows.Forms.Label();
             this.cbxHistoryData = new System.Windows.Forms.ComboBox();
@@ -196,16 +206,6 @@ namespace Jet_System
             this.cogtool_RAF = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.tab_DO = new System.Windows.Forms.TabPage();
             this.cogtool_DO = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mDisplay2Row)).BeginInit();
             this.tblMain.SuspendLayout();
             this.tblParametersAndResultShow.SuspendLayout();
@@ -1655,6 +1655,96 @@ namespace Jet_System
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行";
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(44, 258);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(17, 12);
+            this.label23.TabIndex = 31;
+            this.label23.Text = "10";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(64, 258);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(11, 12);
+            this.label18.TabIndex = 30;
+            this.label18.Text = "9";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(81, 258);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(11, 12);
+            this.label19.TabIndex = 29;
+            this.label19.Text = "8";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(96, 258);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(11, 12);
+            this.label20.TabIndex = 28;
+            this.label20.Text = "7";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(113, 258);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(11, 12);
+            this.label15.TabIndex = 27;
+            this.label15.Text = "6";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(130, 258);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(11, 12);
+            this.label16.TabIndex = 26;
+            this.label16.Text = "5";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(147, 258);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(11, 12);
+            this.label17.TabIndex = 25;
+            this.label17.Text = "4";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(165, 258);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(11, 12);
+            this.label14.TabIndex = 24;
+            this.label14.Text = "3";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(182, 258);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(11, 12);
+            this.label13.TabIndex = 23;
+            this.label13.Text = "2";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(201, 258);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(11, 12);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "1";
+            // 
             // light_History
             // 
             this.light_History.LightColors = new System.Drawing.Color[] {
@@ -1969,7 +2059,7 @@ namespace Jet_System
             this.tabPage8.Controls.Add(this.mDisplay2RowShow);
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(56, 707);
+            this.tabPage8.Size = new System.Drawing.Size(56, 685);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "2号原始图像";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -1987,7 +2077,7 @@ namespace Jet_System
             this.mDisplay2RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay2RowShow.Name = "mDisplay2RowShow";
             this.mDisplay2RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay2RowShow.OcxState")));
-            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 707);
+            this.mDisplay2RowShow.Size = new System.Drawing.Size(56, 685);
             this.mDisplay2RowShow.TabIndex = 5;
             // 
             // tabControl1
@@ -2033,7 +2123,7 @@ namespace Jet_System
             this.tabPage3.Controls.Add(this.mDisplay1RowShow);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1033, 707);
+            this.tabPage3.Size = new System.Drawing.Size(1033, 685);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "1号原始图像";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -2051,7 +2141,7 @@ namespace Jet_System
             this.mDisplay1RowShow.MouseWheelSensitivity = 1D;
             this.mDisplay1RowShow.Name = "mDisplay1RowShow";
             this.mDisplay1RowShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay1RowShow.OcxState")));
-            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 707);
+            this.mDisplay1RowShow.Size = new System.Drawing.Size(1033, 685);
             this.mDisplay1RowShow.TabIndex = 6;
             // 
             // tabControl_Main_all
@@ -2192,96 +2282,6 @@ namespace Jet_System
             this.cogtool_DO.SuspendElectricRuns = false;
             this.cogtool_DO.TabIndex = 2;
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(201, 258);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(11, 12);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "1";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(182, 258);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(11, 12);
-            this.label13.TabIndex = 23;
-            this.label13.Text = "2";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(165, 258);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(11, 12);
-            this.label14.TabIndex = 24;
-            this.label14.Text = "3";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(113, 258);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(11, 12);
-            this.label15.TabIndex = 27;
-            this.label15.Text = "6";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(130, 258);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(11, 12);
-            this.label16.TabIndex = 26;
-            this.label16.Text = "5";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(147, 258);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(11, 12);
-            this.label17.TabIndex = 25;
-            this.label17.Text = "4";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(64, 258);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(11, 12);
-            this.label18.TabIndex = 30;
-            this.label18.Text = "9";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(81, 258);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(11, 12);
-            this.label19.TabIndex = 29;
-            this.label19.Text = "8";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(96, 258);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(11, 12);
-            this.label20.TabIndex = 28;
-            this.label20.Text = "7";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(44, 258);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(17, 12);
-            this.label23.TabIndex = 31;
-            this.label23.Text = "10";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2293,7 +2293,7 @@ namespace Jet_System
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
-            this.Text = "华为5g检测";
+            this.Text = "Elite检测";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.mDisplay2Row)).EndInit();
