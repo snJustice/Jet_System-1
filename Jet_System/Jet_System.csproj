@@ -200,11 +200,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomerUserControl\CustomerLights.cs">
+    <Compile Include="CustomerUserControl\CustomerLight.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CustomerUserControl\CustomerLights.Designer.cs">
-      <DependentUpon>CustomerLights.cs</DependentUpon>
+    <Compile Include="CustomerUserControl\CustomerLight.Designer.cs">
+      <DependentUpon>CustomerLight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerUserControl\CustomerLightsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomerUserControl\CustomerLightsPanel.Designer.cs">
+      <DependentUpon>CustomerLightsPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomerUserControl\DataShowBase.cs">
       <SubType>UserControl</SubType>
@@ -229,6 +235,12 @@
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTest.Designer.cs">
+      <DependentUpon>FormTest.cs</DependentUpon>
     </Compile>
     <Compile Include="InterfaceUtils\IUserControlExtensionLocate.cs" />
     <Compile Include="Program.cs" />
@@ -258,8 +270,11 @@
     <Compile Include="Wave Pattern.Designer.cs">
       <DependentUpon>Wave Pattern.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CustomerUserControl\CustomerLights.resx">
-      <DependentUpon>CustomerLights.cs</DependentUpon>
+    <EmbeddedResource Include="CustomerUserControl\CustomerLight.resx">
+      <DependentUpon>CustomerLight.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomerUserControl\CustomerLightsPanel.resx">
+      <DependentUpon>CustomerLightsPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomerUserControl\DataShowBase.resx">
       <DependentUpon>DataShowBase.cs</DependentUpon>
@@ -272,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTest.resx">
+      <DependentUpon>FormTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
