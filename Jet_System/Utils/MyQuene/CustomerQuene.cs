@@ -32,11 +32,11 @@ namespace Jet_System.Utils.MyQuene
             }
 
         }
-        public IEnumerable<bool> GetResults()
+        public List<bool> GetResults()
         {
             var temp =  SavedTables.ToList();
             var re = from xx in temp select xx.Result;
-            return re; 
+            return re.ToList(); 
         }
 
         public void Add(ProductTables _product)

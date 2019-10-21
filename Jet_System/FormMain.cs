@@ -1254,27 +1254,7 @@ namespace Jet_System
         private void LightShow()
         {
             var historyResults = MeasureDataQuene.GetResults();
-            int signals = 0;
-            List<Color> clolos = new List<Color>();
-            foreach (var item in historyResults)
-            {
-                if(item)
-                {
-                    clolos.Add(Color.Green);
-                    signals = signals << 1 | 1;
-                }
-                else
-                {
-                    clolos.Add(Color.Red);
-                    signals = signals << 1 | 1;
-                }
-            }
-        //    signals = Convert.ToInt32(signals.ToString().PadRight(10,'0'));
-            this.PerformSafely(()=> {
-                light_History.LightColors = clolos.ToArray();
-                light_History.LightStatus = signals;
-
-            });
+            customerLights.SetColor(historyResults);
             
         }
 

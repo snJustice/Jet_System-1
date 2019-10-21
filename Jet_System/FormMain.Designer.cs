@@ -150,17 +150,6 @@ namespace Jet_System
             this.label1 = new System.Windows.Forms.Label();
             this.tblImageAndControl = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.light_History = new Net.FlyingWind.Tools.LightIndicator();
             this.label4 = new System.Windows.Forms.Label();
             this.cbxHistoryData = new System.Windows.Forms.ComboBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -206,6 +195,7 @@ namespace Jet_System
             this.cogtool_RAF = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.tab_DO = new System.Windows.Forms.TabPage();
             this.cogtool_DO = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
+            this.customerLights = new Jet_System.CustomerUserControl.CustomerLightsPanel();
             ((System.ComponentModel.ISupportInitialize)(this.mDisplay2Row)).BeginInit();
             this.tblMain.SuspendLayout();
             this.tblParametersAndResultShow.SuspendLayout();
@@ -1628,17 +1618,7 @@ namespace Jet_System
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label23);
-            this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Controls.Add(this.label19);
-            this.groupBox2.Controls.Add(this.label20);
-            this.groupBox2.Controls.Add(this.label15);
-            this.groupBox2.Controls.Add(this.label16);
-            this.groupBox2.Controls.Add(this.label17);
-            this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.light_History);
+            this.groupBox2.Controls.Add(this.customerLights);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cbxHistoryData);
             this.groupBox2.Controls.Add(this.textBox2);
@@ -1654,122 +1634,6 @@ namespace Jet_System
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(44, 258);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(17, 12);
-            this.label23.TabIndex = 31;
-            this.label23.Text = "10";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(64, 258);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(11, 12);
-            this.label18.TabIndex = 30;
-            this.label18.Text = "9";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(81, 258);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(11, 12);
-            this.label19.TabIndex = 29;
-            this.label19.Text = "8";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(96, 258);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(11, 12);
-            this.label20.TabIndex = 28;
-            this.label20.Text = "7";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(113, 258);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(11, 12);
-            this.label15.TabIndex = 27;
-            this.label15.Text = "6";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(130, 258);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(11, 12);
-            this.label16.TabIndex = 26;
-            this.label16.Text = "5";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(147, 258);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(11, 12);
-            this.label17.TabIndex = 25;
-            this.label17.Text = "4";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(165, 258);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(11, 12);
-            this.label14.TabIndex = 24;
-            this.label14.Text = "3";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(182, 258);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(11, 12);
-            this.label13.TabIndex = 23;
-            this.label13.Text = "2";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(201, 258);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(11, 12);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "1";
-            // 
-            // light_History
-            // 
-            this.light_History.LightColors = new System.Drawing.Color[] {
-        System.Drawing.Color.Red,
-        System.Drawing.Color.Red,
-        System.Drawing.Color.Red,
-        System.Drawing.Color.Red,
-        System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.Lime,
-        System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255))))),
-        System.Drawing.Color.Aqua};
-            this.light_History.LightOffCOlor = System.Drawing.Color.Black;
-            this.light_History.LightOnColor = System.Drawing.Color.LimeGreen;
-            this.light_History.LightStatus = 0;
-            this.light_History.Location = new System.Drawing.Point(43, 277);
-            this.light_History.MinimumSize = new System.Drawing.Size(70, 12);
-            this.light_History.Name = "light_History";
-            this.light_History.NumLight = 10;
-            this.light_History.Size = new System.Drawing.Size(179, 15);
-            this.light_History.TabIndex = 21;
-            this.light_History.ToolTips = new string[] {
-        "急停灯",
-        "左转灯",
-        "右转灯",
-        "喇叭灯"};
             // 
             // label4
             // 
@@ -2282,6 +2146,16 @@ namespace Jet_System
             this.cogtool_DO.SuspendElectricRuns = false;
             this.cogtool_DO.TabIndex = 2;
             // 
+            // customerLights
+            // 
+            this.customerLights.LightCount = 2;
+            this.customerLights.LightLength = 5;
+            this.customerLights.LightRadius = 20;
+            this.customerLights.Location = new System.Drawing.Point(20, 196);
+            this.customerLights.Name = "customerLights";
+            this.customerLights.Size = new System.Drawing.Size(273, 104);
+            this.customerLights.TabIndex = 21;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2550,22 +2424,12 @@ namespace Jet_System
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbxHistoryData;
-        private Net.FlyingWind.Tools.LightIndicator light_History;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label LabelWaveDataCnt;
         private System.Windows.Forms.Button btnClearaHistory;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button BtnWave;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label9;
+        private CustomerUserControl.CustomerLightsPanel customerLights;
     }
 }
 
