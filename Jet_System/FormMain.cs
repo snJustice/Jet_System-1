@@ -1017,7 +1017,7 @@ namespace Jet_System
                     product.Current_NG_Num =Convert.ToInt32( ngnum.ToString()) ;
 
                     mDisplay1Result.Image = (cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey).Copy();
-                    var ImageRecord1 = cogtool_DO.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
+                    var ImageRecord1 = cogtool_RAF.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
                     product.Image = ImageRecord1;
                    
                     
