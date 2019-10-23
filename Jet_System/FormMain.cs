@@ -162,7 +162,7 @@ namespace Jet_System
             {
                 MessageBox.Show("未配置相机，请先转到相机配置");
             }
-            CheckPCI(); 
+          //  CheckPCI(); 
             
             if (programParameters.Current_Program == 0)
             {
@@ -191,7 +191,7 @@ namespace Jet_System
             ReadConfigure();//从csv文件中读取配置
             ScanImageProcess();//开始检测
 
-            ScanIOSignals();
+         //   ScanIOSignals();
             ScanTime();
 
         }
@@ -222,7 +222,7 @@ namespace Jet_System
 
             var fil = System.IO.File.ReadAllLines(measure_path);
 
-            if (fil.Count() != 19)
+            if (fil.Count() != 20)
             {
                 MessageBox.Show(measure_path + "  不存在");
             }
@@ -231,7 +231,7 @@ namespace Jet_System
                 RAF_Configure_Path.Add(fil[i]);
             }
 
-            for (int i = 10; i < 19; i++)
+            for (int i = 10; i < 20; i++)
             {
                 DO_Configure_Path.Add(fil[i]);
             }
@@ -944,6 +944,8 @@ namespace Jet_System
                     cogtool_DO.Subject.Inputs["Shield_Blade_TP"].Value =  ((DataTable)dataGrid_Wafer_Thickness.DataSource).Copy();
                     cogtool_DO.Subject.Inputs["Angle"].Value = ((DataTable)dataGrid_Shield_Cross_Angle.DataSource).Copy();
 
+                    cogtool_DO.Subject.Inputs["Shield_Blade_TP_Line"].Value = ((DataTable)dataGrid_TiePian.DataSource).Copy();
+
                     break;
                 case "DO_T":/*
                     MainTool_DO_T.Inputs.SetInputs(_image as CogImage8Grey,
@@ -1076,6 +1078,10 @@ namespace Jet_System
 
                     temp2 = ((DataTable)_showTool.Subject.Outputs["Angle"].Value).Copy();
                     product.Shield_Cross_Angle = temp2;
+
+
+                    temp2 = ((DataTable)_showTool.Subject.Outputs["Shield_Blade_TP_Line"].Value).Copy();
+                    product.TiePian = temp2;
 
                     object ngnum1 = _showTool.Subject.Outputs["Current_NG_Num"].Value;
                     product.Current_NG_Num = Convert.ToInt32(ngnum1.ToString());
@@ -1667,7 +1673,8 @@ namespace Jet_System
                 temp = CustomerCsvHelper.ReadParameters(DO_Configure_Path[8]);
                 UpdateConfigure(temp, ref dataGrid_Beam_Inner_R);
 
-
+                temp = CustomerCsvHelper.ReadParameters(DO_Configure_Path[9]);
+                UpdateConfigure(temp, ref dataGrid_TiePian);
 
 
 
@@ -1845,7 +1852,10 @@ namespace Jet_System
             temp = _tables.Shield_Cross_Angle.Copy();
             ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, true, ref data_string, ref is_allOK);
 
-            if(isShowRecord)
+            temp = _tables.TiePian.Copy();
+            ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK);
+
+            if (isShowRecord)
             {
                 mDisplay1Result.Record = _tables.Image;
                 mDisplay1ResultShow.Record = _tables.Image;
@@ -1856,17 +1866,17 @@ namespace Jet_System
             switch (_do)
             {
                 case "RAF":
-                    temp = _tables.TiePian.Copy();
-                    ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK);
+                    
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
                    
                     CheckRAFResult(is_allOK, _is_save, data_string, _isFirstOutput);
                    
                     break;
                 case "DO":
+
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
 
-                        CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput);
+                    CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput);
                     
 
                     break;
