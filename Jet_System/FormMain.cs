@@ -2232,7 +2232,17 @@ namespace Jet_System
             selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
             wavedata.Shield_Cross_Angle = selectResult;
 
-            
+
+            temp = _tables.Beam_Inner_L.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Beam_Inner_L = selectResult;
+
+
+            temp = _tables.Beam_Inner_R.AsEnumerable();
+            selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
+            wavedata.Beam_Inner_R = selectResult;
+
+
             wavedata.datetime = DateTime.Now;
            
         }
@@ -2279,7 +2289,7 @@ namespace Jet_System
 
         private void dataGrid_Beam_Touch_Window_L_L_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            string rowindex = e.RowIndex.ToString();
+            string rowindex = (e.RowIndex+1).ToString();
 
             BtnWave.Enabled = false;
             waveName = null;
@@ -2329,6 +2339,20 @@ namespace Jet_System
             {
                 BtnWave.Enabled = true;
                 waveName = ra_Shield_Cross_Angle.Name.Remove(0, 3);
+                textBox3.Text = waveName;
+                textBox3.Text = rowindex;
+            }
+            else if (ra_Beam_Inner_L.Checked)
+            {
+                BtnWave.Enabled = true;
+                waveName = ra_Beam_Inner_L.Name.Remove(0, 3);
+                textBox3.Text = waveName;
+                textBox3.Text = rowindex;
+            }
+            else if (ra_Beam_Inner_R.Checked)
+            {
+                BtnWave.Enabled = true;
+                waveName = ra_Beam_Inner_R.Name.Remove(0, 3);
                 textBox3.Text = waveName;
                 textBox3.Text = rowindex;
             }

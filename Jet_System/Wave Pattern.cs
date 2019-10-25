@@ -20,7 +20,7 @@ namespace Jet_System
 
         List<WaveData> receiveData = new List<WaveData>();
         List<double> a = new List<double>();
-        Series series;
+        Series series = new Series();
         int indexxx;
         int counttt;
         string SelectName;
@@ -35,7 +35,7 @@ namespace Jet_System
         internal void ReceiveMsg(List<WaveData> wd, int indexx, int Count, string name, string program)
         {
             chart1.Width = 1246 + wd.Count() * 50;
-            series = new Series();
+           
             series = chart1.Series[0];
             series.ChartType = SeriesChartType.Spline;
             series.BorderWidth = 2;
@@ -107,6 +107,18 @@ namespace Jet_System
                             WaveDataShow.Text += (i + 1) + ": " + receiveData[i].datetime.ToString("HH:mm:ss") + "  " + Convert.ToDouble(receiveData[i].Shield_Cross_Angle[indexxx - 1]) + "\n";
                             series.LegendText = "Shield_Cross_Angle";
                             label2.Text = "第" + indexxx + "个Shield_Cross_Angle数据";
+                            break;
+                        case "Beam_Inner_L":
+                            a.Add(Convert.ToDouble(receiveData[i].Beam_Inner_L[indexxx - 1]));
+                            WaveDataShow.Text += (i + 1) + ": " + receiveData[i].datetime.ToString("HH:mm:ss") + "  " + Convert.ToDouble(receiveData[i].Beam_Inner_L[indexxx - 1]) + "\n";
+                            series.LegendText = "Beam_Inner_L";
+                            label2.Text = "第" + indexxx + "个Beam_Inner_L数据";
+                            break;
+                        case "Beam_Inner_R":
+                            a.Add(Convert.ToDouble(receiveData[i].Beam_Inner_R[indexxx - 1]));
+                            WaveDataShow.Text += (i + 1) + ": " + receiveData[i].datetime.ToString("HH:mm:ss") + "  " + Convert.ToDouble(receiveData[i].Beam_Inner_R[indexxx - 1]) + "\n";
+                            series.LegendText = "Beam_Inner_R";
+                            label2.Text = "第" + indexxx + "个Beam_Inner_R数据";
                             break;
 
                     }

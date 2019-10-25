@@ -16,6 +16,9 @@ namespace Jet_System.Utils
         public string[] Wafer_Thickness { set; get; }
         public string[] Shield_Cross_Angle { set; get; }
 
+        public string[] Beam_Inner_L { set; get; }
+        public string[] Beam_Inner_R { set; get; }
+
         public DateTime datetime  { set; get; }
   
     }
