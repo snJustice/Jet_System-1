@@ -255,6 +255,8 @@ namespace Jet_System
             cogtool_DO.Subject = dodd;
             cogtool_Check.Subject = check;
 
+            dataGrid_Check.DataSource = (DataTable)check.Outputs["Data"].Value;
+
             cogtool_RAF.Subject.Ran += cogtool_RAF_Ran;
             cogtool_DO.Subject.Ran += cogtool_DO_Ran;
             cogtool_Check.Subject.Ran += cogtool_Check_Ran;
@@ -396,13 +398,21 @@ namespace Jet_System
             Task.Factory.StartNew(()=> {
                 while (true)
                 {
-
-                    var temp = RowImageSave.Take();
-                    if (!Directory.Exists(temp.Path))
+                    try
                     {
-                        Directory.CreateDirectory(temp.Path);
+
+
+                        var temp = RowImageSave.Take();
+                        if (!Directory.Exists(temp.Path))
+                        {
+                            Directory.CreateDirectory(temp.Path);
+                        }
+                        temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
                     }
-                    temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
+                    catch(Exception ex)
+                    {
+
+                    }
                     /*
                     try
                     {
@@ -430,16 +440,24 @@ namespace Jet_System
         private void ScanResultImage()
         {
             Task.Factory.StartNew(() => {
-                while (true)
-                {
-                    var temp = ResultImageSave.Take();
-                    if (!Directory.Exists(temp.Path))
+            while (true)
+            {
+                    try
                     {
-                        Directory.CreateDirectory(temp.Path);
-                    }  
-                 
-                    temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
 
+
+                        var temp = ResultImageSave.Take();
+                        if (!Directory.Exists(temp.Path))
+                        {
+                            Directory.CreateDirectory(temp.Path);
+                        }
+
+                        temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
+                    }
+                    catch(Exception ex )
+                    {
+
+                    }
                     /*
                     try
                     {
@@ -460,9 +478,11 @@ namespace Jet_System
                     {
                         return;
                     }*/
-                   
+
                 }
+                    
             });
+        
         }
 
         #endregion
@@ -1591,6 +1611,10 @@ namespace Jet_System
         private void ReadConfigure()
         {
 
+
+            var checktemp = CustomerCsvHelper.ReadParameters(Check_Configure_Path);
+            UpdateConfigure(checktemp,ref dataGrid_Check);
+
             /*
               RAF
  
@@ -2482,6 +2506,7 @@ namespace Jet_System
 
         private void btnCheck_Click(object sender, EventArgs e)
         {
+            Currnet_PCI.Open4Light();
             Currnet_Camera.ShuterCur = 65000; //(long)programParameters.RAF_Exposure;
             Currnet_Camera.GainCur = 0; //(long)programParameters.RAF_Gain;
 
@@ -2507,10 +2532,10 @@ namespace Jet_System
 
             this.PerformSafely(() => {
                 var result_table = (DataTable)cogtool_Check.Subject.Outputs["Data"].Value;
-
+                dataGrid_Check.DataSource = result_table;
                 var resultrow = result_table.AsEnumerable();
-                var results = from x in resultrow select x.Field<string>("结果") == "false";
-                if(results.Count()>0)
+                var results = resultrow.Where(x => x.Field<string>("指示") == "False");
+                if (results.Count()>0)
                 {
                     lblCheck_Message.BackColor = Color.Red;
                     lblCheck_Message.Text = "NG";
