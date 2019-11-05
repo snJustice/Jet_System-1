@@ -17,3 +17,4 @@ Configure\8PR-DO\Shield_Flatness.csv
 Configure\8PR-DO\Shield_Plate_To_Tower.csv
 Configure\8PR-DO\Beam_Inner_L.csv
 Configure\8PR-DO\Beam_Inner_R.csv
+Configure\Check\Check.csv

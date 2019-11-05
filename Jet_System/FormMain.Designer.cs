@@ -150,6 +150,7 @@ namespace Jet_System
             this.label1 = new System.Windows.Forms.Label();
             this.tblImageAndControl = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.customerLights = new Jet_System.CustomerUserControl.CustomerLightsPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.cbxHistoryData = new System.Windows.Forms.ComboBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -195,7 +196,20 @@ namespace Jet_System
             this.cogtool_RAF = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.tab_DO = new System.Windows.Forms.TabPage();
             this.cogtool_DO = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
-            this.customerLights = new Jet_System.CustomerUserControl.CustomerLightsPanel();
+            this.tab_Check = new System.Windows.Forms.TabPage();
+            this.tblCheckMain = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tabControl3 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cogDisplay_Check = new Cognex.VisionPro.CogRecordDisplay();
+            this.gpbCheck_Data = new System.Windows.Forms.GroupBox();
+            this.dataGrid_Check = new System.Windows.Forms.DataGridView();
+            this.gpbCheck_Result = new System.Windows.Forms.GroupBox();
+            this.lblCheck_Message = new System.Windows.Forms.Label();
+            this.gpbCheck_Control = new System.Windows.Forms.GroupBox();
+            this.btnCheck = new System.Windows.Forms.Button();
+            this.tab_Check_Program = new System.Windows.Forms.TabPage();
+            this.cogtool_Check = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             ((System.ComponentModel.ISupportInitialize)(this.mDisplay2Row)).BeginInit();
             this.tblMain.SuspendLayout();
             this.tblParametersAndResultShow.SuspendLayout();
@@ -283,6 +297,18 @@ namespace Jet_System
             ((System.ComponentModel.ISupportInitialize)(this.cogtool_RAF)).BeginInit();
             this.tab_DO.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cogtool_DO)).BeginInit();
+            this.tab_Check.SuspendLayout();
+            this.tblCheckMain.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tabControl3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cogDisplay_Check)).BeginInit();
+            this.gpbCheck_Data.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Check)).BeginInit();
+            this.gpbCheck_Result.SuspendLayout();
+            this.gpbCheck_Control.SuspendLayout();
+            this.tab_Check_Program.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cogtool_Check)).BeginInit();
             this.SuspendLayout();
             // 
             // mDisplay2Row
@@ -338,7 +364,7 @@ namespace Jet_System
             this.tblMain.RowCount = 1;
             this.tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 743F));
-            this.tblMain.Size = new System.Drawing.Size(1356, 743);
+            this.tblMain.Size = new System.Drawing.Size(1356, 670);
             this.tblMain.TabIndex = 9;
             // 
             // tblParametersAndResultShow
@@ -354,16 +380,16 @@ namespace Jet_System
             this.tblParametersAndResultShow.RowCount = 2;
             this.tblParametersAndResultShow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tblParametersAndResultShow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tblParametersAndResultShow.Size = new System.Drawing.Size(989, 737);
+            this.tblParametersAndResultShow.Size = new System.Drawing.Size(989, 664);
             this.tblParametersAndResultShow.TabIndex = 1;
             // 
             // group_main
             // 
             this.group_main.Controls.Add(this.tblMain2);
             this.group_main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.group_main.Location = new System.Drawing.Point(3, 150);
+            this.group_main.Location = new System.Drawing.Point(3, 135);
             this.group_main.Name = "group_main";
-            this.group_main.Size = new System.Drawing.Size(983, 584);
+            this.group_main.Size = new System.Drawing.Size(983, 526);
             this.group_main.TabIndex = 11;
             this.group_main.TabStop = false;
             this.group_main.Text = "参数";
@@ -380,7 +406,7 @@ namespace Jet_System
             this.tblMain2.Name = "tblMain2";
             this.tblMain2.RowCount = 1;
             this.tblMain2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblMain2.Size = new System.Drawing.Size(977, 564);
+            this.tblMain2.Size = new System.Drawing.Size(977, 506);
             this.tblMain2.TabIndex = 2;
             // 
             // tabControl_Main
@@ -1079,7 +1105,7 @@ namespace Jet_System
             this.palSelectMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
             this.palSelectMeasure.Location = new System.Drawing.Point(3, 3);
             this.palSelectMeasure.Name = "palSelectMeasure";
-            this.palSelectMeasure.Size = new System.Drawing.Size(169, 558);
+            this.palSelectMeasure.Size = new System.Drawing.Size(169, 500);
             this.palSelectMeasure.TabIndex = 2;
             // 
             // ra_TiePian
@@ -1323,7 +1349,7 @@ namespace Jet_System
             this.groupBoxTongji.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTongji.Location = new System.Drawing.Point(3, 3);
             this.groupBoxTongji.Name = "groupBoxTongji";
-            this.groupBoxTongji.Size = new System.Drawing.Size(983, 141);
+            this.groupBoxTongji.Size = new System.Drawing.Size(983, 126);
             this.groupBoxTongji.TabIndex = 12;
             this.groupBoxTongji.TabStop = false;
             this.groupBoxTongji.Text = "统计";
@@ -1613,7 +1639,7 @@ namespace Jet_System
             this.tblImageAndControl.RowCount = 2;
             this.tblImageAndControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblImageAndControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblImageAndControl.Size = new System.Drawing.Size(355, 737);
+            this.tblImageAndControl.Size = new System.Drawing.Size(355, 664);
             this.tblImageAndControl.TabIndex = 0;
             // 
             // groupBox2
@@ -1628,12 +1654,22 @@ namespace Jet_System
             this.groupBox2.Controls.Add(this.btnRunOnce);
             this.groupBox2.Controls.Add(this.btnCurrentImageRun);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 371);
+            this.groupBox2.Location = new System.Drawing.Point(3, 335);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(349, 363);
+            this.groupBox2.Size = new System.Drawing.Size(349, 326);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行";
+            // 
+            // customerLights
+            // 
+            this.customerLights.LightCount = 2;
+            this.customerLights.LightLength = 5;
+            this.customerLights.LightRadius = 20;
+            this.customerLights.Location = new System.Drawing.Point(20, 196);
+            this.customerLights.Name = "customerLights";
+            this.customerLights.Size = new System.Drawing.Size(273, 104);
+            this.customerLights.TabIndex = 21;
             // 
             // label4
             // 
@@ -1696,7 +1732,7 @@ namespace Jet_System
             this.groupBox_Image.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox_Image.Location = new System.Drawing.Point(3, 3);
             this.groupBox_Image.Name = "groupBox_Image";
-            this.groupBox_Image.Size = new System.Drawing.Size(349, 362);
+            this.groupBox_Image.Size = new System.Drawing.Size(349, 326);
             this.groupBox_Image.TabIndex = 0;
             this.groupBox_Image.TabStop = false;
             this.groupBox_Image.Text = "图像";
@@ -1711,7 +1747,7 @@ namespace Jet_System
             this.tabControlImage.Location = new System.Drawing.Point(3, 17);
             this.tabControlImage.Name = "tabControlImage";
             this.tabControlImage.SelectedIndex = 0;
-            this.tabControlImage.Size = new System.Drawing.Size(343, 342);
+            this.tabControlImage.Size = new System.Drawing.Size(343, 306);
             this.tabControlImage.TabIndex = 0;
             // 
             // tapaResultImage1
@@ -1720,7 +1756,7 @@ namespace Jet_System
             this.tapaResultImage1.Location = new System.Drawing.Point(4, 22);
             this.tapaResultImage1.Name = "tapaResultImage1";
             this.tapaResultImage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tapaResultImage1.Size = new System.Drawing.Size(335, 316);
+            this.tapaResultImage1.Size = new System.Drawing.Size(335, 280);
             this.tapaResultImage1.TabIndex = 0;
             this.tapaResultImage1.Text = "1号图像";
             this.tapaResultImage1.UseVisualStyleBackColor = true;
@@ -1738,7 +1774,7 @@ namespace Jet_System
             this.mDisplay1Result.MouseWheelSensitivity = 1D;
             this.mDisplay1Result.Name = "mDisplay1Result";
             this.mDisplay1Result.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay1Result.OcxState")));
-            this.mDisplay1Result.Size = new System.Drawing.Size(329, 310);
+            this.mDisplay1Result.Size = new System.Drawing.Size(329, 274);
             this.mDisplay1Result.TabIndex = 1;
             // 
             // tapaResultImage2
@@ -1837,7 +1873,7 @@ namespace Jet_System
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.status_child_static_message,
             this.status_child_Camera_status});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 800);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 727);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1370, 22);
             this.statusStrip1.TabIndex = 11;
@@ -1860,7 +1896,7 @@ namespace Jet_System
             this.groupBox_Display_max.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox_Display_max.Location = new System.Drawing.Point(3, 3);
             this.groupBox_Display_max.Name = "groupBox_Display_max";
-            this.groupBox_Display_max.Size = new System.Drawing.Size(1123, 737);
+            this.groupBox_Display_max.Size = new System.Drawing.Size(1123, 664);
             this.groupBox_Display_max.TabIndex = 12;
             this.groupBox_Display_max.TabStop = false;
             this.groupBox_Display_max.Text = "图像";
@@ -1877,7 +1913,7 @@ namespace Jet_System
             this.tbll_Max_TwoDisplay.Name = "tbll_Max_TwoDisplay";
             this.tbll_Max_TwoDisplay.RowCount = 1;
             this.tbll_Max_TwoDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tbll_Max_TwoDisplay.Size = new System.Drawing.Size(1117, 717);
+            this.tbll_Max_TwoDisplay.Size = new System.Drawing.Size(1117, 644);
             this.tbll_Max_TwoDisplay.TabIndex = 1;
             // 
             // tabControl2
@@ -1888,7 +1924,7 @@ namespace Jet_System
             this.tabControl2.Location = new System.Drawing.Point(1050, 3);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(64, 711);
+            this.tabControl2.Size = new System.Drawing.Size(64, 638);
             this.tabControl2.TabIndex = 1;
             // 
             // tabPage6
@@ -1897,7 +1933,7 @@ namespace Jet_System
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(56, 685);
+            this.tabPage6.Size = new System.Drawing.Size(56, 612);
             this.tabPage6.TabIndex = 1;
             this.tabPage6.Text = "2号图像";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1915,7 +1951,7 @@ namespace Jet_System
             this.mDisplay2ResultShow.MouseWheelSensitivity = 1D;
             this.mDisplay2ResultShow.Name = "mDisplay2ResultShow";
             this.mDisplay2ResultShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay2ResultShow.OcxState")));
-            this.mDisplay2ResultShow.Size = new System.Drawing.Size(50, 679);
+            this.mDisplay2ResultShow.Size = new System.Drawing.Size(50, 606);
             this.mDisplay2ResultShow.TabIndex = 2;
             // 
             // tabPage8
@@ -1952,7 +1988,7 @@ namespace Jet_System
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1041, 711);
+            this.tabControl1.Size = new System.Drawing.Size(1041, 638);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -1961,7 +1997,7 @@ namespace Jet_System
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1033, 685);
+            this.tabPage1.Size = new System.Drawing.Size(1033, 612);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "1号图像";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1979,7 +2015,7 @@ namespace Jet_System
             this.mDisplay1ResultShow.MouseWheelSensitivity = 1D;
             this.mDisplay1ResultShow.Name = "mDisplay1ResultShow";
             this.mDisplay1ResultShow.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDisplay1ResultShow.OcxState")));
-            this.mDisplay1ResultShow.Size = new System.Drawing.Size(1027, 679);
+            this.mDisplay1ResultShow.Size = new System.Drawing.Size(1027, 606);
             this.mDisplay1ResultShow.TabIndex = 1;
             // 
             // tabPage3
@@ -2014,11 +2050,13 @@ namespace Jet_System
             this.tabControl_Main_all.Controls.Add(this.tab_Display);
             this.tabControl_Main_all.Controls.Add(this.tab_RAF);
             this.tabControl_Main_all.Controls.Add(this.tab_DO);
+            this.tabControl_Main_all.Controls.Add(this.tab_Check);
+            this.tabControl_Main_all.Controls.Add(this.tab_Check_Program);
             this.tabControl_Main_all.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl_Main_all.Location = new System.Drawing.Point(0, 25);
             this.tabControl_Main_all.Name = "tabControl_Main_all";
             this.tabControl_Main_all.SelectedIndex = 0;
-            this.tabControl_Main_all.Size = new System.Drawing.Size(1370, 775);
+            this.tabControl_Main_all.Size = new System.Drawing.Size(1370, 702);
             this.tabControl_Main_all.TabIndex = 13;
             // 
             // tab_Measure
@@ -2027,7 +2065,7 @@ namespace Jet_System
             this.tab_Measure.Location = new System.Drawing.Point(4, 22);
             this.tab_Measure.Name = "tab_Measure";
             this.tab_Measure.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Measure.Size = new System.Drawing.Size(1362, 749);
+            this.tab_Measure.Size = new System.Drawing.Size(1362, 676);
             this.tab_Measure.TabIndex = 0;
             this.tab_Measure.Text = "检测";
             this.tab_Measure.UseVisualStyleBackColor = true;
@@ -2038,7 +2076,7 @@ namespace Jet_System
             this.tab_Display.Location = new System.Drawing.Point(4, 22);
             this.tab_Display.Name = "tab_Display";
             this.tab_Display.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Display.Size = new System.Drawing.Size(1362, 749);
+            this.tab_Display.Size = new System.Drawing.Size(1362, 676);
             this.tab_Display.TabIndex = 1;
             this.tab_Display.Text = "显示";
             this.tab_Display.UseVisualStyleBackColor = true;
@@ -2055,7 +2093,7 @@ namespace Jet_System
             this.tbll_Display_max.Name = "tbll_Display_max";
             this.tbll_Display_max.RowCount = 1;
             this.tbll_Display_max.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tbll_Display_max.Size = new System.Drawing.Size(1356, 743);
+            this.tbll_Display_max.Size = new System.Drawing.Size(1356, 670);
             this.tbll_Display_max.TabIndex = 13;
             // 
             // groupBox_message
@@ -2066,7 +2104,7 @@ namespace Jet_System
             this.groupBox_message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox_message.Location = new System.Drawing.Point(1132, 3);
             this.groupBox_message.Name = "groupBox_message";
-            this.groupBox_message.Size = new System.Drawing.Size(221, 737);
+            this.groupBox_message.Size = new System.Drawing.Size(221, 664);
             this.groupBox_message.TabIndex = 13;
             this.groupBox_message.TabStop = false;
             this.groupBox_message.Text = "信息";
@@ -2105,7 +2143,7 @@ namespace Jet_System
             this.tab_RAF.Controls.Add(this.cogtool_RAF);
             this.tab_RAF.Location = new System.Drawing.Point(4, 22);
             this.tab_RAF.Name = "tab_RAF";
-            this.tab_RAF.Size = new System.Drawing.Size(1362, 749);
+            this.tab_RAF.Size = new System.Drawing.Size(1362, 676);
             this.tab_RAF.TabIndex = 2;
             this.tab_RAF.Text = "RAF_程序";
             this.tab_RAF.UseVisualStyleBackColor = true;
@@ -2119,7 +2157,7 @@ namespace Jet_System
             this.cogtool_RAF.MinimumSize = new System.Drawing.Size(489, 0);
             this.cogtool_RAF.Name = "cogtool_RAF";
             this.cogtool_RAF.ShowNodeToolTips = true;
-            this.cogtool_RAF.Size = new System.Drawing.Size(1362, 749);
+            this.cogtool_RAF.Size = new System.Drawing.Size(1362, 676);
             this.cogtool_RAF.SuspendElectricRuns = false;
             this.cogtool_RAF.TabIndex = 3;
             // 
@@ -2128,7 +2166,7 @@ namespace Jet_System
             this.tab_DO.Controls.Add(this.cogtool_DO);
             this.tab_DO.Location = new System.Drawing.Point(4, 22);
             this.tab_DO.Name = "tab_DO";
-            this.tab_DO.Size = new System.Drawing.Size(1362, 749);
+            this.tab_DO.Size = new System.Drawing.Size(1362, 676);
             this.tab_DO.TabIndex = 3;
             this.tab_DO.Text = "DO_程序";
             this.tab_DO.UseVisualStyleBackColor = true;
@@ -2142,25 +2180,177 @@ namespace Jet_System
             this.cogtool_DO.MinimumSize = new System.Drawing.Size(489, 0);
             this.cogtool_DO.Name = "cogtool_DO";
             this.cogtool_DO.ShowNodeToolTips = true;
-            this.cogtool_DO.Size = new System.Drawing.Size(1362, 749);
+            this.cogtool_DO.Size = new System.Drawing.Size(1362, 676);
             this.cogtool_DO.SuspendElectricRuns = false;
             this.cogtool_DO.TabIndex = 2;
             // 
-            // customerLights
+            // tab_Check
             // 
-            this.customerLights.LightCount = 2;
-            this.customerLights.LightLength = 5;
-            this.customerLights.LightRadius = 20;
-            this.customerLights.Location = new System.Drawing.Point(20, 196);
-            this.customerLights.Name = "customerLights";
-            this.customerLights.Size = new System.Drawing.Size(273, 104);
-            this.customerLights.TabIndex = 21;
+            this.tab_Check.Controls.Add(this.tblCheckMain);
+            this.tab_Check.Location = new System.Drawing.Point(4, 22);
+            this.tab_Check.Name = "tab_Check";
+            this.tab_Check.Size = new System.Drawing.Size(1362, 676);
+            this.tab_Check.TabIndex = 4;
+            this.tab_Check.Text = "点检";
+            this.tab_Check.UseVisualStyleBackColor = true;
+            // 
+            // tblCheckMain
+            // 
+            this.tblCheckMain.ColumnCount = 2;
+            this.tblCheckMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.8884F));
+            this.tblCheckMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.1116F));
+            this.tblCheckMain.Controls.Add(this.groupBox1, 0, 0);
+            this.tblCheckMain.Controls.Add(this.gpbCheck_Data, 1, 0);
+            this.tblCheckMain.Controls.Add(this.gpbCheck_Result, 0, 1);
+            this.tblCheckMain.Controls.Add(this.gpbCheck_Control, 1, 1);
+            this.tblCheckMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblCheckMain.Location = new System.Drawing.Point(0, 0);
+            this.tblCheckMain.Name = "tblCheckMain";
+            this.tblCheckMain.RowCount = 2;
+            this.tblCheckMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.50296F));
+            this.tblCheckMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.49704F));
+            this.tblCheckMain.Size = new System.Drawing.Size(1362, 676);
+            this.tblCheckMain.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tabControl3);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(619, 572);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "图像";
+            // 
+            // tabControl3
+            // 
+            this.tabControl3.Controls.Add(this.tabPage2);
+            this.tabControl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl3.Location = new System.Drawing.Point(3, 17);
+            this.tabControl3.Name = "tabControl3";
+            this.tabControl3.SelectedIndex = 0;
+            this.tabControl3.Size = new System.Drawing.Size(613, 552);
+            this.tabControl3.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.cogDisplay_Check);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(605, 526);
+            this.tabPage2.TabIndex = 0;
+            this.tabPage2.Text = "图像";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cogDisplay_Check
+            // 
+            this.cogDisplay_Check.ColorMapLowerClipColor = System.Drawing.Color.Black;
+            this.cogDisplay_Check.ColorMapLowerRoiLimit = 0D;
+            this.cogDisplay_Check.ColorMapPredefined = Cognex.VisionPro.Display.CogDisplayColorMapPredefinedConstants.None;
+            this.cogDisplay_Check.ColorMapUpperClipColor = System.Drawing.Color.Black;
+            this.cogDisplay_Check.ColorMapUpperRoiLimit = 1D;
+            this.cogDisplay_Check.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cogDisplay_Check.Location = new System.Drawing.Point(3, 3);
+            this.cogDisplay_Check.MouseWheelMode = Cognex.VisionPro.Display.CogDisplayMouseWheelModeConstants.Zoom1;
+            this.cogDisplay_Check.MouseWheelSensitivity = 1D;
+            this.cogDisplay_Check.Name = "cogDisplay_Check";
+            this.cogDisplay_Check.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("cogDisplay_Check.OcxState")));
+            this.cogDisplay_Check.Size = new System.Drawing.Size(599, 520);
+            this.cogDisplay_Check.TabIndex = 1;
+            // 
+            // gpbCheck_Data
+            // 
+            this.gpbCheck_Data.Controls.Add(this.dataGrid_Check);
+            this.gpbCheck_Data.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gpbCheck_Data.Location = new System.Drawing.Point(628, 3);
+            this.gpbCheck_Data.Name = "gpbCheck_Data";
+            this.gpbCheck_Data.Size = new System.Drawing.Size(731, 572);
+            this.gpbCheck_Data.TabIndex = 2;
+            this.gpbCheck_Data.TabStop = false;
+            this.gpbCheck_Data.Text = "数据";
+            // 
+            // dataGrid_Check
+            // 
+            this.dataGrid_Check.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGrid_Check.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGrid_Check.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid_Check.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid_Check.Location = new System.Drawing.Point(3, 17);
+            this.dataGrid_Check.Name = "dataGrid_Check";
+            this.dataGrid_Check.RowTemplate.Height = 23;
+            this.dataGrid_Check.Size = new System.Drawing.Size(725, 552);
+            this.dataGrid_Check.TabIndex = 1;
+            // 
+            // gpbCheck_Result
+            // 
+            this.gpbCheck_Result.Controls.Add(this.lblCheck_Message);
+            this.gpbCheck_Result.Location = new System.Drawing.Point(3, 581);
+            this.gpbCheck_Result.Name = "gpbCheck_Result";
+            this.gpbCheck_Result.Size = new System.Drawing.Size(591, 92);
+            this.gpbCheck_Result.TabIndex = 3;
+            this.gpbCheck_Result.TabStop = false;
+            this.gpbCheck_Result.Text = "结果";
+            // 
+            // lblCheck_Message
+            // 
+            this.lblCheck_Message.AutoSize = true;
+            this.lblCheck_Message.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCheck_Message.Location = new System.Drawing.Point(35, 34);
+            this.lblCheck_Message.Name = "lblCheck_Message";
+            this.lblCheck_Message.Size = new System.Drawing.Size(130, 24);
+            this.lblCheck_Message.TabIndex = 17;
+            this.lblCheck_Message.Text = "未开始检测";
+            // 
+            // gpbCheck_Control
+            // 
+            this.gpbCheck_Control.Controls.Add(this.btnCheck);
+            this.gpbCheck_Control.Location = new System.Drawing.Point(628, 581);
+            this.gpbCheck_Control.Name = "gpbCheck_Control";
+            this.gpbCheck_Control.Size = new System.Drawing.Size(487, 92);
+            this.gpbCheck_Control.TabIndex = 4;
+            this.gpbCheck_Control.TabStop = false;
+            this.gpbCheck_Control.Text = "检测";
+            // 
+            // btnCheck
+            // 
+            this.btnCheck.Location = new System.Drawing.Point(384, 40);
+            this.btnCheck.Name = "btnCheck";
+            this.btnCheck.Size = new System.Drawing.Size(75, 23);
+            this.btnCheck.TabIndex = 0;
+            this.btnCheck.Text = "检测";
+            this.btnCheck.UseVisualStyleBackColor = true;
+            this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
+            // 
+            // tab_Check_Program
+            // 
+            this.tab_Check_Program.Controls.Add(this.cogtool_Check);
+            this.tab_Check_Program.Location = new System.Drawing.Point(4, 22);
+            this.tab_Check_Program.Name = "tab_Check_Program";
+            this.tab_Check_Program.Size = new System.Drawing.Size(1362, 676);
+            this.tab_Check_Program.TabIndex = 5;
+            this.tab_Check_Program.Text = "点检程序";
+            this.tab_Check_Program.UseVisualStyleBackColor = true;
+            // 
+            // cogtool_Check
+            // 
+            this.cogtool_Check.AllowDrop = true;
+            this.cogtool_Check.ContextMenuCustomizer = null;
+            this.cogtool_Check.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cogtool_Check.Location = new System.Drawing.Point(0, 0);
+            this.cogtool_Check.MinimumSize = new System.Drawing.Size(489, 0);
+            this.cogtool_Check.Name = "cogtool_Check";
+            this.cogtool_Check.ShowNodeToolTips = true;
+            this.cogtool_Check.Size = new System.Drawing.Size(1362, 676);
+            this.cogtool_Check.SuspendElectricRuns = false;
+            this.cogtool_Check.TabIndex = 3;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1370, 822);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.tabControl_Main_all);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -2263,6 +2453,19 @@ namespace Jet_System
             ((System.ComponentModel.ISupportInitialize)(this.cogtool_RAF)).EndInit();
             this.tab_DO.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cogtool_DO)).EndInit();
+            this.tab_Check.ResumeLayout(false);
+            this.tblCheckMain.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.tabControl3.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cogDisplay_Check)).EndInit();
+            this.gpbCheck_Data.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_Check)).EndInit();
+            this.gpbCheck_Result.ResumeLayout(false);
+            this.gpbCheck_Result.PerformLayout();
+            this.gpbCheck_Control.ResumeLayout(false);
+            this.tab_Check_Program.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cogtool_Check)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2430,6 +2633,20 @@ namespace Jet_System
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button BtnWave;
         private CustomerUserControl.CustomerLightsPanel customerLights;
+        private System.Windows.Forms.TabPage tab_Check;
+        private System.Windows.Forms.TableLayoutPanel tblCheckMain;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TabControl tabControl3;
+        private System.Windows.Forms.TabPage tabPage2;
+        private CogRecordDisplay cogDisplay_Check;
+        private System.Windows.Forms.GroupBox gpbCheck_Data;
+        private System.Windows.Forms.DataGridView dataGrid_Check;
+        private System.Windows.Forms.GroupBox gpbCheck_Result;
+        private System.Windows.Forms.Label lblCheck_Message;
+        private System.Windows.Forms.GroupBox gpbCheck_Control;
+        private System.Windows.Forms.Button btnCheck;
+        private System.Windows.Forms.TabPage tab_Check_Program;
+        private Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 cogtool_Check;
     }
 }
 

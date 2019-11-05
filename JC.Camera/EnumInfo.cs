@@ -12,6 +12,7 @@ namespace JC.Camera
         ExtTrigger,
         Video,
         Grab,
-        Grab2
+        Grab2,
+        Grab_Check
     }
 }

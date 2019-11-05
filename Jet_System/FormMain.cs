@@ -109,6 +109,8 @@ namespace Jet_System
         List<string> RAF_Configure_Path = new List<string>();//存放RAF配置
         List<string> DO_Configure_Path = new List<string>();//存放DO配置
 
+        string Check_Configure_Path = "";
+
         CustomerQuene MeasureDataQuene;
 
         List<WaveData> Wavedata_Do = new List<WaveData>();
@@ -222,7 +224,7 @@ namespace Jet_System
 
             var fil = System.IO.File.ReadAllLines(measure_path);
 
-            if (fil.Count() != 19)
+            if (fil.Count() != 20)
             {
                 MessageBox.Show(measure_path + "  不存在");
             }
@@ -235,6 +237,8 @@ namespace Jet_System
             {
                 DO_Configure_Path.Add(fil[i]);
             }
+
+            Check_Configure_Path = fil[19];
         }
         private ProgramParameters ReadParameters()
         {
@@ -246,12 +250,14 @@ namespace Jet_System
 
             var raf = CogSerializer.LoadObjectFromFile(filenames[0]) as CogToolBlock;
             var dodd = CogSerializer.LoadObjectFromFile(filenames[1]) as CogToolBlock;
+            var check = CogSerializer.LoadObjectFromFile(filenames[2]) as CogToolBlock;
             cogtool_RAF.Subject = raf;
             cogtool_DO.Subject = dodd;
+            cogtool_Check.Subject = check;
 
             cogtool_RAF.Subject.Ran += cogtool_RAF_Ran;
             cogtool_DO.Subject.Ran += cogtool_DO_Ran;
-            
+            cogtool_Check.Subject.Ran += cogtool_Check_Ran;
         }
        
 
@@ -814,6 +820,22 @@ namespace Jet_System
            
         }
 
+        void cogtool_Check_Ran(object sender, EventArgs e)
+        {
+
+            mDisplay1Result.Image = cogtool_Check.Subject.Inputs["Image"].Value as CogImage8Grey;
+
+            var temp = cogtool_Check.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
+
+            cogDisplay_Check.Record = temp;
+
+
+
+            cogDisplay_Check.Fit(true);
+           
+
+        }
+
         private void SaveToolBlock(Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 _tool, string _file)
         {
             CogSerializer.SaveObjectToFile(_tool.Subject, _file);
@@ -834,6 +856,10 @@ namespace Jet_System
                 case Command.Grab2:
                     ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy( CogImageCopyModeConstants.CopyPixels), Program = programParameters.Current_Program, RunTime = 2 });
                     //RunningOnce_Second(e.CameraImage);
+                    break;
+                case Command.Grab_Check:
+
+                    RunningCheck(e.CameraImage.Copy(CogImageCopyModeConstants.CopyPixels));
                     break;
                 default:
                     break;
@@ -1249,6 +1275,9 @@ namespace Jet_System
             }
             
         }
+
+
+
 
 
         private void LightShow()
@@ -2437,14 +2466,72 @@ namespace Jet_System
 
 
         }
+
+
+
+
+
+
+
         #endregion
 
 
-        
-
-        
 
 
+        #region Check,点检
+
+        private void btnCheck_Click(object sender, EventArgs e)
+        {
+            Currnet_Camera.ShuterCur = 65000; //(long)programParameters.RAF_Exposure;
+            Currnet_Camera.GainCur = 0; //(long)programParameters.RAF_Gain;
+
+            Currnet_Camera.OneShot(Command.Grab_Check);
+        }
+
+
+
+        private void RunningCheck(CogImage8Grey image)
+        {
+
+            this.PerformSafely(() => {
+                lblCheck_Message.Text = "开始检测....";
+
+                lblCheck_Message.ForeColor = Color.Black;
+            });
+            cogtool_Check.Subject.Inputs["Image"].Value = image.Copy();
+            cogtool_Check.Subject.Inputs["Data"].Value = ((DataTable)dataGrid_Check.DataSource).Copy();
+            Currnet_PCI?.Clear4Light();
+            cogtool_Check.Subject.Run();
+            
+
+
+            this.PerformSafely(() => {
+                var result_table = (DataTable)cogtool_Check.Subject.Outputs["Data"].Value;
+
+                var resultrow = result_table.AsEnumerable();
+                var results = from x in resultrow select x.Field<string>("结果") == "false";
+                if(results.Count()>0)
+                {
+                    lblCheck_Message.BackColor = Color.Red;
+                    lblCheck_Message.Text = "NG";
+                }
+                else
+                {
+                    lblCheck_Message.BackColor = Color.Green;
+                    lblCheck_Message.Text = "OK";
+                }
+
+
+            });
+
+             
+            
+
+            
+
+        }
+
+        #endregion
 
     }
 
