@@ -2193,7 +2193,7 @@ namespace Jet_System
                         }
                         if (item == "TP")
                         {
-                            for (int j = 0; j < 8; j++)
+                            for (int j = 1; j <= 8; j++)
                             {
                                 head += item + "_" + (j + 96).ToString() + ";";
                             }
