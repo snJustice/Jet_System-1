@@ -1177,7 +1177,7 @@ namespace Jet_System
                 ss.Start();
                 Tool_SetInputs(_image, cogtool_RAF);
                 
-                Currnet_PCI?.Clear12Light();
+                Currnet_PCI?.Clear4Light();
                 cogtool_RAF.Subject.Run();
 
            
@@ -1409,6 +1409,10 @@ namespace Jet_System
             bool switch12_last_sigal = false;
             bool switch12_current_sigal = false;
 
+
+            bool check_last_signal = false;
+            bool check_current_signal = false;
+
             uint current_signls;
 
             ScanPCI = Observable.Interval(TimeSpan.FromMilliseconds(10)).Buffer(1).Subscribe(
@@ -1419,6 +1423,9 @@ namespace Jet_System
                     trigger_current_signal = (current_signls & PCI7230.PCI_IN4) == PCI7230.PCI_IN4 ? true : false;
                     switch8_current_sigal = (current_signls & PCI7230.PCI_IN1) == PCI7230.PCI_IN1 ? true : false;
                     switch12_current_sigal = (current_signls & PCI7230.PCI_IN0) == PCI7230.PCI_IN0 ? true : false;
+
+                    check_current_signal = (current_signls & PCI7230.PCI_IN3) == PCI7230.PCI_IN3 ? true : false;
+
 
                     //get io signal
                     if (trigger_current_signal == true && trigger_last_signal == false)
@@ -1451,9 +1458,20 @@ namespace Jet_System
                         PCI_Change_Program_OK();//程序切换完成后，发送切换完成信号
                     }
 
+                    //点检
+                    if(check_current_signal == true && check_last_signal == false)
+                    {/*
+                        Currnet_PCI.Open4Light();
+                        Currnet_Camera.ShuterCur = 65000; //(long)programParameters.RAF_Exposure;
+                        Currnet_Camera.GainCur = 0; //(long)programParameters.RAF_Gain;
+
+                        Currnet_Camera.OneShot(Command.Grab_Check);*/
+                    }
+
                     trigger_last_signal = trigger_current_signal;
                     switch8_last_sigal = switch8_current_sigal;
                     switch12_last_sigal = switch12_current_sigal;
+                    check_last_signal = check_current_signal;
                 }
                 
                 );
@@ -1573,7 +1591,7 @@ namespace Jet_System
         {
             if (programParameters.Current_Program == 0)
             {
-                Currnet_PCI?.Open12Light();
+                Currnet_PCI?.Open4Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure;
                 Currnet_Camera.GainCur = (long)programParameters.RAF_Gain;
 

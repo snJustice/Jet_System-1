@@ -545,6 +545,19 @@ namespace Jet_System.Utils
             ClearIO(PCI_OUT0 | PCI_OUT1 | PCI_OUT2 | PCI_OUT3);
         }
 
+        public void Open023Light()
+        {
+
+            WriteIO(PCI_OUT0  | PCI_OUT2 | PCI_OUT3);
+        }
+
+        public void Clear023Light()
+        {
+            ClearIO(PCI_OUT0  | PCI_OUT2 | PCI_OUT3);
+        }
+
+
+
         public void Open124Light()
         {
 
