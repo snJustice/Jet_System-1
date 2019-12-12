@@ -557,6 +557,17 @@ namespace Jet_System.Utils
         }
 
 
+        public void Open5Light()
+        {
+
+            WriteIO( PCI_OUT8);
+        }
+
+        public void Clear5Light()
+        {
+            ClearIO(PCI_OUT8);
+        }
+
 
         public void Open124Light()
         {

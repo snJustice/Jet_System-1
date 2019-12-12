@@ -745,8 +745,8 @@ namespace Jet_System
         //Trigger Once
         private void btnRunOnce_Click(object sender, EventArgs e)
         {
-           
-            First_Trigger();
+
+            Second_Trigger();
             
 
 
@@ -1313,13 +1313,17 @@ namespace Jet_System
         private void RunningOnce_Second(CogImage8Grey _image)
         {
 
-            Currnet_PCI.Clear4Light();
+            Currnet_PCI.Clear5Light();
 
             mDisplay2Row.Image = _image;
             mDisplay2RowShow.Image = _image;
 
             mDisplay2Result.Image = _image;
             mDisplay2ResultShow.Image = _image;
+
+            cogtool_DO.Subject.Inputs["Image_T"].Value = _image;
+
+            First_Trigger();
 
 
             
@@ -1430,8 +1434,8 @@ namespace Jet_System
                     //get io signal
                     if (trigger_current_signal == true && trigger_last_signal == false)
                     {
-
-                        First_Trigger();
+                        Second_Trigger();
+                       // First_Trigger();
                     
                     }
                     
@@ -1594,34 +1598,46 @@ namespace Jet_System
                 Currnet_PCI?.Open4Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure;
                 Currnet_Camera.GainCur = (long)programParameters.RAF_Gain;
-
                 
+
             }
             else
             {
+                //8pair为了保留
                 Currnet_PCI?.Open4Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure1;
                 Currnet_Camera.GainCur = (long)programParameters.DO_Gain1;
+                
 
-               
 
             }
             Currnet_Camera.OneShot(Command.Grab);
+
         }
         private void Second_Trigger()
         {
-            if (programParameters.Current_Program == 1)
+            
+            if (programParameters.Current_Program == 0)
             {
-                Currnet_PCI?.Open4Light();
-                
-                Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure2;
-                Currnet_Camera.GainCur = (long)programParameters.DO_Gain2;
-                Currnet_PCI?.Clear4Light(); 
-
-                //  Currnet_Camera.OneShot(Command.Grab2);
+                First_Trigger();
 
 
             }
+            else
+            {
+                
+                Currnet_PCI?.Open5Light();//改变光源
+
+                Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure2;
+                Currnet_Camera.GainCur = (long)programParameters.DO_Gain2;
+
+
+                Currnet_Camera.OneShot(Command.Grab2);
+
+
+            }
+
+
         }
         #endregion
 
@@ -1840,6 +1856,7 @@ namespace Jet_System
            
             _modifyGrid.DataSource = null;
             _modifyGrid.DataSource = temp;
+            _modifyGrid.Columns["偏移"].Visible = false;
             ShowResultTableChild(ref _allok, ref _modifyGrid, temp, _save_data, ref _data_string);
             
         }
@@ -2549,6 +2566,8 @@ namespace Jet_System
 
 
             this.PerformSafely(() => {
+
+                
                 var result_table = (DataTable)cogtool_Check.Subject.Outputs["Data"].Value;
                 dataGrid_Check.DataSource = result_table;
                 var resultrow = result_table.AsEnumerable();
