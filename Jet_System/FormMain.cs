@@ -1310,7 +1310,7 @@ namespace Jet_System
 
         
 
-        private void RunningOnce_Second(CogImage8Grey _image)
+        private void RunningOnce_Second(CogImage8Grey _image,int programID)
         {
 
             Currnet_PCI.Clear5Light();
@@ -1320,8 +1320,20 @@ namespace Jet_System
 
             mDisplay2Result.Image = _image;
             mDisplay2ResultShow.Image = _image;
+            switch (programID)
+            {
+                case 0:
+                    cogtool_RAF.Subject.Inputs["Image_T"].Value = _image;
+                    break;
+                case 1:
+                    cogtool_DO.Subject.Inputs["Image_T"].Value = _image;
+                    break;
+                default:
+                    break;
+            }
 
-            cogtool_DO.Subject.Inputs["Image_T"].Value = _image;
+
+            
 
             First_Trigger();
 
@@ -1344,7 +1356,7 @@ namespace Jet_System
                             RunningOnce_First(temp.Image as CogImage8Grey,temp.Program);
                             break;
                         case 2:
-                            RunningOnce_Second(temp.Image as CogImage8Grey);
+                            RunningOnce_Second(temp.Image as CogImage8Grey,temp.Program);
                             break;
                         default:
                             break;
@@ -1541,6 +1553,17 @@ namespace Jet_System
                         Currnet_PCI.ClearIO3();
                     }
                     break;
+
+                case "8":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO8();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO8();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1619,7 +1642,14 @@ namespace Jet_System
             
             if (programParameters.Current_Program == 0)
             {
-                First_Trigger();
+                Currnet_PCI?.Open5Light();//改变光源
+
+                Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure2;
+                Currnet_Camera.GainCur = (long)programParameters.RAF_Gain2;
+
+
+                Currnet_Camera.OneShot(Command.Grab2);
+               // First_Trigger();
 
 
             }
