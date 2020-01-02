@@ -51,9 +51,6 @@ namespace Jet_System
             txt_DO_Gain.Text = programs.DO_Gain1.ToString();
             txt_DO_T_Gain.Text = programs.DO_Gain2.ToString();
 
-            txtRAF_T_Exposure.Text = programs.RAF_Exposure2.ToString();
-            txtRAF_T_Gain.Text = programs.RAF_Gain2.ToString();
-
             chbxStartConnect.Checked = programs.IsStartConnect;
 
 
@@ -185,7 +182,6 @@ namespace Jet_System
             btnSetRaf.Enabled = _set_raf;
             btnSetDO.Enabled = _set_do;
             btnSetDO_T.Enabled = _set_do_t;
-            btnSetRaf_T.Enabled = _set_do;
 
 
         }
@@ -245,15 +241,6 @@ namespace Jet_System
             SetIOEvent?.Invoke(ioCount, checkState);
 
 
-        }
-
-        private void btnSetRaf_T_Click(object sender, EventArgs e)
-        {
-            programs.RAF_Exposure2 = Convert.ToDouble(txtExposure.Text);
-            txtRAF_T_Exposure.Text = programs.RAF_Exposure2.ToString();
-
-            programs.RAF_Gain2 = Convert.ToDouble(txtGain.Text);
-            txtRAF_T_Gain.Text = programs.RAF_Gain2.ToString();
         }
     }
 }
