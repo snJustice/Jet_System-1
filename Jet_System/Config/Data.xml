@@ -6,17 +6,15 @@
   <RAF_Gain>0</RAF_Gain>
   <DO_Exposure1>65000</DO_Exposure1>
   <DO_Gain1>4</DO_Gain1>
-  <DO_Exposure2>50000</DO_Exposure2>
-  <DO_Gain2>4</DO_Gain2>
-  <RAF_Exposure2>30000</RAF_Exposure2>
-  <RAF_Gain2>0</RAF_Gain2>
+  <DO_Exposure2>40000</DO_Exposure2>
+  <DO_Gain2>3</DO_Gain2>
   <RAF_OK_NUM>63</RAF_OK_NUM>
   <RAF_ALL_NUM>129</RAF_ALL_NUM>
   <RAF_NG_NUM>66</RAF_NG_NUM>
   <DO_OK_NUM>79</DO_OK_NUM>
   <DO_ALL_NUM>162</DO_ALL_NUM>
   <DO_NG_NUM>83</DO_NG_NUM>
-  <Current_Program>0</Current_Program>
+  <Current_Program>1</Current_Program>
   <MeasureDeep>10</MeasureDeep>
   <ImageDeleteNum>3</ImageDeleteNum>
 </ProgramParameters>
