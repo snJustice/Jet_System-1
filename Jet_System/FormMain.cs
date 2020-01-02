@@ -306,6 +306,7 @@ namespace Jet_System
             pingCamera.PingInterval = 1000;
 
             pingCamera.Start();
+            //444
         }
 
 
