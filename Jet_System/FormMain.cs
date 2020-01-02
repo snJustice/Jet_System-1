@@ -79,7 +79,7 @@ using System.Windows.Forms;
 
 namespace Jet_System
 {
-    
+
     public partial class FormMain : Form
     {
         string[] filenames;//vpp root
@@ -88,10 +88,10 @@ namespace Jet_System
 
         ProgramParameters programParameters = new ProgramParameters();//
 
-        string  last_time="";     //check time ,update excel file name
+        string last_time = "";     //check time ,update excel file name
         CameraBase Currnet_Camera;
 
-       
+
 
         string DO_Result;//for twice exposure ,not use now
         bool First_ok;//for twice exposure ,not use now
@@ -127,7 +127,7 @@ namespace Jet_System
 
             chbxSaveImage.Checked = true;
             DataGridBindEvent();//找到显示DataTable的控件
-            
+
             //并将每个控件显示datatable包含datagrid名称的控件绑定rowprepaint事件和自适应表格大小
 
 
@@ -136,7 +136,7 @@ namespace Jet_System
         #region FormInit
         private void Init()//初始化
         {
-            
+
             programParameters = ReadParameters();
             MeasureDataQuene = new CustomerQuene(programParameters.MeasureDeep);
             SetImageAndMeasureDataPath();//读取存放再xml文件的根文件名，用来存放公差数据和图片，下次需要更换保存路径就不要反复设置了；
@@ -157,36 +157,36 @@ namespace Jet_System
             if (programParameters != null)
             {
                 ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
-                ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);              
+                ShowDONum(programParameters.DO_ALL_NUM, programParameters.DO_OK_NUM, programParameters.DO_NG_NUM);
                 FormInitConnectCamera(programParameters.IP);////////////////////////////////////////////////////相机ip
             }
             else
             {
                 MessageBox.Show("未配置相机，请先转到相机配置");
             }
-            CheckPCI(); 
-            
+            CheckPCI();
+
             if (programParameters.Current_Program == 0)
             {
                 var tab = GetProductTable(cogtool_RAF);//tab存放生成的datatable的各项数据
-        
-                ShowRecord(0,ref  tab,"RAF",false,false,false);//这个index不知道干嘛的的。。tab：输入的表。""raf:"raf/do" false:是否保存
-             
+
+                ShowRecord(0, ref tab, "RAF", false, false, false);//这个index不知道干嘛的的。。tab：输入的表。""raf:"raf/do" false:是否保存
+
                 mDisplay1Row.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
                 ShowRAF_User_Message();//tab和ratiobutton text显示成raf的各项数据
             }
             else
             {
                 var tab = GetProductTable(cogtool_DO);
-        
-                ShowRecord(0,ref  tab, "DO",false,false,false);
-              
+
+                ShowRecord(0, ref tab, "DO", false, false, false);
+
                 mDisplay1Row.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
                 ShowDO_User_Message();
             }
 
             cbxProgramSelect.SelectedIndex = programParameters.Current_Program;
-            
+
             ScanResultImage();//开一个新线程用来保存结果图片
             ScanRowImage();//保存原始图
 
@@ -207,7 +207,7 @@ namespace Jet_System
             {
                 cbxHistoryData.Items.Add(i);
             }
-            
+
         }
 
         private void SetImageAndMeasureDataPath()
@@ -261,9 +261,9 @@ namespace Jet_System
             cogtool_DO.Subject.Ran += cogtool_DO_Ran;
             cogtool_Check.Subject.Ran += cogtool_Check_Ran;
         }
-       
 
-     
+
+
 
         private void FormInitConnectCamera(string _cameraIP)
         {
@@ -280,10 +280,10 @@ namespace Jet_System
                             host.Stop();
                             Currnet_Camera.Open(programParameters.IP);
                             Currnet_Camera.IP = programParameters.IP;
-                            this.PerformSafely(()=> {
+                            this.PerformSafely(() => {
                                 status_child_Camera_status.Text = "相机已连接：" + programParameters.IP;
                             });
-                            
+
                             break;
                         default:
                             count++;
@@ -294,7 +294,7 @@ namespace Jet_System
                                 this.PerformSafely(() => {
                                     status_child_Camera_status.Text = "相机未连接";
                                 });
-                               
+
 
 
                             }
@@ -306,7 +306,6 @@ namespace Jet_System
             pingCamera.PingInterval = 1000;
 
             pingCamera.Start();
-            //444
         }
 
 
@@ -323,7 +322,7 @@ namespace Jet_System
 
         }
 
-        
+
 
 
         /// <summary>
@@ -338,16 +337,16 @@ namespace Jet_System
         /// </summary>
         private void SetCurrentFileName()
         {
-            if(!Directory.Exists(SavePath.FileResult + "/RAF"))
+            if (!Directory.Exists(SavePath.FileResult + "/RAF"))
             {
                 MessageBox.Show(SavePath.FileResult + "/ RAF   路劲不存在，请增加 ");
             }
-            string file = SavePath.FileResult + "/RAF/" + DateTime.Now.ToString("yyyy-MM-dd")+".csv";
+            string file = SavePath.FileResult + "/RAF/" + DateTime.Now.ToString("yyyy-MM-dd") + ".csv";
 
             Current_File_Name.AddOrUpdate(0,
-                key=> file,
-                (key,oldvalue)=>file);
-           
+                key => file,
+                (key, oldvalue) => file);
+
 
 
             AddImagePathDirectonary(1, SavePath.Image1ResultOK);
@@ -378,7 +377,7 @@ namespace Jet_System
                key => file,
                (key, oldvalue) => file);
         }
-        
+
 
         #endregion
 
@@ -396,7 +395,7 @@ namespace Jet_System
 
         private void ScanRowImage()
         {
-            Task.Factory.StartNew(()=> {
+            Task.Factory.StartNew(() => {
                 while (true)
                 {
                     try
@@ -410,7 +409,7 @@ namespace Jet_System
                         }
                         temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
@@ -441,8 +440,8 @@ namespace Jet_System
         private void ScanResultImage()
         {
             Task.Factory.StartNew(() => {
-            while (true)
-            {
+                while (true)
+                {
                     try
                     {
 
@@ -455,7 +454,7 @@ namespace Jet_System
 
                         temp.image.Save(temp.Path + "/" + DateTime.Now.ToString("hh-mm-ss-ff") + ".png");
                     }
-                    catch(Exception ex )
+                    catch (Exception ex)
                     {
 
                     }
@@ -481,9 +480,9 @@ namespace Jet_System
                     }*/
 
                 }
-                    
+
             });
-        
+
         }
 
         #endregion
@@ -521,12 +520,12 @@ namespace Jet_System
 
         #region Form Event
 
-        public Action<List<WaveData>,int,int,string> Sendmsg;
+        public Action<List<WaveData>, int, int, string> Sendmsg;
         private void FormMain_Load(object sender, EventArgs e)
         {
             Init();
             BtnWave.Enabled = false;
-      
+
 
         }
 
@@ -534,14 +533,14 @@ namespace Jet_System
         {
             Currnet_Camera?.Close();
             ScanPCI?.Dispose();
-           // ImageProcess_Task.CompleteAdding();
-          //  cancel.Cancel(); 
+            // ImageProcess_Task.CompleteAdding();
+            //  cancel.Cancel(); 
 
             Task.Delay(TimeSpan.FromMilliseconds(100));
             Currnet_PCI?.Release();
             RowImageSave.CompleteAdding();
             ResultImageSave.CompleteAdding();
-            
+
 
             CustomerSerialize.XMLSerialize<ProgramParameters>(programParameters);
         }
@@ -549,23 +548,23 @@ namespace Jet_System
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)// Program switch
         {
 
-            if(programParameters.Current_Program == cbxProgramSelect.SelectedIndex)
+            if (programParameters.Current_Program == cbxProgramSelect.SelectedIndex)
             {
                 return;
             }
-            
-            if(ChangeCurrentProgram(cbxProgramSelect.SelectedIndex))
+
+            if (ChangeCurrentProgram(cbxProgramSelect.SelectedIndex))
             {
                 MessageBox.Show("切换完成");
             }
 
-            
+
         }
 
 
         private bool ChangeCurrentProgram(int _programID)
         {
-            if(_programID == programParameters.Current_Program)
+            if (_programID == programParameters.Current_Program)
             {
                 return false;
             }
@@ -583,12 +582,12 @@ namespace Jet_System
                 programParameters.Current_Program = 0;
 
                 ShowRAF_User_Message();
-               // Tool_SetInputs(cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_DO);
+                // Tool_SetInputs(cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_DO);
                 SaveToolBlock(cogtool_DO, filenames[1]);
                 mDisplay1Row.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
 
                 var tab = GetProductTable(cogtool_RAF);
-                ShowRecord(0,ref  tab, "RAF", false,false,false);
+                ShowRecord(0, ref tab, "RAF", false, false, false);
 
                 ReadConfigure();
             }
@@ -597,13 +596,13 @@ namespace Jet_System
 
                 programParameters.Current_Program = 1;
                 ShowDO_User_Message();
-              //  Tool_SetInputs(cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_RAF);
+                //  Tool_SetInputs(cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_RAF);
 
                 SaveToolBlock(cogtool_RAF, filenames[0]);
                 mDisplay1Row.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
 
                 var tab = GetProductTable(cogtool_DO);
-                ShowRecord(0,ref tab, "DO", false,false,false);
+                ShowRecord(0, ref tab, "DO", false, false, false);
 
 
                 ReadConfigure();
@@ -614,16 +613,16 @@ namespace Jet_System
 
         private void cbxHistoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int count = Convert.ToInt32(cbxHistoryData.Text) -1;
+            int count = Convert.ToInt32(cbxHistoryData.Text) - 1;
             // count = programParameters.MeasureDeep - count;
-         //   int index = MeasureDataQuene.CurrentCount - count;
+            //   int index = MeasureDataQuene.CurrentCount - count;
 
 
             if (count < MeasureDataQuene.CurrentCount)
             {
                 var table = MeasureDataQuene[count];
                 string programString = programParameters.Current_Program == 0 ? "RAF" : "DO";
-                ShowRecord(0,ref table, programString, false,false,true);
+                ShowRecord(0, ref table, programString, false, false, true);
             }
             else
             {
@@ -671,7 +670,7 @@ namespace Jet_System
 
 
 
-       
+
 
         #endregion
 
@@ -680,7 +679,7 @@ namespace Jet_System
         private void 相机ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCameraSearch camera = new FormCameraSearch();
-            
+
             camera.SetIOEvent += SetIO;
             camera.programs = programParameters;
             if (Currnet_Camera != null)
@@ -690,25 +689,25 @@ namespace Jet_System
                 camera.camera = Currnet_Camera;
 
             }
-            
+
 
             string camera_msg = "";
-           
+
             if (camera.ShowDialog(this) == DialogResult.OK)
             {
                 Currnet_Camera = camera.camera;
                 programParameters = camera.programs;
 
                 Currnet_PCI.Init();
-                
 
-              //  Currnet_Camera.ImageEvent += ProcessImage;
+
+                //  Currnet_Camera.ImageEvent += ProcessImage;
 
 
             }
 
 
-            if(Currnet_Camera.IsLink)
+            if (Currnet_Camera.IsLink)
             {
                 camera_msg = Currnet_Camera.IP + "已连接";
                 Currnet_Camera.ImageEvent += ProcessImage;
@@ -728,7 +727,7 @@ namespace Jet_System
 
         }
 
-        
+
 
         #endregion
 
@@ -737,7 +736,7 @@ namespace Jet_System
         //当前图像再次运行
         private void btnCurrentImageRun_Click(object sender, EventArgs e)
         {
-            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image,Program = programParameters.Current_Program,RunTime=1});
+            ImageProcess_Task.Add(new ImageProcess { Image = mDisplay1Row.Image, Program = programParameters.Current_Program, RunTime = 1 });
 
 
 
@@ -748,12 +747,12 @@ namespace Jet_System
         {
 
             Second_Trigger();
-            
+
 
 
         }
 
-       
+
 
 
         //Switch Current CogDisplay
@@ -764,7 +763,7 @@ namespace Jet_System
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            
+
             programParameters.RAF_ALL_NUM = 0;
             programParameters.RAF_OK_NUM = 0;
             programParameters.RAF_NG_NUM = 0;
@@ -789,7 +788,7 @@ namespace Jet_System
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            
+
             if (programParameters.Current_Program == 0)
             {
                 Tool_SetInputs(cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey, cogtool_RAF);
@@ -811,7 +810,7 @@ namespace Jet_System
 
         void cogtool_RAF_Ran(object sender, EventArgs e)
         {
-            
+
             mDisplay1Result.Image = cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey;
             var temp = cogtool_RAF.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
 
@@ -819,7 +818,7 @@ namespace Jet_System
             mDisplay1ResultShow.Record = temp;
 
 
-        
+
 
             mDisplay1Result.Fit(true);
             mDisplay1ResultShow.Fit(true);
@@ -838,7 +837,7 @@ namespace Jet_System
 
             mDisplay1Result.Fit(true);
             mDisplay1ResultShow.Fit(true);
-           
+
         }
 
         void cogtool_Check_Ran(object sender, EventArgs e)
@@ -853,7 +852,7 @@ namespace Jet_System
 
 
             cogDisplay_Check.Fit(true);
-           
+
 
         }
 
@@ -864,18 +863,18 @@ namespace Jet_System
 
         private void ProcessImage(object sender, ImageEventArgs e)
         {
-            
 
 
-            switch(e.Command)
+
+            switch (e.Command)
             {
 
                 case Command.Grab:
-                   // RunningOnce_First(e.CameraImage);
-                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy( CogImageCopyModeConstants.CopyPixels),Program = programParameters.Current_Program ,RunTime = 1});
+                    // RunningOnce_First(e.CameraImage);
+                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy(CogImageCopyModeConstants.CopyPixels), Program = programParameters.Current_Program, RunTime = 1 });
                     break;
                 case Command.Grab2:
-                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy( CogImageCopyModeConstants.CopyPixels), Program = programParameters.Current_Program, RunTime = 2 });
+                    ImageProcess_Task.Add(new ImageProcess { Image = e.CameraImage.Copy(CogImageCopyModeConstants.CopyPixels), Program = programParameters.Current_Program, RunTime = 2 });
                     //RunningOnce_Second(e.CameraImage);
                     break;
                 case Command.Grab_Check:
@@ -886,8 +885,8 @@ namespace Jet_System
                     break;
             }
 
-    
-           
+
+
 
         }
         /*
@@ -938,7 +937,7 @@ namespace Jet_System
         */
         private void Tool_SetInputs(CogImage8Grey _image, Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 _tool)
         {
-            switch (_tool.Name.Replace("cogtool_",""))
+            switch (_tool.Name.Replace("cogtool_", ""))
             {
                 case "RAF":
                     cogtool_RAF.Subject.Inputs["Image"].Value = _image.Copy();
@@ -946,19 +945,19 @@ namespace Jet_System
                     cogtool_RAF.Subject.Inputs["Beam_Touch_Window_L_L"].Value = ((DataTable)dataGrid_Beam_Touch_Window_L_L.DataSource).Copy();
 
 
-                    cogtool_RAF.Subject.Inputs["Beam_Touch_Window_L_R"].Value =  ((DataTable)dataGrid_Beam_Touch_Window_L_R.DataSource).Copy();
-                    cogtool_RAF.Subject.Inputs["Beam_Tip_To_Window_L"].Value =((DataTable)dataGrid_Beam_Tip_To_Window_L.DataSource).Copy();
-                    cogtool_RAF.Subject.Inputs["Beam_Touch_Window_R_L"].Value =  ((DataTable)dataGrid_Beam_Touch_Window_R_L.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Touch_Window_L_R"].Value = ((DataTable)dataGrid_Beam_Touch_Window_L_R.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Tip_To_Window_L"].Value = ((DataTable)dataGrid_Beam_Tip_To_Window_L.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Touch_Window_R_L"].Value = ((DataTable)dataGrid_Beam_Touch_Window_R_L.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Beam_Touch_Window_R_R"].Value = ((DataTable)dataGrid_Beam_Touch_Window_R_R.DataSource).Copy();
-                    cogtool_RAF.Subject.Inputs["Beam_Tip_To_Window_R"].Value =  ((DataTable)dataGrid_Beam_Tip_To_Window_R.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Tip_To_Window_R"].Value = ((DataTable)dataGrid_Beam_Tip_To_Window_R.DataSource).Copy();
 
-                    cogtool_RAF.Subject.Inputs["Beam_Height_Difference"].Value =  ((DataTable)dataGrid_Beam_Height_Difference.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Height_Difference"].Value = ((DataTable)dataGrid_Beam_Height_Difference.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Shield_Flatness"].Value = ((DataTable)dataGrid_Shield_Flatness.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Cross_Shield_TP"].Value = ((DataTable)dataGrid_Cross_Shield_TP.DataSource).Copy();
-                    cogtool_RAF.Subject.Inputs["Wafer_Thickness"].Value =  ((DataTable)dataGrid_Wafer_Thickness.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Wafer_Thickness"].Value = ((DataTable)dataGrid_Wafer_Thickness.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Shield_Cross_Angle"].Value = ((DataTable)dataGrid_Shield_Cross_Angle.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Beam_Height_L"].Value = ((DataTable)dataGrid_Beam_Height_L.DataSource).Copy();
-                    cogtool_RAF.Subject.Inputs["Beam_Height_R"].Value =  ((DataTable)dataGrid_Beam_Height_R.DataSource).Copy();
+                    cogtool_RAF.Subject.Inputs["Beam_Height_R"].Value = ((DataTable)dataGrid_Beam_Height_R.DataSource).Copy();
 
                     cogtool_RAF.Subject.Inputs["Beam_Inner_L"].Value = ((DataTable)dataGrid_Beam_Inner_L.DataSource).Copy();
                     cogtool_RAF.Subject.Inputs["Beam_Inner_R"].Value = ((DataTable)dataGrid_Beam_Inner_R.DataSource).Copy();
@@ -971,24 +970,24 @@ namespace Jet_System
 
 
                     cogtool_DO.Subject.Inputs["Beam_Touch_Window_L_L"].Value = ((DataTable)dataGrid_Beam_Touch_Window_L_L.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_L_R"].Value =  ((DataTable)dataGrid_Beam_Touch_Window_L_R.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Beam_Tip_To_Window_L"].Value =  ((DataTable)dataGrid_Beam_Tip_To_Window_L.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_R_L"].Value =  ((DataTable)dataGrid_Beam_Touch_Window_R_L.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_R_R"].Value =  ((DataTable)dataGrid_Beam_Touch_Window_R_R.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_L_R"].Value = ((DataTable)dataGrid_Beam_Touch_Window_L_R.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Tip_To_Window_L"].Value = ((DataTable)dataGrid_Beam_Tip_To_Window_L.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_R_L"].Value = ((DataTable)dataGrid_Beam_Touch_Window_R_L.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Touch_Window_R_R"].Value = ((DataTable)dataGrid_Beam_Touch_Window_R_R.DataSource).Copy();
                     cogtool_DO.Subject.Inputs["Beam_Tip_To_Window_R"].Value = ((DataTable)dataGrid_Beam_Tip_To_Window_R.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Beam_Height_Difference"].Value =  ((DataTable)dataGrid_Beam_Height_Difference.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Height_Difference"].Value = ((DataTable)dataGrid_Beam_Height_Difference.DataSource).Copy();
 
                     cogtool_DO.Subject.Inputs["Shield_Plate_Flatness"].Value = ((DataTable)dataGrid_Shield_Flatness.DataSource).Copy();
-                    cogtool_DO.Subject.Inputs["Shield_Plate_To_Tower"].Value =  ((DataTable)dataGrid_Cross_Shield_TP.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Shield_Plate_To_Tower"].Value = ((DataTable)dataGrid_Cross_Shield_TP.DataSource).Copy();
 
 
-                    cogtool_DO.Subject.Inputs["Beam_Height_L"].Value =  ((DataTable)dataGrid_Beam_Height_L.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Beam_Height_L"].Value = ((DataTable)dataGrid_Beam_Height_L.DataSource).Copy();
                     cogtool_DO.Subject.Inputs["Beam_Height_R"].Value = ((DataTable)dataGrid_Beam_Height_R.DataSource).Copy();
 
                     cogtool_DO.Subject.Inputs["Beam_Inner_L"].Value = ((DataTable)dataGrid_Beam_Inner_L.DataSource).Copy();
                     cogtool_DO.Subject.Inputs["Beam_Inner_R"].Value = ((DataTable)dataGrid_Beam_Inner_R.DataSource).Copy();
 
-                    cogtool_DO.Subject.Inputs["Shield_Blade_TP"].Value =  ((DataTable)dataGrid_Wafer_Thickness.DataSource).Copy();
+                    cogtool_DO.Subject.Inputs["Shield_Blade_TP"].Value = ((DataTable)dataGrid_Wafer_Thickness.DataSource).Copy();
                     cogtool_DO.Subject.Inputs["Angle"].Value = ((DataTable)dataGrid_Shield_Cross_Angle.DataSource).Copy();
 
                     break;
@@ -1061,19 +1060,19 @@ namespace Jet_System
 
 
                     object ngnum = _showTool.Subject.Outputs["Current_NG_Num"].Value;
-                    product.Current_NG_Num =Convert.ToInt32( ngnum.ToString()) ;
+                    product.Current_NG_Num = Convert.ToInt32(ngnum.ToString());
 
                     mDisplay1Result.Image = (cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey).Copy();
                     var ImageRecord1 = cogtool_RAF.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
                     product.Image = ImageRecord1;
-                   
-                    
+
+
 
                     break;
                 case "DO":
 
-                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy(); 
-                      product.Beam_Touch_Window_L_L = temp2;
+                    var temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_L"].Value).Copy();
+                    product.Beam_Touch_Window_L_L = temp2;
 
 
                     temp2 = ((DataTable)_showTool.Subject.Outputs["Beam_Touch_Window_L_R"].Value).Copy();
@@ -1142,7 +1141,7 @@ namespace Jet_System
         }
 
         public delegate void delegatea(List<WaveData> wd, int indexx, int Count, string name, string program);
-        private void RunningOnce_First(CogImage8Grey image,int _program)
+        private void RunningOnce_First(CogImage8Grey image, int _program)
         {
             mDisplay1Row.Image = image;
             mDisplay1RowShow.Image = image;
@@ -1151,7 +1150,7 @@ namespace Jet_System
 
 
 
-            this.PerformSafely(()=> {
+            this.PerformSafely(() => {
                 lblStatus.Text = "开始检测....";
                 lblStatusShow.Text = "开始检测....";
                 PCI_ImageOK_Signal();//拍照完成脉冲显示
@@ -1161,35 +1160,35 @@ namespace Jet_System
                 lblStatus.ForeColor = Color.Black;
                 lblStatusShow.ForeColor = Color.Black;
 
-                
+
             });
-            
+
 
 
 
             if (_program == 0)//RAF
             {
 
-               
+
 
                 RowImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[3], image = aa });
 
                 Stopwatch ss = new Stopwatch();
                 ss.Start();
                 Tool_SetInputs(_image, cogtool_RAF);
-                
+
                 Currnet_PCI?.Clear4Light();
                 cogtool_RAF.Subject.Run();
 
-           
-               
-               
-                this.PerformSafely(()=> {
-                    var tab=GetProductTable(cogtool_RAF);
+
+
+
+                this.PerformSafely(() => {
+                    var tab = GetProductTable(cogtool_RAF);
                     tab.RowImage = _image;
 
-                       
-                        
+
+
                     if (isClick == false)
                     {
 
@@ -1209,13 +1208,13 @@ namespace Jet_System
                             a(Wavedata_Raf, Convert.ToInt32(textBox3.Text), count, waveName, "RAF");
                             LabelWaveDataCnt.Text = "共有" + Wavedata_Raf.Count.ToString() + "个数据。";
                         }
-                       
+
 
                     }
 
 
-                   
-                    ShowRecord(0,ref tab, "RAF",true,true,false);
+
+                    ShowRecord(0, ref tab, "RAF", true, true, false);
                     MeasureDataQuene.Add(tab);
 
                     LightShow();
@@ -1224,10 +1223,10 @@ namespace Jet_System
 
 
                 });
-                
-                ss.Stop();             
+
+                ss.Stop();
                 this.PerformSafely(() => {
-                    
+
                     Console.WriteLine(ss.ElapsedMilliseconds.ToString());
                     txtTime.Text = ss.ElapsedMilliseconds.ToString();
                 });
@@ -1235,27 +1234,27 @@ namespace Jet_System
 
             else
             {
-              
-                RowImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[6], image = aa }) ;
-             
-                
+
+                RowImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[6], image = aa });
+
+
                 CogStopwatch ss = new CogStopwatch();
                 ss.Start();
-               
+
                 Tool_SetInputs(_image, cogtool_DO);
                 Currnet_PCI?.Clear4Light();
                 cogtool_DO.Subject.Run();
-                
-               
 
-                this.PerformSafely(()=> {
-              //      Currnet_PCI?.Open4Light();
-                //    Second_Trigger();
+
+
+                this.PerformSafely(() => {
+                    //      Currnet_PCI?.Open4Light();
+                    //    Second_Trigger();
 
                     var tab = GetProductTable(cogtool_DO);
                     tab.RowImage = _image;
-                    
-                       
+
+
                     if (isClick == false)
                     {
 
@@ -1277,12 +1276,12 @@ namespace Jet_System
                         }
 
                     }
-                    
-                    ShowRecord(0,ref tab, "DO", true,true,false);
+
+                    ShowRecord(0, ref tab, "DO", true, true, false);
                     MeasureDataQuene.Add(tab);
                     LightShow();
                 });
-                
+
                 ss.Stop();
                 this.PerformSafely(() => {
 
@@ -1290,11 +1289,11 @@ namespace Jet_System
                     txtTime.Text = ss.Milliseconds.ToString();
 
                 });
-                           
-                  
-          
+
+
+
             }
-            
+
         }
 
 
@@ -1305,13 +1304,13 @@ namespace Jet_System
         {
             var historyResults = MeasureDataQuene.GetResults();
             customerLights.SetColor(historyResults);
-            
+
         }
 
 
-        
 
-        private void RunningOnce_Second(CogImage8Grey _image)
+
+        private void RunningOnce_Second(CogImage8Grey _image, int programID)
         {
 
             Currnet_PCI.Clear5Light();
@@ -1321,36 +1320,48 @@ namespace Jet_System
 
             mDisplay2Result.Image = _image;
             mDisplay2ResultShow.Image = _image;
+            switch (programID)
+            {
+                case 0:
+                    cogtool_RAF.Subject.Inputs["Image_T"].Value = _image;
+                    break;
+                case 1:
+                    cogtool_DO.Subject.Inputs["Image_T"].Value = _image;
+                    break;
+                default:
+                    break;
+            }
 
-            cogtool_DO.Subject.Inputs["Image_T"].Value = _image;
+
+
 
             First_Trigger();
 
 
-            
+
         }
 
-            
+
 
         private void ScanImageProcess()
         {
-            Task.Factory.StartNew(()=> {
+            Task.Factory.StartNew(() => {
 
-                while(true)
+                while (true)
                 {
                     var temp = ImageProcess_Task.Take(cancel.Token);
-                    switch(temp.RunTime)
+                    switch (temp.RunTime)
                     {
                         case 1:
-                            RunningOnce_First(temp.Image as CogImage8Grey,temp.Program);
+                            RunningOnce_First(temp.Image as CogImage8Grey, temp.Program);
                             break;
                         case 2:
-                            RunningOnce_Second(temp.Image as CogImage8Grey);
+                            RunningOnce_Second(temp.Image as CogImage8Grey, temp.Program);
                             break;
                         default:
                             break;
                     }
-                   
+
                 }
 
             });
@@ -1360,16 +1371,16 @@ namespace Jet_System
         {
             var table = MeasureDataQuene[index];
             string name = programParameters.Current_Program == 0 ? "RAF" : "DO";
-            ShowRecord(0,ref table, name,false,false,false);
+            ShowRecord(0, ref table, name, false, false, false);
         }
 
-        
+
 
 
         #endregion
 
         #region  FileName Change 
-       
+
 
 
         /// <summary>
@@ -1392,7 +1403,7 @@ namespace Jet_System
         }
 
 
-       
+
 
 
 
@@ -1422,7 +1433,7 @@ namespace Jet_System
 
             ScanPCI = Observable.Interval(TimeSpan.FromMilliseconds(10)).Buffer(1).Subscribe(
                 x => {
-                    
+
                     current_signls = Currnet_PCI.Read();
 
                     trigger_current_signal = (current_signls & PCI7230.PCI_IN4) == PCI7230.PCI_IN4 ? true : false;
@@ -1436,15 +1447,15 @@ namespace Jet_System
                     if (trigger_current_signal == true && trigger_last_signal == false)
                     {
                         Second_Trigger();
-                       // First_Trigger();
-                    
+                        // First_Trigger();
+
                     }
-                    
+
 
 
                     if (switch8_current_sigal == true && switch8_last_sigal == false)
                     {
-                        this.PerformSafely(()=> {
+                        this.PerformSafely(() => {
 
                             ChangeCurrentProgram(1);
                             cbxProgramSelect.SelectedIndex = 1;
@@ -1459,12 +1470,12 @@ namespace Jet_System
                             ChangeCurrentProgram(0);
                             cbxProgramSelect.SelectedIndex = 0;
                         });
-                        
+
                         PCI_Change_Program_OK();//程序切换完成后，发送切换完成信号
                     }
 
                     //点检
-                    if(check_current_signal == true && check_last_signal == false)
+                    if (check_current_signal == true && check_last_signal == false)
                     {/*
                         Currnet_PCI.Open4Light();
                         Currnet_Camera.ShuterCur = 65000; //(long)programParameters.RAF_Exposure;
@@ -1478,10 +1489,10 @@ namespace Jet_System
                     switch12_last_sigal = switch12_current_sigal;
                     check_last_signal = check_current_signal;
                 }
-                
+
                 );
 
-            
+
         }
 
         private void CheckPCI()
@@ -1542,6 +1553,17 @@ namespace Jet_System
                         Currnet_PCI.ClearIO3();
                     }
                     break;
+
+                case "8":
+                    if (_checked)
+                    {
+                        Currnet_PCI.WriteIO8();
+                    }
+                    else
+                    {
+                        Currnet_PCI.ClearIO8();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1599,7 +1621,7 @@ namespace Jet_System
                 Currnet_PCI?.Open4Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure;
                 Currnet_Camera.GainCur = (long)programParameters.RAF_Gain;
-                
+
 
             }
             else
@@ -1608,7 +1630,7 @@ namespace Jet_System
                 Currnet_PCI?.Open4Light();
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure1;
                 Currnet_Camera.GainCur = (long)programParameters.DO_Gain1;
-                
+
 
 
             }
@@ -1617,16 +1639,23 @@ namespace Jet_System
         }
         private void Second_Trigger()
         {
-            
+
             if (programParameters.Current_Program == 0)
             {
-                First_Trigger();
+                Currnet_PCI?.Open5Light();//改变光源
+
+                Currnet_Camera.ShuterCur = (long)programParameters.RAF_Exposure2;
+                Currnet_Camera.GainCur = (long)programParameters.RAF_Gain2;
+
+
+                Currnet_Camera.OneShot(Command.Grab2);
+                // First_Trigger();
 
 
             }
             else
             {
-                
+
                 Currnet_PCI?.Open5Light();//改变光源
 
                 Currnet_Camera.ShuterCur = (long)programParameters.DO_Exposure2;
@@ -1648,7 +1677,7 @@ namespace Jet_System
 
 
             var checktemp = CustomerCsvHelper.ReadParameters(Check_Configure_Path);
-            UpdateConfigure(checktemp,ref dataGrid_Check);
+            UpdateConfigure(checktemp, ref dataGrid_Check);
 
             /*
               RAF
@@ -1664,7 +1693,7 @@ namespace Jet_System
             if (programParameters.Current_Program == 0)
             {
                 var temp = CustomerCsvHelper.ReadParameters(RAF_Configure_Path[0]);
-                UpdateConfigure(temp,ref dataGrid_Shield_Cross_Angle);
+                UpdateConfigure(temp, ref dataGrid_Shield_Cross_Angle);
 
                 temp = CustomerCsvHelper.ReadParameters(RAF_Configure_Path[1]);
                 UpdateConfigure(temp, ref dataGrid_Beam_Height_Difference);
@@ -1764,7 +1793,7 @@ namespace Jet_System
         }
 
 
-        private void UpdateConfigure(IEnumerable<ParametersConfigure > _configure, ref DataGridView _grid)
+        private void UpdateConfigure(IEnumerable<ParametersConfigure> _configure, ref DataGridView _grid)
         {
             var temp = _configure.ToList();
             DataTable tempt = ((DataTable)_grid.DataSource).Copy();
@@ -1782,18 +1811,18 @@ namespace Jet_System
                 _grid.Rows[i].Cells["比例系数"].Value = temp[i].Rate.ToString();
                 _grid.Rows[i].Cells["偏移"].Value = temp[i].Offer.ToString();*/
 
-               // _grid.Rows[i].Cells["序号"].Value = (i+1).ToString();
+                // _grid.Rows[i].Cells["序号"].Value = (i+1).ToString();
 
             }
             _grid.DataSource = tempt;
         }
 
-        private void UpdateConfigure( DataGridView _grid)
+        private void UpdateConfigure(DataGridView _grid)
         {
-           
+
             for (int i = 0; i < 96; i++)
             {
-               
+
 
                 _grid.Rows[i].Cells["序号"].Value = (i + 1).ToString();
 
@@ -1805,42 +1834,42 @@ namespace Jet_System
         #endregion
 
         #region ResultShow  ,Save MeasureData
-       
 
-       
 
-        private bool ShowResultTableChild(ref bool _all_result ,ref DataGridView _grid, DataTable _table,bool isNeedSave,ref string dataS)
+
+
+        private bool ShowResultTableChild(ref bool _all_result, ref DataGridView _grid, DataTable _table, bool isNeedSave, ref string dataS)
         {
             bool isok = true;//标红的标志位
-           
+
             var data_table = _table.AsEnumerable();
             if (isNeedSave)
             {
-                var sss  = data_table.Select(x=>x.Field<string>("结果"));
-             
-                
+                var sss = data_table.Select(x => x.Field<string>("结果"));
+
+
                 foreach (var item in sss)
                 {
                     dataS += item + ";";
                 }
-              
+
             }
 
-            
-           
+
+
             var ng = data_table.Where(x => x.Field<string>("指示") == "False");
 
 
             isok = ng.Count() > 0 ? false : true;
 
-            
-           
+
+
             var temp1 = this.FindControls<RadioButton>(_grid.Name.Replace("dataGrid", "ra")).FirstOrDefault();
 
             if (isok)
             {
                 temp1.BackColor = Color.White;
-                
+
             }
             else
             {
@@ -1852,14 +1881,14 @@ namespace Jet_System
 
 
 
-        private void ModifyDataGridChild(ref DataGridView _modifyGrid,DataTable temp, bool _save_data,ref string _data_string,ref bool _allok)
+        private void ModifyDataGridChild(ref DataGridView _modifyGrid, DataTable temp, bool _save_data, ref string _data_string, ref bool _allok)
         {
-           
+
             _modifyGrid.DataSource = null;
             _modifyGrid.DataSource = temp;
             _modifyGrid.Columns["偏移"].Visible = false;
             ShowResultTableChild(ref _allok, ref _modifyGrid, temp, _save_data, ref _data_string);
-            
+
         }
 
         /// <summary>
@@ -1869,7 +1898,7 @@ namespace Jet_System
         /// <param name="_tables"></param>
         /// <param name="_do"></param>
         /// <param name="_is_save"></param>
-        private void ShowRecord(int index,ref ProductTables _tables,string _do,bool _is_save,bool _isFirstOutput,bool isShowRecord)
+        private void ShowRecord(int index, ref ProductTables _tables, string _do, bool _is_save, bool _isFirstOutput, bool isShowRecord)
         {
             bool is_allOK = true;
             string data_string = "";
@@ -1934,29 +1963,29 @@ namespace Jet_System
             temp = _tables.Shield_Cross_Angle.Copy();
             ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, true, ref data_string, ref is_allOK);
 
-            if(isShowRecord)
+            if (isShowRecord)
             {
                 mDisplay1Result.Record = _tables.Image;
                 mDisplay1ResultShow.Record = _tables.Image;
                 mDisplay1Row.Image = _tables.RowImage;
                 mDisplay1RowShow.Image = _tables.RowImage;
             }
-            
+
             switch (_do)
             {
                 case "RAF":
                     temp = _tables.TiePian.Copy();
                     ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK);
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
-                   
+
                     CheckRAFResult(is_allOK, _is_save, data_string, _isFirstOutput);
-                   
+
                     break;
                 case "DO":
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
 
-                        CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput);
-                    
+                    CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput);
+
 
                     break;
 
@@ -1967,10 +1996,10 @@ namespace Jet_System
             _tables.Result = is_allOK;
         }
 
-        private void CheckRAFResult(bool is_allOK,bool _save_data,string data_string,bool isfirstOutput)
+        private void CheckRAFResult(bool is_allOK, bool _save_data, string data_string, bool isfirstOutput)
         {
 
-        
+
             if (is_allOK)
             {
 
@@ -1978,18 +2007,19 @@ namespace Jet_System
                 lbl_RAF_OKNG.Text = "OK";
                 Label_max.BackColor = Color.Green;
                 Label_max.Text = "OK";
-                this.PerformSafely(() =>{lblStatus.Text = "检测成功，产品OK";
+                this.PerformSafely(() => {
+                    lblStatus.Text = "检测成功，产品OK";
                     lblStatusShow.Text = "检测成功，产品OK";
                     lblStatus.ForeColor = Color.Green;
                     lblStatusShow.ForeColor = Color.Green;
-                    if(isfirstOutput == true)
+                    if (isfirstOutput == true)
                     {
                         PCI_OpenSignal_OK();
                     }
-                    
-                    
+
+
                 });
-                
+
                 if (_save_data)
                 {
 
@@ -1999,7 +2029,7 @@ namespace Jet_System
 
                 }
 
-              
+
             }
             else
             {
@@ -2007,7 +2037,8 @@ namespace Jet_System
                 lbl_RAF_OKNG.Text = "NG";
                 Label_max.BackColor = Color.Red;
                 Label_max.Text = "NG";
-                this.PerformSafely(() =>{lblStatus.Text = "检测成功，产品NG";
+                this.PerformSafely(() => {
+                    lblStatus.Text = "检测成功，产品NG";
                     lblStatusShow.Text = "检测成功，产品NG";
                     lblStatus.ForeColor = Color.Red;
                     lblStatusShow.ForeColor = Color.Red;
@@ -2015,9 +2046,9 @@ namespace Jet_System
                     {
                         PCI_OpenSignal_NG();
                     }
-                        
+
                 });
-              
+
                 if (_save_data)
                 {
                     programParameters.RAF_NG_NUM++;
@@ -2026,37 +2057,38 @@ namespace Jet_System
 
                 }
 
-               
+
             }
             if (_save_data)
             {
-               
+
                 SaveMeasureData_RAF(data_string, Current_File_Name[0]);
             }
             ShowRafNum(programParameters.RAF_ALL_NUM, programParameters.RAF_OK_NUM, programParameters.RAF_NG_NUM);
-           
+
         }
 
-        private void CheckDOResult(bool is_allOK,bool _save_data,string data_string,bool _isFistInit)
+        private void CheckDOResult(bool is_allOK, bool _save_data, string data_string, bool _isFistInit)
         {
 
 
-            
+
             if (is_allOK)
             {
                 lbl_DO_OKNG.BackColor = Color.Green;
                 lbl_DO_OKNG.Text = "OK";
                 Label_max.BackColor = Color.Green;
                 Label_max.Text = "OK";
-                this.PerformSafely(() => {lblStatus.Text = "检测成功，产品OK";
+                this.PerformSafely(() => {
+                    lblStatus.Text = "检测成功，产品OK";
                     lblStatusShow.Text = "检测成功，产品OK";
                     lblStatus.ForeColor = Color.Green;
                     lblStatusShow.ForeColor = Color.Green;
-                    if(_isFistInit==true)
+                    if (_isFistInit == true)
                     {
                         PCI_OpenSignal_OK();
                     }
-                    
+
                 });
 
                 if (_save_data)
@@ -2074,7 +2106,8 @@ namespace Jet_System
                 lbl_DO_OKNG.Text = "NG";
                 Label_max.BackColor = Color.Red;
                 Label_max.Text = "NG";
-                this.PerformSafely(() => {lblStatus.Text = "检测成功，产品NG";
+                this.PerformSafely(() => {
+                    lblStatus.Text = "检测成功，产品NG";
                     lblStatusShow.Text = "检测成功，产品NG";
                     lblStatus.ForeColor = Color.Red;
                     lblStatusShow.ForeColor = Color.Red;
@@ -2082,19 +2115,19 @@ namespace Jet_System
                     {
                         PCI_OpenSignal_NG();
                     }
-                        
+
                 });
                 if (_save_data)
                 {
                     programParameters.DO_NG_NUM++;
-                    programParameters.DO_ALL_NUM++;                   
+                    programParameters.DO_ALL_NUM++;
                     ResultImageSave.Add(new ImageIndexAndImage { Path = Current_File_Name[5], image = mDisplay1Result.CreateContentBitmap(CogDisplayContentBitmapConstants.Display) as Bitmap });
-                    
+
                 }
             }
-            if(_save_data)
+            if (_save_data)
             {
-                
+
                 SaveMeasureData_DO(data_string, Current_File_Name[7]);
             }
 
@@ -2144,7 +2177,7 @@ namespace Jet_System
 
         }
 
-        private void SaveMeasureData_RAF(string _measureData,string _filename)
+        private void SaveMeasureData_RAF(string _measureData, string _filename)
         {
             if (!File.Exists(_filename))
             {
@@ -2180,14 +2213,14 @@ namespace Jet_System
 
         private void SaveMeasureData_DO(string _measureData, string _filename)
         {
-            
+
 
             if (!File.Exists(_filename))
             {
                 CustomerCsvHelper.CreateFile(_filename);
                 string head = "Number;";
                 List<string> dataname = new List<string>();
-                if (programParameters.Current_Program ==0)
+                if (programParameters.Current_Program == 0)
                 {
                     dataname.Add("Beam_L");
                     dataname.Add("Beam_R");
@@ -2204,14 +2237,14 @@ namespace Jet_System
                         {
                             head += item + "_" + i.ToString() + ";";
                         }
-                       
+
                     }
-                 
+
                 }
 
                 else
                 {
-                    
+
                     dataname.Add("Beam_L");
                     dataname.Add("Beam_R");
                     dataname.Add("Beam_Inner_L");
@@ -2235,9 +2268,9 @@ namespace Jet_System
                             }
                         }
                     }
-                   
+
                 }
-                
+
                 CustomerCsvHelper.WriteHeader(_filename, head);
 
 
@@ -2258,7 +2291,7 @@ namespace Jet_System
         {
 
             var finds = this.FindControls<DataGridView>("");
-          
+
             foreach (var item in finds)
             {
                 if (item is DataGridView && item.Name.Contains("dataGrid"))
@@ -2271,8 +2304,8 @@ namespace Jet_System
 
                 }
             }
-        
-           
+
+
 
 
 
@@ -2280,19 +2313,19 @@ namespace Jet_System
         private void dataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var temp = (DataGridView)sender;
-           
+
             string isok = temp.Rows[e.RowIndex].Cells[7].Value.ToString();
 
-            if (isok =="False" )
+            if (isok == "False")
             {
                 temp.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
             }
-            
+
         }
-        private void WaveDisplay(ProductTables _tables,ref WaveData wavedata)
+        private void WaveDisplay(ProductTables _tables, ref WaveData wavedata)
         {
             wavedata = new WaveData();
-            
+
             var temp = _tables.Beam_Height_L.AsEnumerable();
             var selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
             wavedata.Beam_Height_L = selectResult;
@@ -2311,7 +2344,7 @@ namespace Jet_System
 
             temp = _tables.Wafer_Thickness.AsEnumerable();
             selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
-            wavedata.Wafer_Thickness= selectResult;
+            wavedata.Wafer_Thickness = selectResult;
 
             temp = _tables.Shield_Flatness.AsEnumerable();
             selectResult = temp.Select(x => x.Field<string>("结果")).ToArray();
@@ -2333,7 +2366,7 @@ namespace Jet_System
 
 
             wavedata.datetime = DateTime.Now;
-           
+
         }
 
 
@@ -2378,7 +2411,7 @@ namespace Jet_System
 
         private void dataGrid_Beam_Touch_Window_L_L_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            string rowindex = (e.RowIndex+1).ToString();
+            string rowindex = (e.RowIndex + 1).ToString();
 
             BtnWave.Enabled = false;
             waveName = null;
@@ -2563,17 +2596,17 @@ namespace Jet_System
             cogtool_Check.Subject.Inputs["Data"].Value = ((DataTable)dataGrid_Check.DataSource).Copy();
             Currnet_PCI?.Clear4Light();
             cogtool_Check.Subject.Run();
-            
+
 
 
             this.PerformSafely(() => {
 
-                
+
                 var result_table = (DataTable)cogtool_Check.Subject.Outputs["Data"].Value;
                 dataGrid_Check.DataSource = result_table;
                 var resultrow = result_table.AsEnumerable();
                 var results = resultrow.Where(x => x.Field<string>("指示") == "False");
-                if (results.Count()>0)
+                if (results.Count() > 0)
                 {
                     lblCheck_Message.BackColor = Color.Red;
                     lblCheck_Message.Text = "NG";
@@ -2587,10 +2620,10 @@ namespace Jet_System
 
             });
 
-             
-            
 
-            
+
+
+
 
         }
 

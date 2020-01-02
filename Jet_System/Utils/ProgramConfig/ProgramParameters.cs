@@ -12,7 +12,7 @@ namespace Jet_System.Utils.ProgramConfig
 
         public bool IsStartConnect { set; get; }
 
-        public double RAF_Exposure { set; get; } 
+        public double RAF_Exposure { set; get; }
 
         public double RAF_Gain { set; get; }
 
@@ -23,6 +23,11 @@ namespace Jet_System.Utils.ProgramConfig
         public double DO_Exposure2 { set; get; }
 
         public double DO_Gain2 { set; get; }
+
+
+        public double RAF_Exposure2 { set; get; }
+
+        public double RAF_Gain2 { set; get; }
 
 
         public int RAF_OK_NUM { set; get; }

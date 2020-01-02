@@ -42,6 +42,11 @@
             this.btnSetExposure = new System.Windows.Forms.Button();
             this.tblMain = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxParameters = new System.Windows.Forms.GroupBox();
+            this.cbxIO8 = new System.Windows.Forms.CheckBox();
+            this.cbxIO3 = new System.Windows.Forms.CheckBox();
+            this.cbxIO2 = new System.Windows.Forms.CheckBox();
+            this.cbxIO1 = new System.Windows.Forms.CheckBox();
+            this.cbxIO0 = new System.Windows.Forms.CheckBox();
             this.btnSetDO_T = new System.Windows.Forms.Button();
             this.btnSetDO = new System.Windows.Forms.Button();
             this.btnSetRaf = new System.Windows.Forms.Button();
@@ -61,10 +66,10 @@
             this.txtGain = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chbxStartConnect = new System.Windows.Forms.CheckBox();
-            this.cbxIO0 = new System.Windows.Forms.CheckBox();
-            this.cbxIO1 = new System.Windows.Forms.CheckBox();
-            this.cbxIO2 = new System.Windows.Forms.CheckBox();
-            this.cbxIO3 = new System.Windows.Forms.CheckBox();
+            this.btnSetRaf_T = new System.Windows.Forms.Button();
+            this.txtRAF_T_Gain = new System.Windows.Forms.TextBox();
+            this.txtRAF_T_Exposure = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayBefore)).BeginInit();
             this.tblMain.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -205,6 +210,11 @@
             // 
             // groupBoxParameters
             // 
+            this.groupBoxParameters.Controls.Add(this.btnSetRaf_T);
+            this.groupBoxParameters.Controls.Add(this.txtRAF_T_Gain);
+            this.groupBoxParameters.Controls.Add(this.txtRAF_T_Exposure);
+            this.groupBoxParameters.Controls.Add(this.label8);
+            this.groupBoxParameters.Controls.Add(this.cbxIO8);
             this.groupBoxParameters.Controls.Add(this.cbxIO3);
             this.groupBoxParameters.Controls.Add(this.cbxIO2);
             this.groupBoxParameters.Controls.Add(this.cbxIO1);
@@ -245,11 +255,66 @@
             this.groupBoxParameters.TabStop = false;
             this.groupBoxParameters.Text = "参数";
             // 
+            // cbxIO8
+            // 
+            this.cbxIO8.AutoSize = true;
+            this.cbxIO8.Location = new System.Drawing.Point(156, 650);
+            this.cbxIO8.Name = "cbxIO8";
+            this.cbxIO8.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO8.TabIndex = 42;
+            this.cbxIO8.Text = "8口";
+            this.cbxIO8.UseVisualStyleBackColor = true;
+            this.cbxIO8.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO3
+            // 
+            this.cbxIO3.AutoSize = true;
+            this.cbxIO3.Location = new System.Drawing.Point(156, 612);
+            this.cbxIO3.Name = "cbxIO3";
+            this.cbxIO3.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO3.TabIndex = 41;
+            this.cbxIO3.Text = "3口";
+            this.cbxIO3.UseVisualStyleBackColor = true;
+            this.cbxIO3.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO2
+            // 
+            this.cbxIO2.AutoSize = true;
+            this.cbxIO2.Location = new System.Drawing.Point(37, 612);
+            this.cbxIO2.Name = "cbxIO2";
+            this.cbxIO2.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO2.TabIndex = 40;
+            this.cbxIO2.Text = "2口";
+            this.cbxIO2.UseVisualStyleBackColor = true;
+            this.cbxIO2.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO1
+            // 
+            this.cbxIO1.AutoSize = true;
+            this.cbxIO1.Location = new System.Drawing.Point(156, 567);
+            this.cbxIO1.Name = "cbxIO1";
+            this.cbxIO1.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO1.TabIndex = 39;
+            this.cbxIO1.Text = "1口";
+            this.cbxIO1.UseVisualStyleBackColor = true;
+            this.cbxIO1.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
+            // cbxIO0
+            // 
+            this.cbxIO0.AutoSize = true;
+            this.cbxIO0.Location = new System.Drawing.Point(37, 567);
+            this.cbxIO0.Name = "cbxIO0";
+            this.cbxIO0.Size = new System.Drawing.Size(42, 16);
+            this.cbxIO0.TabIndex = 38;
+            this.cbxIO0.Text = "0口";
+            this.cbxIO0.UseVisualStyleBackColor = true;
+            this.cbxIO0.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            // 
             // btnSetDO_T
             // 
             this.btnSetDO_T.Enabled = false;
             this.btnSetDO_T.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSetDO_T.Location = new System.Drawing.Point(243, 485);
+            this.btnSetDO_T.Location = new System.Drawing.Point(243, 524);
             this.btnSetDO_T.Name = "btnSetDO_T";
             this.btnSetDO_T.Size = new System.Drawing.Size(58, 40);
             this.btnSetDO_T.TabIndex = 37;
@@ -284,7 +349,7 @@
             // txt_DO_T_Gain
             // 
             this.txt_DO_T_Gain.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_DO_T_Gain.Location = new System.Drawing.Point(154, 493);
+            this.txt_DO_T_Gain.Location = new System.Drawing.Point(154, 532);
             this.txt_DO_T_Gain.Name = "txt_DO_T_Gain";
             this.txt_DO_T_Gain.ReadOnly = true;
             this.txt_DO_T_Gain.Size = new System.Drawing.Size(60, 29);
@@ -293,7 +358,7 @@
             // txt_DO_T_Exposure
             // 
             this.txt_DO_T_Exposure.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_DO_T_Exposure.Location = new System.Drawing.Point(66, 493);
+            this.txt_DO_T_Exposure.Location = new System.Drawing.Point(66, 532);
             this.txt_DO_T_Exposure.Name = "txt_DO_T_Exposure";
             this.txt_DO_T_Exposure.ReadOnly = true;
             this.txt_DO_T_Exposure.Size = new System.Drawing.Size(60, 29);
@@ -303,7 +368,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("宋体", 14.25F);
-            this.label7.Location = new System.Drawing.Point(6, 493);
+            this.label7.Location = new System.Drawing.Point(6, 532);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(68, 19);
             this.label7.TabIndex = 32;
@@ -437,49 +502,45 @@
             this.chbxStartConnect.UseVisualStyleBackColor = true;
             this.chbxStartConnect.Visible = false;
             // 
-            // cbxIO0
+            // btnSetRaf_T
             // 
-            this.cbxIO0.AutoSize = true;
-            this.cbxIO0.Location = new System.Drawing.Point(37, 567);
-            this.cbxIO0.Name = "cbxIO0";
-            this.cbxIO0.Size = new System.Drawing.Size(42, 16);
-            this.cbxIO0.TabIndex = 38;
-            this.cbxIO0.Text = "0口";
-            this.cbxIO0.UseVisualStyleBackColor = true;
-            this.cbxIO0.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            this.btnSetRaf_T.Enabled = false;
+            this.btnSetRaf_T.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSetRaf_T.Location = new System.Drawing.Point(243, 480);
+            this.btnSetRaf_T.Name = "btnSetRaf_T";
+            this.btnSetRaf_T.Size = new System.Drawing.Size(58, 40);
+            this.btnSetRaf_T.TabIndex = 46;
+            this.btnSetRaf_T.Text = "设置";
+            this.btnSetRaf_T.UseVisualStyleBackColor = true;
+            this.btnSetRaf_T.Click += new System.EventHandler(this.btnSetRaf_T_Click);
             // 
-            // cbxIO1
+            // txtRAF_T_Gain
             // 
-            this.cbxIO1.AutoSize = true;
-            this.cbxIO1.Location = new System.Drawing.Point(156, 567);
-            this.cbxIO1.Name = "cbxIO1";
-            this.cbxIO1.Size = new System.Drawing.Size(42, 16);
-            this.cbxIO1.TabIndex = 39;
-            this.cbxIO1.Text = "1口";
-            this.cbxIO1.UseVisualStyleBackColor = true;
-            this.cbxIO1.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            this.txtRAF_T_Gain.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtRAF_T_Gain.Location = new System.Drawing.Point(154, 488);
+            this.txtRAF_T_Gain.Name = "txtRAF_T_Gain";
+            this.txtRAF_T_Gain.ReadOnly = true;
+            this.txtRAF_T_Gain.Size = new System.Drawing.Size(60, 29);
+            this.txtRAF_T_Gain.TabIndex = 45;
             // 
-            // cbxIO2
+            // txtRAF_T_Exposure
             // 
-            this.cbxIO2.AutoSize = true;
-            this.cbxIO2.Location = new System.Drawing.Point(37, 612);
-            this.cbxIO2.Name = "cbxIO2";
-            this.cbxIO2.Size = new System.Drawing.Size(42, 16);
-            this.cbxIO2.TabIndex = 40;
-            this.cbxIO2.Text = "2口";
-            this.cbxIO2.UseVisualStyleBackColor = true;
-            this.cbxIO2.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            this.txtRAF_T_Exposure.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtRAF_T_Exposure.Location = new System.Drawing.Point(66, 488);
+            this.txtRAF_T_Exposure.Name = "txtRAF_T_Exposure";
+            this.txtRAF_T_Exposure.ReadOnly = true;
+            this.txtRAF_T_Exposure.Size = new System.Drawing.Size(60, 29);
+            this.txtRAF_T_Exposure.TabIndex = 44;
             // 
-            // cbxIO3
+            // label8
             // 
-            this.cbxIO3.AutoSize = true;
-            this.cbxIO3.Location = new System.Drawing.Point(156, 612);
-            this.cbxIO3.Name = "cbxIO3";
-            this.cbxIO3.Size = new System.Drawing.Size(42, 16);
-            this.cbxIO3.TabIndex = 41;
-            this.cbxIO3.Text = "3口";
-            this.cbxIO3.UseVisualStyleBackColor = true;
-            this.cbxIO3.CheckedChanged += new System.EventHandler(this.cbxIO1_CheckedChanged);
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("宋体", 14.25F);
+            this.label8.Location = new System.Drawing.Point(6, 488);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(78, 19);
+            this.label8.TabIndex = 43;
+            this.label8.Text = "RAF_T：";
             // 
             // FormCameraSearch
             // 
@@ -536,5 +597,10 @@
         private System.Windows.Forms.CheckBox cbxIO2;
         private System.Windows.Forms.CheckBox cbxIO1;
         private System.Windows.Forms.CheckBox cbxIO0;
+        private System.Windows.Forms.CheckBox cbxIO8;
+        private System.Windows.Forms.Button btnSetRaf_T;
+        private System.Windows.Forms.TextBox txtRAF_T_Gain;
+        private System.Windows.Forms.TextBox txtRAF_T_Exposure;
+        private System.Windows.Forms.Label label8;
     }
 }

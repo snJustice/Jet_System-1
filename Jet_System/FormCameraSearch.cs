@@ -29,9 +29,9 @@ namespace Jet_System
         {
             InitializeComponent();
 
-            
 
-            
+
+
 
         }
 
@@ -39,9 +39,9 @@ namespace Jet_System
 
 
 
-        private  void Init()
+        private void Init()
         {
-            
+
 
             txtRAF_Exposure.Text = programs.RAF_Exposure.ToString();
             txt_DO_Exposure.Text = programs.DO_Exposure1.ToString();
@@ -50,6 +50,9 @@ namespace Jet_System
             txtRAF_Gain.Text = programs.RAF_Gain.ToString();
             txt_DO_Gain.Text = programs.DO_Gain1.ToString();
             txt_DO_T_Gain.Text = programs.DO_Gain2.ToString();
+
+            txtRAF_T_Exposure.Text = programs.RAF_Exposure2.ToString();
+            txtRAF_T_Gain.Text = programs.RAF_Gain2.ToString();
 
             chbxStartConnect.Checked = programs.IsStartConnect;
 
@@ -61,10 +64,10 @@ namespace Jet_System
         private void btnTriggerOnce_Click(object sender, EventArgs e)
         {
 
-         
+
             camera.OneShot(Command.Grab);
 
-            
+
 
 
 
@@ -72,8 +75,8 @@ namespace Jet_System
 
         private void Formest_FormClosing(object sender, FormClosingEventArgs e)
         {
-           
-            
+
+
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -85,30 +88,30 @@ namespace Jet_System
                 cbxCameras.Items.Add(item.Key);
             }
 
-            ShowButtonState(true, false, false, false, false, false, false,false,false,false);
+            ShowButtonState(true, false, false, false, false, false, false, false, false, false);
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            
-            if(cbxCameras.Items.Count!=0)
+
+            if (cbxCameras.Items.Count != 0)
             {
                 temp = new CameraOperator();
                 MyCamera.MV_CC_DEVICE_INFO cameraInfo;
-                camerastring.TryGetValue(cbxCameras.Text,out cameraInfo);
+                camerastring.TryGetValue(cbxCameras.Text, out cameraInfo);
                 camera = new HikvisionCamera(temp, cameraInfo);
                 camera.ImageEvent += ImagShow;
                 camera.Open();
                 camera.IP = cbxCameras.Text;
 
-                ShowButtonState(true,true,true,false,true,true,true,true,true,true);
+                ShowButtonState(true, true, true, false, true, true, true, true, true, true);
                 txtGain.Text = camera.GainCur.ToString();
                 txtExposure.Text = camera.ShuterCur.ToString();
 
             }
-            
-            
-           
+
+
+
         }
 
 
@@ -121,14 +124,14 @@ namespace Jet_System
         private void btnStopLive_Click(object sender, EventArgs e)
         {
             camera.ContinuousShotStop();
-            ShowButtonState(true, true, true, false, true, true, true,true,true,true);
+            ShowButtonState(true, true, true, false, true, true, true, true, true, true);
         }
 
         private void btnLive_Click(object sender, EventArgs e)
         {
             camera.ContinuousShot();
 
-            ShowButtonState(true, true,false, true, true, true, true,true,true,true);
+            ShowButtonState(true, true, false, true, true, true, true, true, true, true);
 
         }
 
@@ -150,7 +153,7 @@ namespace Jet_System
             this.Close();
         }
 
-        
+
 
         private void btnSetGain_Click(object sender, EventArgs e)
         {
@@ -165,12 +168,12 @@ namespace Jet_System
 
         private void cbxCameras_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
         }
 
-        void ShowButtonState(bool _open,bool _trigger_once, 
+        void ShowButtonState(bool _open, bool _trigger_once,
             bool _live, bool _stop_live, bool _set_gain, bool _set_exposure, bool _complete,
-            bool _set_raf,bool _set_do,bool _set_do_t)
+            bool _set_raf, bool _set_do, bool _set_do_t)
         {
             btnOpen.Enabled = _open;
             btnTriggerOnce.Enabled = _trigger_once;
@@ -182,13 +185,14 @@ namespace Jet_System
             btnSetRaf.Enabled = _set_raf;
             btnSetDO.Enabled = _set_do;
             btnSetDO_T.Enabled = _set_do_t;
+            btnSetRaf_T.Enabled = _set_do;
 
 
         }
 
         private void btnSetRaf_Click(object sender, EventArgs e)
         {
-            programs.RAF_Exposure =Convert.ToDouble( txtExposure.Text);
+            programs.RAF_Exposure = Convert.ToDouble(txtExposure.Text);
             txtRAF_Exposure.Text = programs.RAF_Exposure.ToString();
 
             programs.RAF_Gain = Convert.ToDouble(txtGain.Text);
@@ -207,7 +211,7 @@ namespace Jet_System
 
         private void btnSetDO_T_Click(object sender, EventArgs e)
         {
-            programs.DO_Exposure2= Convert.ToDouble(txtExposure.Text);
+            programs.DO_Exposure2 = Convert.ToDouble(txtExposure.Text);
             txt_DO_T_Exposure.Text = programs.DO_Exposure2.ToString();
 
             programs.DO_Gain2 = Convert.ToDouble(txtGain.Text);
@@ -217,9 +221,9 @@ namespace Jet_System
         private void FormCameraSearch_Load(object sender, EventArgs e)
         {
             Init();
-            if(camera.IsLink)
+            if (camera.IsLink)
             {
-                camera.ImageEvent+= ImagShow;
+                camera.ImageEvent += ImagShow;
                 cbxCameras.Items.Add(programs.IP);
                 cbxCameras.SelectedIndex = 0;
                 ShowButtonState(true, true, true, false, true, true, true, true, true, true);
@@ -234,13 +238,22 @@ namespace Jet_System
 
 
             var main = (FormMain)this.Parent;
-            
+
             CheckBox cbx = (CheckBox)(sender);
             bool checkState = cbx.Checked;
             string ioCount = cbx.Name.Replace("cbxIO", "");
             SetIOEvent?.Invoke(ioCount, checkState);
 
 
+        }
+
+        private void btnSetRaf_T_Click(object sender, EventArgs e)
+        {
+            programs.RAF_Exposure2 = Convert.ToDouble(txtExposure.Text);
+            txtRAF_T_Exposure.Text = programs.RAF_Exposure2.ToString();
+
+            programs.RAF_Gain2 = Convert.ToDouble(txtGain.Text);
+            txtRAF_T_Gain.Text = programs.RAF_Gain2.ToString();
         }
     }
 }
