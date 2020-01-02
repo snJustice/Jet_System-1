@@ -25,11 +25,6 @@ namespace Jet_System.Utils.ProgramConfig
         public double DO_Gain2 { set; get; }
 
 
-        public double RAF_Exposure2 { set; get; }
-
-        public double RAF_Gain2 { set; get; }
-
-
         public int RAF_OK_NUM { set; get; }
         public int RAF_ALL_NUM { set; get; }
         public int RAF_NG_NUM { set; get; }
