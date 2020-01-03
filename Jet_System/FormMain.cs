@@ -1062,6 +1062,9 @@ namespace Jet_System
                     object ngnum = _showTool.Subject.Outputs["Current_NG_Num"].Value;
                     product.Current_NG_Num = Convert.ToInt32(ngnum.ToString());
 
+                    int isempty = (int)_showTool.Subject.Outputs["IsEmpty"].Value;
+                    product.IsEmpty = isempty;
+
                     mDisplay1Result.Image = (cogtool_RAF.Subject.Inputs["Image"].Value as CogImage8Grey).Copy();
                     var ImageRecord1 = cogtool_RAF.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
                     product.Image = ImageRecord1;
@@ -1125,6 +1128,10 @@ namespace Jet_System
 
                     object ngnum1 = _showTool.Subject.Outputs["Current_NG_Num"].Value;
                     product.Current_NG_Num = Convert.ToInt32(ngnum1.ToString());
+
+
+                    int isempty2 = (int)_showTool.Subject.Outputs["IsEmpty"].Value;
+                    product.IsEmpty = isempty2;
 
                     mDisplay1Result.Image = cogtool_DO.Subject.Inputs["Image"].Value as CogImage8Grey;
                     var ImageRecord2 = cogtool_DO.Subject.CreateLastRunRecord().SubRecords["OutputImage"];
@@ -1303,7 +1310,10 @@ namespace Jet_System
         private void LightShow()
         {
             var historyResults = MeasureDataQuene.GetResults();
-            customerLights.SetColor(historyResults);
+            var historyEmptys = MeasureDataQuene.GetIsEmptys();
+
+
+            customerLights.SetColor(historyResults, historyEmptys);
 
         }
 
@@ -1838,7 +1848,7 @@ namespace Jet_System
 
 
 
-        private bool ShowResultTableChild(ref bool _all_result, ref DataGridView _grid, DataTable _table, bool isNeedSave, ref string dataS)
+        private bool ShowResultTableChild(ref bool _all_result, ref DataGridView _grid, DataTable _table, bool isNeedSave, ref string dataS, int _isEmpty)
         {
             bool isok = true;//标红的标志位
 
@@ -1876,18 +1886,27 @@ namespace Jet_System
                 temp1.BackColor = Color.Red;
                 _all_result = false;
             }
+
+
+
+            if(_isEmpty==0)
+            {
+                temp1.BackColor = Color.White;
+                isok = true;
+            }
+
             return isok;
         }
 
 
 
-        private void ModifyDataGridChild(ref DataGridView _modifyGrid, DataTable temp, bool _save_data, ref string _data_string, ref bool _allok)
+        private void ModifyDataGridChild(ref DataGridView _modifyGrid, DataTable temp, bool _save_data, ref string _data_string, ref bool _allok,int _isEmpty)
         {
 
             _modifyGrid.DataSource = null;
             _modifyGrid.DataSource = temp;
             _modifyGrid.Columns["偏移"].Visible = false;
-            ShowResultTableChild(ref _allok, ref _modifyGrid, temp, _save_data, ref _data_string);
+            ShowResultTableChild(ref _allok, ref _modifyGrid, temp, _save_data, ref _data_string, _isEmpty);
 
         }
 
@@ -1900,68 +1919,71 @@ namespace Jet_System
         /// <param name="_is_save"></param>
         private void ShowRecord(int index, ref ProductTables _tables, string _do, bool _is_save, bool _isFirstOutput, bool isShowRecord)
         {
+            int isEmpty = _tables.IsEmpty;
+
+
             bool is_allOK = true;
             string data_string = "";
 
             var temp = _tables.Beam_Touch_Window_L_L.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_L, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Touch_Window_L_R.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_L_R, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Tip_To_Window_L.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_L, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Touch_Window_R_L.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_L, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Touch_Window_R_R.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Touch_Window_R_R, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Tip_To_Window_R.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Tip_To_Window_R, temp, false, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Height_L.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Height_L, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Height_L, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
 
             temp = _tables.Beam_Height_R.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Height_R, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Height_R, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Inner_L.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Inner_L, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Inner_L, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Inner_R.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Inner_R, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Inner_R, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Beam_Height_Difference.Copy();
-            ModifyDataGridChild(ref dataGrid_Beam_Height_Difference, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Beam_Height_Difference, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Shield_Flatness.Copy();
-            ModifyDataGridChild(ref dataGrid_Shield_Flatness, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Shield_Flatness, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
 
             temp = _tables.Cross_Shield_TP.Copy();
-            ModifyDataGridChild(ref dataGrid_Cross_Shield_TP, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Cross_Shield_TP, temp, true, ref data_string, ref is_allOK, isEmpty);
 
 
             temp = _tables.Wafer_Thickness.Copy();
-            ModifyDataGridChild(ref dataGrid_Wafer_Thickness, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Wafer_Thickness, temp, true, ref data_string, ref is_allOK, isEmpty);
 
             temp = _tables.Shield_Cross_Angle.Copy();
-            ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, true, ref data_string, ref is_allOK);
+            ModifyDataGridChild(ref dataGrid_Shield_Cross_Angle, temp, true, ref data_string, ref is_allOK, isEmpty);
 
             if (isShowRecord)
             {
@@ -1975,16 +1997,16 @@ namespace Jet_System
             {
                 case "RAF":
                     temp = _tables.TiePian.Copy();
-                    ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK);
+                    ModifyDataGridChild(ref dataGrid_TiePian, temp, true, ref data_string, ref is_allOK, isEmpty);
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
 
-                    CheckRAFResult(is_allOK, _is_save, data_string, _isFirstOutput);
+                    CheckRAFResult(is_allOK, _is_save, data_string, _isFirstOutput,isEmpty);
 
                     break;
                 case "DO":
                     data_string = DateTime.Now.ToString("hh:mm:ss,ff") + ";" + data_string;
 
-                    CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput);
+                    CheckDOResult(is_allOK, _is_save, data_string, _isFirstOutput, isEmpty);
 
 
                     break;
@@ -1996,8 +2018,19 @@ namespace Jet_System
             _tables.Result = is_allOK;
         }
 
-        private void CheckRAFResult(bool is_allOK, bool _save_data, string data_string, bool isfirstOutput)
+        private void CheckRAFResult(bool is_allOK, bool _save_data, string data_string, bool isfirstOutput,int _isEmpty)
         {
+
+
+
+            if(_isEmpty==0)
+            {
+                lblStatus.Text = "没有产品";
+                lblStatusShow.Text = "没有产品";
+                lblStatus.ForeColor = Color.Black;
+                lblStatusShow.ForeColor = Color.Black;
+                return ;
+            }
 
 
             if (is_allOK)
@@ -2068,10 +2101,17 @@ namespace Jet_System
 
         }
 
-        private void CheckDOResult(bool is_allOK, bool _save_data, string data_string, bool _isFistInit)
+        private void CheckDOResult(bool is_allOK, bool _save_data, string data_string, bool _isFistInit, int _isEmpty)
         {
 
-
+            if (_isEmpty == 0)
+            {
+                lblStatus.Text = "没有产品";
+                lblStatusShow.Text = "没有产品";
+                lblStatus.ForeColor = Color.Black;
+                lblStatusShow.ForeColor = Color.Black;
+                return;
+            }
 
             if (is_allOK)
             {

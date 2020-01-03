@@ -39,6 +39,14 @@ namespace Jet_System.Utils.MyQuene
             return re.ToList(); 
         }
 
+
+        public List<int> GetIsEmptys()
+        {
+            var temp = SavedTables.ToList();
+            var re = from xx in temp select xx.IsEmpty;
+            return re.ToList();
+        }
+
         public void Add(ProductTables _product)
         {
             SavedTables.Enqueue(_product);

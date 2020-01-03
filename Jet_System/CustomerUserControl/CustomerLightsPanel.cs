@@ -43,24 +43,33 @@ namespace Jet_System.CustomerUserControl
 
 
 
-        public void SetColor(List<bool> _result)
+        public void SetColor(List<bool> _result,List<int> _emptys)
         {
            // var lights = this.FindControls<CustomerLight>("");
            // _result.Reverse();
+
+
             for (int i = 0; i < 10; i++)
             {
                 var light = this.FindControl<CustomerLight>("customerLight" + (i + 1).ToString()).FirstOrDefault();
                 if (i< _result.Count)
                 {
-                    
-                    if(_result[i])
+                    if(_emptys[i] == 0)
                     {
-                        light.Color = Color.Green;
+                        light.Color = Color.Black;
                     }
                     else
                     {
-                        light.Color = Color.Red;
+                        if (_result[i])
+                        {
+                            light.Color = Color.Green;
+                        }
+                        else
+                        {
+                            light.Color = Color.Red;
+                        }
                     }
+                   
 
                 }
 

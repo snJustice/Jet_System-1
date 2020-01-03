@@ -12,6 +12,7 @@ namespace Jet_System.Utils
     {
 
         
+        public int IsEmpty { set; get; }
 
         public Cognex.VisionPro.ICogRecord Image { set; get; }
 
