@@ -20,17 +20,17 @@ namespace Jet_System
         {
 
             InitializeComponent();
-            customerLightsPanel1.SetColor(l1);
+           // customerLightsPanel1.SetColor(l1);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            customerLightsPanel1.SetColor(l2);
+           // customerLightsPanel1.SetColor(l2);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            customerLightsPanel1.SetColor(l3);
+           // customerLightsPanel1.SetColor(l3);
         }
     }
 }

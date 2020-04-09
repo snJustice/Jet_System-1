@@ -307,6 +307,7 @@ namespace Jet_System.Utils
 
 
 
+
         #region//IDI0
         public bool ReadI0()
         {

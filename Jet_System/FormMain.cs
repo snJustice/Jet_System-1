@@ -1160,9 +1160,11 @@ namespace Jet_System
             this.PerformSafely(() => {
                 lblStatus.Text = "开始检测....";
                 lblStatusShow.Text = "开始检测....";
-                PCI_ImageOK_Signal();//拍照完成脉冲显示
                 PCI_CloseSignal_OK();
                 PCI_CloseSignal_NG();
+                PCI_CloseEmpty();
+                PCI_ImageOK_Signal();//拍照完成脉冲显示
+             
 
                 lblStatus.ForeColor = Color.Black;
                 lblStatusShow.ForeColor = Color.Black;
@@ -1623,6 +1625,14 @@ namespace Jet_System
         {
             Currnet_PCI?.WriteIO5();
         }
+        private void PCI_OpenEmpty()
+        {
+            Currnet_PCI?.WriteIO9();
+        }
+        private void PCI_CloseEmpty()
+        {
+            Currnet_PCI?.ClearIO9();
+        }
 
         private void First_Trigger()
         {
@@ -2029,6 +2039,7 @@ namespace Jet_System
                 lblStatusShow.Text = "没有产品";
                 lblStatus.ForeColor = Color.Black;
                 lblStatusShow.ForeColor = Color.Black;
+                PCI_OpenEmpty();
                 return ;
             }
 
@@ -2110,6 +2121,7 @@ namespace Jet_System
                 lblStatusShow.Text = "没有产品";
                 lblStatus.ForeColor = Color.Black;
                 lblStatusShow.ForeColor = Color.Black;
+                PCI_OpenEmpty();
                 return;
             }
 
